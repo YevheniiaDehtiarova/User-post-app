@@ -1,0 +1,11 @@
+.post {
+    border: 1px solid rgb(82, 75, 75);
+    margin-top: 15px;
+}
+
+.btn-group,h1,p {
+   margin: 10px;
+}
+.open-post-modal-btn{
+    margin-right: 15px;
+}

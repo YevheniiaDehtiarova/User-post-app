@@ -1,0 +1,60 @@
+<div *ngIf="user" class="container">
+    <button kendoButton class="k-primary" (click)="goBack()">Go back</button>
+    <button kendoButton class="k-primary open-user-modal-btn" (click)="openUserModal()">Edit User</button>
+    <div class="user-info">
+        <div class="user-info_person">
+            <h1>User Details</h1>
+            <div class="user-info-item">
+                <strong><span>First Name</span></strong>
+                <span>{{ user.firstName }}</span>
+            </div>
+            <div class="user-info-item">
+                <strong><span>Last Name</span></strong>
+                <span>{{ user.lastName }}</span>
+            </div>
+            <div class="user-info-item">
+                <strong><span>User name</span></strong>
+                <span>{{ user.username }}</span>
+            </div>
+            <div class="user-info-item">
+                <strong><span>Email</span></strong>
+                <span>{{ user.email }}</span>
+            </div>
+            <div class="user-info-item">
+                <strong><span>Address</span></strong>
+                <span>{{ user.address.street }} {{ user.address.building }} {{ user.address.city }} {{
+                    user.address.zipcode }}</span>
+            </div>
+            <div class="user-info-item">
+                <strong><span>Phone</span></strong>
+                <span>{{ user.phone }}</span>
+            </div>
+            <div class="user-info-item">
+                <strong><span>Website</span></strong>
+                <span>{{ user.website }}</span>
+            </div>
+            <div class="user-info-item">
+                <strong><span>Company</span></strong>
+                <span>{{ user.company.name }} {{ user.company.scope }}</span>
+            </div>
+        </div>
+        <div class="user-info_posts" *ngIf="posts && !isModalDialogVisible">
+            <button kendoButton class="k-primary open-post-modal-btn" (click)="addPost()">Add post</button>
+            <ng-container *ngFor="let post of posts">
+              <app-post *ngIf="!isModalAddDialogVisible"
+              (needUpdate)="deletePost($event)"
+              [post]="post">
+              </app-post>
+            </ng-container>
+        </div>
+    </div>
+
+</div>
+
+<app-user-form [user]="user" [isFormForEditDetails]="isFormForEdit" (update)="updateUser()">
+</app-user-form>
+
+<app-post-form *ngIf="user"
+(createPost)="newPost($event)"
+[userId]="user.id">
+</app-post-form>

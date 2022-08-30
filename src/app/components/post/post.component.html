@@ -1,0 +1,19 @@
+<!-- <button kendoButton class="k-primary open-post-modal-btn" (click)="addPost()">Add post</button> -->
+
+<div class="post">
+    <div class="post-info">
+        <div class="btn-group">
+            <button kendoButton class="k-primary open-post-modal-btn" (click)="editPost()">Edit post</button>
+            <button kendoButton icon="delete" [primary]="false" (click)="deletePost()">Delete post</button>
+        </div>
+        <h1>{{post.title}}</h1>
+        <p>{{post.body}}</p>
+    </div>
+</div>
+
+
+<app-post-form
+    (updatePost)="getUpdatePost($event)"
+    [post]="post"
+    [userId]="post.userId"
+></app-post-form>

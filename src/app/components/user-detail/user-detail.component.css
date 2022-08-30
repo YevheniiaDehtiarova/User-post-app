@@ -1,0 +1,13 @@
+.user-info-item{
+    display: flex;
+    justify-content: space-between;
+}
+h1{
+    text-align: center;
+}
+.user-info_person{
+    width: 800px;
+}
+.k-primary{
+    margin: 10px;
+}

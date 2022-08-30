@@ -1,0 +1,28 @@
+<kendo-grid
+  [data]="users"
+  (edit)="onEdit($event.dataItem)"
+  (add)="editModal()"
+  (dblclick)="doubleClick()"
+  (cellClick)="cellClickHandler($event)">
+>
+  <kendo-grid-column field="name" title="Name"></kendo-grid-column>
+  <kendo-grid-column field="email" title="Email"></kendo-grid-column>
+  <kendo-grid-column field="address" title="Address"></kendo-grid-column>
+  <kendo-grid-column field="phone" title="Phone">
+    <ng-template kendoGridCellTemplate format="{0:n0}" let-dataItem>
+      <a href="#" class="badge badge-info">{{ dataItem?.phone | phone }}</a>      
+  </ng-template>
+  </kendo-grid-column>
+  <kendo-grid-command-column class="button-container" title="Update">
+    <ng-template kendoGridCellTemplate>
+      <button class="btn-add" kendoGridEditCommand (click)="openModal()">Edit</button>
+    </ng-template>
+  </kendo-grid-command-column>
+</kendo-grid>
+
+<app-user-form 
+[user]="user"
+(update)="updateUser($event)" 
+(create)="createUser($event)">
+</app-user-form>
+

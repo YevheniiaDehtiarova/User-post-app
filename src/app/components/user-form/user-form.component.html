@@ -1,0 +1,100 @@
+<button (click)="clickAddUser()" *ngIf="!isModalDialogVisible" type="button" class="btn-add btn-add__main" (click)="openModal()">Add user
+</button>
+<div class="form__container" *ngIf="isModalDialogVisible">
+  <form class="k-form" [formGroup]="userForm" (ngSubmit)="submit()">
+    <kendo-formfield class="form-control">
+      <kendo-label [for]="firstName" text="Enter Firstname"></kendo-label>
+      <input class="form-input" #firstName formControlName="firstName" kendoTextBox #UserName/>
+      <div *ngIf="userForm.get('firstName')?.invalid && userForm.get('firstName')?.touched" class="validation">
+        <small *ngIf="userForm.get('firstName')?.errors?.['required']">
+          Firstname couldn't be empty
+        </small>
+      </div>
+    </kendo-formfield>
+
+    <kendo-formfield class="form-control">
+        <kendo-label [for]="lastName" text="Enter LastName"></kendo-label>
+        <input class="form-input" #lastName formControlName="lastName" kendoTextBox #UserName/>
+        <div *ngIf="userForm.get('lastName')?.invalid && userForm.get('lastName')?.touched" class="validation">
+          <small *ngIf="userForm.get('lastName')?.errors?.['required']">
+            Lastname couldn't be empty
+          </small>
+        </div>
+      </kendo-formfield>
+
+      <kendo-formfield class="form-control">
+        <kendo-label [for]="userName" text="Enter Username"></kendo-label>
+        <input class="form-input"  #userName formControlName="userName" kendoTextBox #UserName/>
+        <div *ngIf="userForm.get('userName')?.invalid && userForm.get('userName')?.touched" class="validation">
+          <small *ngIf="userForm.get('userName')?.errors?.['required']">
+            Username couldn't be empty
+          </small>
+        </div>
+      </kendo-formfield>
+
+      <kendo-formfield class="form-control">
+        <kendo-label [for]="email" text="Enter email"></kendo-label>
+        <input class="form-input" #email formControlName="email" kendoTextBox #UserName/>
+        <div *ngIf="userForm.get('email')?.invalid && userForm.get('email')?.touched" class="validation">
+          <small *ngIf="userForm.get('userName')?.errors?.['required']">
+             Email couldn't be empty
+          </small>
+        </div>
+      </kendo-formfield>
+
+      <kendo-formfield class="form-control">
+        <kendo-label [for]="street" text="Enter street"></kendo-label>
+        <input class="form-input" #street formControlName="street" kendoTextBox #UserName/>
+      </kendo-formfield>
+
+      <kendo-formfield class="form-control">
+        <kendo-label [for]="building" text="Enter building"></kendo-label>
+        <input class="form-input" #building formControlName="building" kendoTextBox #UserName/>
+      </kendo-formfield>
+
+      <kendo-formfield class="form-control">
+        <kendo-label [for]="city" text="Enter city"></kendo-label>
+        <input class="form-input" #city formControlName="city" kendoTextBox #UserName/>
+      </kendo-formfield>
+
+      <kendo-formfield class="form-control">
+        <kendo-label [for]="zipcode" text="Enter zipcode"></kendo-label>
+        <input class="form-input" #zipcode formControlName="zipcode" kendoTextBox #UserName/>
+      </kendo-formfield>
+
+      
+      <kendo-formfield class="form-control">
+        <kendo-label [for]="phone" text="Enter phone"></kendo-label>
+        <input class="form-input" #phone formControlName="phone" kendoTextBox #UserName/>
+      </kendo-formfield>
+
+      
+      <kendo-formfield class="form-control">
+        <kendo-label [for]="website" text="Enter website"></kendo-label>
+        <input class="form-input" #website formControlName="website" kendoTextBox #UserName/>
+      </kendo-formfield>
+
+      <kendo-formfield class="form-control">
+        <kendo-label [for]="companyName" text="Enter companyName"></kendo-label>
+        <input class="form-input" #companyName formControlName="companyName" kendoTextBox #UserName/>
+      </kendo-formfield>
+
+      <kendo-formfield class="form-control">
+        <kendo-label [for]="companyScope" text="Enter companyScope"></kendo-label>
+        <input class="form-input" #companyScope formControlName="companyScope" kendoTextBox #UserName/>
+      </kendo-formfield>
+
+
+
+
+
+
+    <div class="button-container">
+      <button class="btn-add" type="submit" (click)="closeModal()">Cancel</button>
+      <button *ngIf="!isFormForEdit" class="btn-add" (click)="submit()">Add</button>
+      <button *ngIf="isFormForEdit" class="btn-add" (click)="updateSubmit()">Update</button>
+    </div>
+  </form>
+</div>
+
+

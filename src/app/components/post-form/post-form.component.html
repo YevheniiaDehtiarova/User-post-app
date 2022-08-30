@@ -1,0 +1,30 @@
+
+<div class="form__container" *ngIf="isPostModalDialogVisible">
+    <form class="k-form" [formGroup]="postForm" (ngSubmit)="submit()">
+      <kendo-formfield class="form-control">
+        <kendo-label [for]="title" text="Enter title"></kendo-label>
+        <input class="form-input" #title formControlName="title" kendoTextBox #UserName/>
+        <div *ngIf="postForm.get('title')?.invalid && postForm.get('title')?.touched" class="validation">
+          <small *ngIf="postForm.get('title')?.errors?.['required']">
+            title couldn't be empty
+          </small>
+        </div>
+      </kendo-formfield>
+  
+      <kendo-formfield class="form-control">
+          <kendo-label [for]="body" text="Enter body"></kendo-label>
+          <input class="form-input" #body formControlName="body" kendoTextBox #UserName/>
+          <div *ngIf="postForm.get('body')?.invalid && postForm.get('body')?.touched" class="validation">
+            <small *ngIf="postForm.get('body')?.errors?.['required']">
+              body couldn't be empty
+            </small>
+          </div>
+        </kendo-formfield>
+
+        <div class="button-container">
+          <button class="btn-add" type="submit" (click)="closeModal()">Cancel</button>
+          <button *ngIf="!isPostFormForEdit" class="btn-add" (click)="submit()">Add Post</button>
+          <button *ngIf="isPostFormForEdit" class="btn-add" (click)="updateCurrentPost()">Update Post</button>
+        </div>
+    </form>
+</div>
