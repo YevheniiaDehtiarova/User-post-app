@@ -55,6 +55,7 @@
 </app-user-form>
 
 <app-post-form *ngIf="user"
-(createPost)="newPost($event)"
+(createPost)="newPostCreated($event)"
+(cancelCreatePost)="newPostCanceled($event)"
 [userId]="user.id">
 </app-post-form>

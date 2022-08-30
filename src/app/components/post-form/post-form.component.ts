@@ -15,6 +15,7 @@ export class PostFormComponent implements OnInit, OnChanges {
   @Input() userId: string;
   @Output() public updatePost = new EventEmitter<Post>();
   @Output() public createPost = new EventEmitter<Post>();
+  @Output() public cancelCreatePost = new EventEmitter<boolean>();
   public postForm: FormGroup;
   public isPostModalDialogVisible: boolean;
   public isPostFormForEdit: boolean;
@@ -51,6 +52,7 @@ export class PostFormComponent implements OnInit, OnChanges {
       this.isPostModalDialogVisible = isModalDialogVisible;
     });
   }
+  
   private getFormStatus(): void {
     this.postFormStateService.getFormStatus().subscribe((isFormForEdit: boolean) => {
         this.isPostFormForEdit = isFormForEdit;
@@ -70,6 +72,7 @@ export class PostFormComponent implements OnInit, OnChanges {
   public closeModal(): void {
     this.postForm.reset();
     this.postModalService.modalClose();
+    this.cancelCreatePost.emit(true);
   }
 
    public updateCurrentPost(): void{
@@ -104,7 +107,7 @@ export class PostFormComponent implements OnInit, OnChanges {
             this.createPost.emit(this.createdPost);
           });
       }
-      this.clickAddUser();
+      this.clickAddPost();
       this.postModalService.modalClose();
       this.postForm.reset();
     } else {
@@ -112,7 +115,7 @@ export class PostFormComponent implements OnInit, OnChanges {
     }
   }
 
-  public clickAddUser(): void {
+  public clickAddPost(): void {
     this.postForm.reset();
     this.postFormStateService.changeFormStatus(false);
     this.postFormStateService.setDefaultInitialFormState();

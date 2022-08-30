@@ -27,18 +27,16 @@ export class UserFormComponent implements OnInit, OnChanges {
   @Output() create: EventEmitter<UserApiInterface> = new EventEmitter<UserApiInterface>();
 
   public isModalDialogVisible: boolean;
-  public isAddingState: boolean;
   public users: Array<UserTableInterface>;
   public userForm: FormGroup;
   public updatedUser: UserApiInterface;
   public createdUser: UserApiInterface;
   public isFirstChanges = true;
   public isFormForEdit: boolean;
-  // private initialFormState: UserFormInterface;
 
   constructor(
     private userService: UserService,
-    private modalService: UserModalService,
+    private userModalService: UserModalService,
     private userMapper: UserMapper,
     private userFormStateService: UserFormStateService
   ) {}
@@ -72,15 +70,13 @@ export class UserFormComponent implements OnInit, OnChanges {
       companyName: new FormControl('', Validators.required),
       companyScope: new FormControl('', Validators.required),
     });
-
     this.getModalStatus();
     this.getFormStatus();
-    // this.getInitialFormState();
   }
 
 
   private getModalStatus(): void {
-    this.modalService.getModalStatus().subscribe((isModalDialogVisible) => {
+    this.userModalService.getModalStatus().subscribe((isModalDialogVisible) => {
       this.isModalDialogVisible = isModalDialogVisible;
     });
   }
@@ -92,11 +88,6 @@ export class UserFormComponent implements OnInit, OnChanges {
       });
   }
 
-  // private getInitialFormState(): void {
-  //   this.userFormStateService.getInitialFormState()
-  //     .subscribe((initState: UserFormInterface) => {this.initialFormState = initState;});
-  // }
-
   public submit(): void {
     if (this.userForm.valid) {
       if (!this.isFormForEdit) {
@@ -107,7 +98,7 @@ export class UserFormComponent implements OnInit, OnChanges {
           });
       }
       this.clickAddUser();
-      this.modalService.modalClose();
+      this.userModalService.modalClose();
       this.userForm.reset();
     } else {
       this.userForm.markAllAsTouched();
@@ -115,7 +106,6 @@ export class UserFormComponent implements OnInit, OnChanges {
   }
 
   public updateSubmit(): void {
-    // const id = this.initialFormState.id as string;
     if (this.isFormForEdit) {
       this.userService.updateUser(this.userForm.value.id,this.userMapper.mapToCreateUpdateDto(this.userForm.value))
         .subscribe((user) => {
@@ -123,22 +113,21 @@ export class UserFormComponent implements OnInit, OnChanges {
           this.update.emit(this.updatedUser);
         });
     }
-    this.modalService.modalClose();
+    this.userModalService.modalClose();
   }
 
   public openModal(): void {
     this.isModalDialogVisible = true;
-    this.modalService.modalOpen();
+    this.userModalService.modalOpen()
   }
 
   public closeModal(): void {
     this.userForm.reset();
-    this.modalService.modalClose();
+    this.userModalService.modalClose();
   }
 
   public clickAddUser(): void {
     this.userForm.reset();
-    this.isAddingState = true;
     this.userFormStateService.changeFormStatus(false);
     this.userFormStateService.setDefaultInitialFormState();
   }

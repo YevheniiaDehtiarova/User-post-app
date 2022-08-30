@@ -26,7 +26,7 @@ export class UserTableComponent implements OnInit, OnChanges {
   constructor(
     private userService: UserService,
     private userMapper: UserMapper,
-    private modalService: UserModalService,
+    private userModalService: UserModalService,
     private userFormStateService: UserFormStateService,
     private cd: ChangeDetectorRef,
     private router: Router
@@ -53,17 +53,17 @@ export class UserTableComponent implements OnInit, OnChanges {
       (user) => Number(user.id) === dataItem.id
     ) as UserApiInterface;
 
-    this.modalService.modalOpen();
+    this.openModal();
     this.userFormStateService.changeFormStatus(true);
     this.userFormStateService.setInitialFormState(this.user);
   }
 
   public openModal(): void {
-    this.modalService.modalOpen();
+    this.userModalService.modalOpen();
   }
 
   public editModal(): void {
-    this.modalService.modalOpen();
+    this.openModal();
     this.userFormStateService.changeFormStatus(false);
     this.userFormStateService.setDefaultInitialFormState();
   }
@@ -87,5 +87,4 @@ export class UserTableComponent implements OnInit, OnChanges {
    this.cd.detectChanges();
    this.getAllUsers();
   }
-
 }

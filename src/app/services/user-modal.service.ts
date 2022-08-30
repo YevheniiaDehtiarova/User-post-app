@@ -5,19 +5,20 @@ import {Observable, BehaviorSubject} from 'rxjs';
   providedIn: 'root'
 })
 export class UserModalService {
-  public isModalDialogVisible: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+  public isModalDialog: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   public isAddingState: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
 
-  public getModalStatus(): Observable<boolean> {
-    return this.isModalDialogVisible.asObservable();
-  }
 
-  public modalClose(): void {
-    this.isModalDialogVisible.next(false);
+  public getModalStatus(): Observable<boolean> {
+    return this.isModalDialog.asObservable();
   }
 
   public modalOpen(): void {
-    this.isModalDialogVisible.next(true);
+    this.isModalDialog.next(true);
     this.isAddingState.next(false);
+  }
+
+  public modalClose(): void {
+    this.isModalDialog.next(false);
   }
 }

@@ -276,14 +276,8 @@
     {
       "userId": 6,
       "id": 51,
-      "title": "soluta aliquam aperiam consequatur illo quis voluptas",
-      "body": "sunt dolores aut doloribus\ndolore doloribus voluptates tempora et\ndoloremque et quo\ncum asperiores sit consectetur dolorem"
-    },
-    {
-      "userId": 6,
-      "id": 52,
-      "title": "qui enim et consequuntur quia animi quis voluptate quibusdam",
-      "body": "iusto est quibusdam fuga quas quaerat molestias\na enim ut sit accusamus enim\ntemporibus iusto accusantium provident architecto\nsoluta esse reprehenderit qui laborum"
+      "title": "sit asperiores ipsam eveniet odio non quiad123",
+      "body": "totam corporis dignissimos\nvitae dolorem ut occaecati accusamus\nex velit deserunt\net exercitationem vero incidunt corrupti mollitia"
     },
     {
       "userId": 6,
@@ -330,8 +324,8 @@
     {
       "userId": 6,
       "id": 60,
-      "title": "consequatur placeat omnis quisquam quia reprehenderit fugit veritatis facere",
-      "body": "asperiores sunt ab assumenda cumque modi velit\nqui esse omnis\nvoluptate et fuga perferendis voluptas\nillo ratione amet aut et omnis"
+      "title": "voluptatum itaque dolores nisi et quasi11111",
+      "body": "veniam voluptatum quae adipisci id\net id quia eos ad et dolorem\naliquam quo nisi sunt eos impedit error\nad similique veniam"
     },
     {
       "id": 101
@@ -2077,41 +2071,6 @@
       "body": "nihil esse aut\ndebitis nostrum mollitia similique minus aspernatur possimus\nomnis eaque non eveniet\nrerum qui iure laboriosam"
     },
     {
-      "postId": 52,
-      "id": 256,
-      "name": "tempore distinctio quam",
-      "email": "Carlee_Heathcote@harley.tv",
-      "body": "nemo deleniti sunt praesentium quis quam repellendus\nconsequatur non est ex fugiat distinctio aliquam explicabo\naspernatur omnis debitis sint consequatur\nquo autem natus veritatis"
-    },
-    {
-      "postId": 52,
-      "id": 257,
-      "name": "illum non quod vel voluptas quos",
-      "email": "Delpha_Cormier@raymond.org",
-      "body": "facere at voluptatem\nrepellendus omnis perspiciatis placeat aspernatur nobis blanditiis ut deleniti\nquis non cumque laborum sit id ratione vel sequi\nfacere doloremque beatae aut maxime non"
-    },
-    {
-      "postId": 52,
-      "id": 258,
-      "name": "omnis quia fugit nisi officiis aspernatur occaecati et",
-      "email": "Glenna@caesar.org",
-      "body": "aut cum sint qui facere blanditiis magnam consequuntur perspiciatis\nharum impedit reprehenderit iste doloribus quia quo facere\net explicabo aut voluptate modi dolorem\nrem aut nobis ut ad voluptatum ipsum eos maxime"
-    },
-    {
-      "postId": 52,
-      "id": 259,
-      "name": "animi minima ducimus tempore officiis qui",
-      "email": "Hoyt_Dickens@napoleon.ca",
-      "body": "itaque occaecati non aspernatur\nvelit repudiandae sit rerum esse quibusdam unde molestias\nexplicabo dolorem vero consequatur quis et libero\nvoluptatem totam vel sapiente autem dolorum consequuntur"
-    },
-    {
-      "postId": 52,
-      "id": 260,
-      "name": "qui dolore delectus et omnis quia",
-      "email": "Wendell.Marvin@maegan.net",
-      "body": "aliquid molestias nemo aut est maxime\nlaboriosam et consequatur laudantium\ncommodi et corrupti\nharum quasi minima ratione sint magni sapiente ut"
-    },
-    {
       "postId": 53,
       "id": 261,
       "name": "aut veritatis quasi voluptatem enim dolor soluta temporibus",
@@ -2395,7 +2354,7 @@
   "users": [
     {
       "id": 1,
-      "firstName": "Leanne1234",
+      "firstName": "Leanne",
       "lastName": "Graham",
       "username": "Bret",
       "email": "Sincere@april.biz",
@@ -2414,8 +2373,8 @@
     },
     {
       "id": 2,
-      "firstName": "Yevheniia1",
-      "lastName": "Dehtiarova2",
+      "firstName": "Yevheniia",
+      "lastName": "Dehtiarova",
       "username": "1",
       "email": "jeni4ka2509@gmail.com",
       "address": {
@@ -2505,6 +2464,25 @@
       "company": {
         "name": "8",
         "scope": "10"
+      }
+    },
+    {
+      "id": 7,
+      "firstName": "YEVHENIIA",
+      "lastName": "DEHTIAROVA",
+      "username": "77",
+      "email": "jeni4ka2509@gmail.com",
+      "address": {
+        "street": "9 Bolotnikova st.",
+        "building": "8",
+        "city": "Luhansk",
+        "zipcode": "61204-####"
+      },
+      "phone": "0661618617",
+      "website": "7",
+      "company": {
+        "name": "8",
+        "scope": "9"
       }
     }
   ],

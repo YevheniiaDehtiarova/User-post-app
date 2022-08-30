@@ -3,11 +3,12 @@ import { ActivatedRoute } from '@angular/router';
 import { Post } from 'src/app/models/post.interface';
 import { UserApiInterface } from 'src/app/models/user-api.interface';
 import { PostFormStateService } from 'src/app/services/post-form-state.service';
-import { PostModalService } from 'src/app/services/post-modal.service';
 import { PostService } from 'src/app/services/post.service';
 import { UserFormStateService } from 'src/app/services/user-form-state.service';
-import { UserModalService } from 'src/app/services/user-modal.service';
 import { UserService } from 'src/app/services/user.service';
+import { Location } from '@angular/common';
+import { UserModalService } from 'src/app/services/user-modal.service';
+import { PostModalService } from 'src/app/services/post-modal.service';
 
 @Component({
   selector: 'app-user-detail',
@@ -25,14 +26,15 @@ export class UserDetailComponent implements OnInit {
   public isModalDialogVisible: boolean;
   public isFormForEdit: boolean;
   public isModalAddDialogVisible: boolean;
+  public location: Location;
 
   constructor(
     private userService: UserService,
     private activateRoute: ActivatedRoute,
     private postService: PostService,
     private userModalService: UserModalService,
-    private userFormStateService: UserFormStateService,
     private postModalService: PostModalService,
+    private userFormStateService: UserFormStateService,
     private postFormStateService: PostFormStateService,
   ) {}
 
@@ -73,19 +75,23 @@ export class UserDetailComponent implements OnInit {
     });
   }
 
-  openUserModal(): void {
+  public openUserModal(): void {
     this.isModalDialogVisible = true;
     this.userModalService.modalOpen();
     this.isFormForEdit = true;
   }
 
   public goBack(): void {
+    this.location.back();
   }
 
-  public newPost(event: Post): void{
-    console.log(event);
+  public newPostCreated(event: Post): void{
     this.isModalAddDialogVisible = false;
     this.posts.push(event);
+  }
+
+  public newPostCanceled(event: boolean): void{
+    this.isModalAddDialogVisible = false;
   }
 
   public deletePost(event: boolean): void{
