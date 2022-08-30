@@ -10,42 +10,29 @@ import { PostService } from 'src/app/services/post.service';
   templateUrl: './post-form.component.html',
   styleUrls: ['./post-form.component.css']
 })
-export class PostFormComponent implements OnInit, OnChanges {
+export class PostFormComponent implements OnInit {
   @Input() post: Post;
   @Input() userId: string;
-  @Output() public updatePost = new EventEmitter<Post>();
-  @Output() public createPost = new EventEmitter<Post>();
-  @Output() public cancelCreatePost = new EventEmitter<boolean>();
+
   public postForm: FormGroup;
   public isPostModalDialogVisible: boolean;
   public isPostFormForEdit: boolean;
-  public updatedPost: Post;
-  public createdPost: Post;
-  public isFirstChanges = true;
-  private initialFormState: Post;
+  public isFirstChange: boolean = true;
 
   constructor(private postModalService: PostModalService,
-              private postFormStateService: PostFormStateService,
-              private postService: PostService) { }
+              private postFormStateService: PostFormStateService) { }
 
   ngOnInit(): void {
     this.postForm = new FormGroup({
       title: new FormControl(this.post?.title ?? '', Validators.required),
-      body: new FormControl(this.post?.body ?? '', [Validators.required]),
+      body: new FormControl(this.post?.body ?? '', Validators.required),
+      postId: new FormControl(this.post ? this.post.id : null)
     });
+  
     this.getModalStatus();
     this.getFormStatus();
-    this.getInitialFormState();
   }
 
-  ngOnChanges(changes: SimpleChanges): void {
-    if (this.isFirstChanges) {
-      this.isFirstChanges = false;
-      return;
-    } else {
-      this.postForm.setValue((this.post));
-    }
-  }
 
   private getModalStatus(): void {
     this.postModalService.getModalStatus().subscribe((isModalDialogVisible) => {
@@ -59,65 +46,4 @@ export class PostFormComponent implements OnInit, OnChanges {
       });
   }
 
-   private getInitialFormState(): void {
-    this.postFormStateService.getInitialFormState()
-      .subscribe((initState: Post) => {this.initialFormState = initState;});
-  }
-
-  public openModal(): void {
-    this.isPostModalDialogVisible = true;
-    this.postModalService.modalOpen();
-  }
-
-  public closeModal(): void {
-    this.postForm.reset();
-    this.postModalService.modalClose();
-    this.cancelCreatePost.emit(true);
-  }
-
-   public updateCurrentPost(): void{
-    const id = this.initialFormState.id as string;
-    const updatedPost = {
-      userId: this.initialFormState.userId,
-      id: this.initialFormState.id,
-      title: this.postForm.value.title,
-      body: this.postForm.value.body
-    }
-    if (this.isPostFormForEdit) {
-      this.postService.updatePost(id, updatedPost)
-        .subscribe((post) => {
-          this.updatedPost = post;
-          this.updatePost.emit(this.updatedPost);
-        });
-    }
-    this.postModalService.modalClose();
-   }
-
- public submit(): void{
-    if (this.postForm.valid) {
-      if (!this.isPostFormForEdit) {
-        const newPost: createdPost= {
-          userId: this.userId,
-          title: this.postForm.value.title,
-          body: this.postForm.value.body
-        }
-        this.postService.createPost(newPost)
-          .subscribe((post) => {
-            this.createdPost = post;
-            this.createPost.emit(this.createdPost);
-          });
-      }
-      this.clickAddPost();
-      this.postModalService.modalClose();
-      this.postForm.reset();
-    } else {
-      this.postForm.markAllAsTouched();
-    }
-  }
-
-  public clickAddPost(): void {
-    this.postForm.reset();
-    this.postFormStateService.changeFormStatus(false);
-    this.postFormStateService.setDefaultInitialFormState();
-  }
 }

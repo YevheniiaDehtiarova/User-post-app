@@ -9,6 +9,7 @@ import { UserService } from 'src/app/services/user.service';
 import { Location } from '@angular/common';
 import { UserModalService } from 'src/app/services/user-modal.service';
 import { PostModalService } from 'src/app/services/post-modal.service';
+import { DEFAULT_POST } from 'src/app/models/default-post';
 
 @Component({
   selector: 'app-user-detail',
@@ -22,11 +23,10 @@ export class UserDetailComponent implements OnInit {
   public user: UserApiInterface;
   public posts: Array<Post>;
   public post: Post;
-  public isOpenPostModal: boolean;
   public isModalDialogVisible: boolean;
   public isFormForEdit: boolean;
-  public isModalAddDialogVisible: boolean;
   public location: Location;
+  public isPostModalDialogVisible: boolean;
 
   constructor(
     private userService: UserService,
@@ -47,12 +47,19 @@ export class UserDetailComponent implements OnInit {
       this.posts = posts.filter((post) => post.userId == this.userId);
     });
     this.getUserModalStatus();
+    this.getPostModalStatus();
     this.getUserFormStatus();
   }
 
   private getUserModalStatus(): void {
     this.userModalService.getModalStatus().subscribe((isModalDialogVisible) => {
       this.isModalDialogVisible = isModalDialogVisible;
+    });
+  }
+
+  private getPostModalStatus(): void {
+    this.postModalService.getModalStatus().subscribe((isModalDialogVisible) => {
+      this.isPostModalDialogVisible = isModalDialogVisible;
     });
   }
 
@@ -63,10 +70,11 @@ export class UserDetailComponent implements OnInit {
   }
 
   public addPost(): void {
+    this.post = DEFAULT_POST;
     this.postModalService.modalOpen();
     this.postFormStateService.changeFormStatus(false);
     this.postFormStateService.setDefaultInitialFormState();
-    this.isModalAddDialogVisible = true;
+    this. isPostModalDialogVisible = true;
   }
 
   public updateUser(): void{
@@ -85,17 +93,7 @@ export class UserDetailComponent implements OnInit {
     this.location.back();
   }
 
-  public newPostCreated(event: Post): void{
-    this.isModalAddDialogVisible = false;
-    this.posts.push(event);
-  }
-
-  public newPostCanceled(event: boolean): void{
-    this.isModalAddDialogVisible = false;
-  }
-
   public deletePost(event: boolean): void{
-    console.log(event)
     if(event){
       this.postService.getAllPosts().subscribe((posts) => {
         this.posts = posts.filter((post) => post.userId == this.userId);

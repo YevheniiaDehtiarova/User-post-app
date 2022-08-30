@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { Post } from 'src/app/models/post.interface';
 import { PostFormStateService } from 'src/app/services/post-form-state.service';
 import { PostModalService } from 'src/app/services/post-modal.service';
@@ -15,10 +15,12 @@ export class PostComponent implements OnInit {
   @Input() post: Post;
   @Output() needUpdate = new EventEmitter<boolean>();
   public isPostModalDialogVisible: boolean = false;
+  public updatedPost: Post;
 
   constructor(private postModalService: PostModalService,
               private postFormStateService: PostFormStateService,
               private postService: PostService) {}
+
               
   ngOnInit(): void {
     this.getModalStatus();
@@ -36,11 +38,12 @@ export class PostComponent implements OnInit {
     this.postFormStateService.setDefaultInitialFormState();
   }
 
-  public editPost():void {
+  public editPost(post: Post):void {
     this.postModalService.modalOpen();
+    this.isPostModalDialogVisible = true;
     this.postFormStateService.changeFormStatus(true);
-    this.postFormStateService.setInitialFormState(this.post);
-    this.isPostModalDialogVisible = !this.isPostModalDialogVisible;
+    this.postFormStateService.setInitialFormState(post);
+    this.updatedPost = post;
   }
 
   public deletePost(): void {

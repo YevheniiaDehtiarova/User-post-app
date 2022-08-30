@@ -1,7 +1,7 @@
 <div class="post">
     <div class="post-info">
         <div class="btn-group">
-            <button kendoButton class="k-primary open-post-modal-btn" (click)="editPost()">Edit post</button>
+            <button kendoButton class="k-primary open-post-modal-btn" (click)="editPost(post)">Edit post</button>
             <button kendoButton icon="delete" [primary]="false" (click)="deletePost()">Delete post</button>
         </div>
         <h1>{{post.title}}</h1>
@@ -9,9 +9,17 @@
     </div>
 </div>
 
+<app-post-modal
+*ngIf="isPostModalDialogVisible"
+(updatePosts)="getUpdatedPost($event)"
+[post]="updatedPost"
+[userId]="post.userId">
+</app-post-modal>
 
-<app-post-form
+
+<!-- <app-post-form
+    *ngIf="isPostModalDialogVisible"
     (updatePost)="getUpdatedPost($event)"
     [post]="post"
     [userId]="post.userId"
-></app-post-form>
+></app-post-form> -->

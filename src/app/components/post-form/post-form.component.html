@@ -1,6 +1,6 @@
 
 <div class="form__container" *ngIf="isPostModalDialogVisible">
-    <form class="k-form" [formGroup]="postForm" (ngSubmit)="submit()">
+    <form class="k-form" [formGroup]="postForm">
       <kendo-formfield class="form-control">
         <kendo-label [for]="title" text="Enter title"></kendo-label>
         <input class="form-input" #title formControlName="title" kendoTextBox #UserName/>
@@ -21,10 +21,10 @@
           </div>
         </kendo-formfield>
 
-        <div class="button-container">
+        <!-- <div class="button-container">
           <button class="btn-add" type="submit" (click)="closeModal()">Cancel</button>
           <button *ngIf="!isPostFormForEdit" class="btn-add" (click)="submit()">Add Post</button>
           <button *ngIf="isPostFormForEdit" class="btn-add" (click)="updateCurrentPost()">Update Post</button>
-        </div>
+        </div> -->
     </form>
 </div>

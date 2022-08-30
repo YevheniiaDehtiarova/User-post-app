@@ -40,12 +40,10 @@
         </div>
         <div class="user-info_posts" *ngIf="posts && !isModalDialogVisible">
             <button kendoButton class="k-primary open-post-modal-btn" (click)="addPost()">Add post</button>
-            <ng-container *ngFor="let post of posts">
-              <app-post *ngIf="!isModalAddDialogVisible"
+              <app-post *ngFor="let post of posts"
               (needUpdate)="deletePost($event)"
               [post]="post">
               </app-post>
-            </ng-container>
         </div>
     </div>
 
@@ -54,8 +52,7 @@
 <app-user-form [user]="user" [isFormForEditDetails]="isFormForEdit" (update)="updateUser()">
 </app-user-form>
 
-<app-post-form *ngIf="user"
-(createPost)="newPostCreated($event)"
-(cancelCreatePost)="newPostCanceled($event)"
+<app-post-modal *ngIf="user && isPostModalDialogVisible"
+[post]="post"
 [userId]="user.id">
-</app-post-form>
+</app-post-modal>
