@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { map, Observable } from 'rxjs';
 import { createdPost, Post } from '../models/post.interface';
 import { postRoutes } from '../routes/post.routes';
 import { Comment } from '../models/comment.interface';
@@ -39,9 +39,19 @@ export class PostService {
     return this.http.delete<Post>(apiUrl);
   }
 
-  public getComments(): Observable<Array<Comment>>{
+  public getComments(): Observable<Array<Comment>> {
     const apiUrl = postRoutes.getComments;
 
-    return this.http.get<Array<Comment>>(apiUrl)
+    return this.http.get<Array<Comment>>(apiUrl);
+  }
+
+  public getCommentById(id: string): Observable<Array<Comment>> {
+    return this.getComments().pipe(
+      map((comments: Array<Comment>) => {
+        return comments.filter((comment: Comment) => {
+          return comment.postId == id;
+        });
+      })
+    );
   }
 }

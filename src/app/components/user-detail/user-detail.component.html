@@ -1,6 +1,9 @@
 <div *ngIf="user" class="container">
-    <button kendoButton class="k-primary" (click)="goBack()">Go to users</button>
-    <button kendoButton class="k-primary open-user-modal-btn" (click)="openUserModal()">Edit User</button>
+    <div class="button-container">
+        <button kendoButton class="btn-add" (click)="goBack()">Go to users</button>
+        <button kendoButton class="btn-add" (click)="openUserModal()">Edit User</button>  
+    </div>
+
     <div class="user-info">
         <div class="user-info_person">
             <h1>User Details</h1>
@@ -38,26 +41,12 @@
                 <span>{{ user.company.name }} {{ user.company.scope }}</span>
             </div>
         </div>
-        <div class="user-info_posts" *ngIf="posts">
-            <button kendoButton class="k-primary open-post-modal-btn" (click)="addPost()">Add post</button>
-              <app-post *ngFor="let post of posts"
-              (needUpdate)="deletePost($event)"
-              [post]="post">
-              </app-post>
-        </div>
+        <app-post [posts]="posts">
+        </app-post>
     </div>
 
 </div>
 
-<app-user-modal
-*ngIf="isUserModalDialogVisible"
- [user]="user"
- [isUserDetailFormEdit]="isUserDetailFormEdit"
- (updatingDetail)="updateUser($event)">
+<app-user-modal *ngIf="isUserModalDialogVisible" [user]="user" [isUserDetailFormEdit]="isUserDetailFormEdit"
+    (updatingDetail)="updateUser($event)">
 </app-user-modal>
-
-<app-post-modal *ngIf="user && isPostModalDialogVisible"
-(createPosts)="viewCreatedPost($event)"
-[post]="post"
-[userId]="user.id">
-</app-post-modal>

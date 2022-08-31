@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Post } from 'src/app/models/post.interface';
 
@@ -9,8 +9,9 @@ import { Post } from 'src/app/models/post.interface';
 })
 export class PostFormComponent implements OnInit {
   @Input() post: Post;
-  @Input() userId: string;
+  @Input('userId') userId: string;
   public postForm: FormGroup;
+  public isFirstChanges = true;
 
   ngOnInit(): void {
     this.postForm = new FormGroup({
@@ -19,4 +20,5 @@ export class PostFormComponent implements OnInit {
       postId: new FormControl(this.post ? this.post.id : null),
     });
   }
+
 }

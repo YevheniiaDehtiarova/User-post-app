@@ -1,18 +1,12 @@
-<kendo-dialog  *ngIf="user"
-    title="Update User"
-    (close)="closeModal()" 
-    [minWidth]="800" 
->
-<div style="height:800px; overflow:auto; padding:1.143em; margin:-1.143em;">
-    <app-user-form 
-       [user]="user"
-    ></app-user-form>
+<kendo-dialog *ngIf="user" title="Update User" (close)="closeModal()" [minWidth]="800">
+    <div style="height:800px; overflow:auto; padding:1.143em; margin:-1.143em;">
+        <app-user-form [user]="user"></app-user-form>
 
-    <div class="button-container">
-        <button class="btn-add" type="submit" (click)="closeModal()">Cancel</button>
-        <button *ngIf="!isUserDetailFormEdit && !isFormForEdit" class="btn-add" (click)="submit()">Add</button>
-        <button *ngIf="isFormForEdit || isUserDetailFormEdit" class="btn-add" (click)="updateSubmit()">Update</button>
-      </div>
+        <div class="button-container">
+            <button class="button" type="submit" (click)="closeModal()">Cancel</button>
+            <button *ngIf="!isUserDetailFormEdit && !isFormForEdit" class="button" (click)="submit()">Add</button>
+            <button *ngIf="isFormForEdit || isUserDetailFormEdit" class="button" (click)="updateSubmit()">Update</button>
+        </div>
     </div>
 
 </kendo-dialog>

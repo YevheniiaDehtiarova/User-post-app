@@ -7,10 +7,8 @@ import { Post } from '../models/post.interface';
   providedIn: 'root',
 })
 export class PostFormStateService {
-  private initialPostFormState: BehaviorSubject<Post> =
-    new BehaviorSubject<Post>(DEFAULT_POST);
-  private isPostFormForEdit: BehaviorSubject<boolean> =
-    new BehaviorSubject<boolean>(false);
+  private initialPostFormState: BehaviorSubject<Post> = new BehaviorSubject<Post>(DEFAULT_POST);
+  private isPostFormForEdit: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
 
   public getFormStatus(): Observable<boolean> {
     return this.isPostFormForEdit.asObservable();

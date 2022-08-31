@@ -16,11 +16,10 @@ import { UserApiInterface } from 'src/app/models/user-api.interface';
   styleUrls: ['./user-form.component.css'],
 })
 export class UserFormComponent implements OnInit {
-  @Input() user: UserApiInterface;
+  @Input('user') user: UserApiInterface;
   public userForm: FormGroup;
 
   ngOnInit(): void {
-    console.log(this.user);
     this.userForm = new FormGroup({
       id: new FormControl(this.user?.id ?? ''),
       firstName: new FormControl(this.user?.firstName ?? '', [Validators.required,]),

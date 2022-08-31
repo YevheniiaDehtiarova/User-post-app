@@ -1,4 +1,4 @@
-<kendo-dialog  *ngIf="post"
+<kendo-dialog *ngIf="post"
      title="Update Post"
     (close)="close()" 
     [minWidth]="600" 
@@ -8,9 +8,9 @@
         [userId]="userId"
     ></app-post-form>
 
-    <div class="k-actions k-actions-end">
-        <button type="button" class="k-button" (click)="close()">Cancel</button>
-        <button type="button" class="k-button k-primary" (click)="submit()">Update</button>
+    <div class="k-actions k-actions-end button-container">
+        <button type="button" class="k-button button" (click)="close()">Cancel</button>
+        <button type="button" class="k-button k-primary button" (click)="submit()">Update</button>
     </div>
 
 </kendo-dialog>

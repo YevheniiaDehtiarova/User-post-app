@@ -1,9 +1,9 @@
-import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { Post } from 'src/app/models/post.interface';
 import { PostModalService } from 'src/app/services/post-modal.service';
 import { PostService } from 'src/app/services/post.service';
 import { PostFormComponent } from '../post-form/post-form.component';
-import { take } from 'rxjs';
+import { Subscribable, Subscription, take } from 'rxjs';
 import { DEFAULT_POST } from 'src/app/models/default-post';
 
 @Component({
@@ -11,25 +11,39 @@ import { DEFAULT_POST } from 'src/app/models/default-post';
   templateUrl: './post-modal.component.html',
   styleUrls: ['./post-modal.component.css']
 })
-export class PostModalComponent implements OnInit {
-  @Input() post: Post;
-  @Input() userId: string;
+export class PostModalComponent implements OnInit, OnDestroy {
+  @Input('post') post: Post;
+  @Input('userId') userId: string;
+  @Input() posts: Array<Post>;
   @Output() updatePosts = new EventEmitter<Post>();
   @Output() createPosts = new EventEmitter<Post>();
   public postLength: number;
+  public isFirstChanges = true;
+  public updatedPost: Post;
+  public getAllPostSubscription: Subscription;
 
   @ViewChild(PostFormComponent) public postFormComponent: PostFormComponent;
 
   constructor( public postModalService: PostModalService,
-               public postService: PostService) { }
+               public postService: PostService, 
+               public cd: ChangeDetectorRef) { }
+
+  ngOnDestroy(): void {
+    this.getAllPostSubscription.unsubscribe();
+  }
+
 
   ngOnInit(): void {
-    !this.post ? this.postService.getAllPosts().pipe(take(1)).subscribe((posts: Post[]) => this.postLength = posts.length) : null;
+    this.getAllPostSubscription = this.postService.getAllPosts().pipe(take(1)).subscribe((posts: Post[]) => this.postLength = posts.length);
+    !this.post ? this.getAllPostSubscription : null;
   }
+
 
   public close(): void {
     this.postModalService.modalClose();
+    this.postFormComponent.postForm.reset(); 
   }
+
   public submit(): void{
     if(this.postFormComponent.postForm.valid) {
       const post: Post = {

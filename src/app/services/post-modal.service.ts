@@ -18,6 +18,5 @@ export class PostModalService {
 
   public modalOpen(): void {
     this.isModalDialogVisible.next(true);
-    //this.isAddingState.next(false);
   }
 }

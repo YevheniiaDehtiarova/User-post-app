@@ -8,7 +8,7 @@ import { userRoutes } from '../routes/user.routes';
 export class UserService {
   constructor(private http: HttpClient) {}
 
-  public getUsers(): Observable<Array<UserApiInterface>> {
+  public getAllUsers(): Observable<Array<UserApiInterface>> {
     const apiUrl = userRoutes.getUsers;
 
     return this.http.get<Array<UserApiInterface>>(apiUrl);

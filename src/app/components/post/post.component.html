@@ -1,29 +1,29 @@
-<div class="post">
-    <div class="post-info">
-        <div class="btn-group">
-            <button kendoButton class="k-primary open-post-modal-btn" (click)="editPost(post)">Edit post</button>
-            <button kendoButton icon="delete" [primary]="false" (click)="deletePost()">Delete post</button>
+<div class="user-info_posts" *ngIf="posts.length > 0">
+    <button kendoButton class="k-primary open-post-modal-btn" (click)="addPost()">Add post</button>
+    <div class="post" *ngFor="let post of posts">
+        <div class="post-info">
+            <div class="button-container">
+                <button kendoButton class="k-primary button open-post-modal-btn" (click)="editPost(post)">Edit
+                    post</button>
+                <button kendoButton class="button" icon="delete" [primary]="false" (click)="deletePost(post)">Delete
+                    post</button>
+            </div>
+            <h2>{{post.title}}</h2>
+            <p>{{post.body}}</p>
         </div>
-        <h1>{{post.title}}</h1>
-        <p>{{post.body}}</p>
-    </div>
 
-<div class="comments" *ngIf="comments$ | async as comments">
-    <button kendoButton [primary]="true" (click)="showHideComments()" class="comments-btn">
-        <span *ngIf="!showComments">show comments</span>
-        <span class="hide-comments-btn" *ngIf="showComments">hide comments</span>
-    </button>
-    <div *ngIf="showComments">
-        <app-comment *ngFor="let comment of comments" [comment]="comment"></app-comment>
+        <div class="comments" *ngIf="post.comments">
+            <button kendoButton [primary]="true" (click)="showHideComments()" class="comments-btn">
+                <span *ngIf="!showComments">show comments</span>
+                <span class="hide-comments-btn" *ngIf="showComments">hide comments</span>
+            </button>
+            <div *ngIf="showComments">
+                <app-comment *ngFor="let comment of post.comments" [comment]="comment"></app-comment>
+            </div>
+        </div>
     </div>
 </div>
-</div>
 
-
-<app-post-modal
-*ngIf="isPostModalDialogVisible"
-(updatePosts)="viewUpdatedPost($event)"
-[post]="updatedPost"
-[userId]="post.userId">
+<app-post-modal *ngIf="isPostModalDialogVisible" (updatePosts)="viewUpdatedPost($event)"
+    (createPosts)="viewCreatedPost($event)" [posts]="posts" [post]="post" [userId]="userId">
 </app-post-modal>
-

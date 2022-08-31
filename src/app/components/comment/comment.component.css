@@ -1,0 +1,12 @@
+.comment{
+    margin: 10px;
+    padding: 10px;
+    border: 1px solid #ff6358;
+    border-radius: 4px;
+}
+h4{
+    text-align: center;
+}
+span{
+    font-weight: bold;
+}

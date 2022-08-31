@@ -1,7 +1,8 @@
-import { ChangeDetectorRef, Component,EventEmitter,Input,OnChanges,OnInit, Output, SimpleChanges } from '@angular/core';
+import { ChangeDetectorRef, Component,EventEmitter,Input,OnChanges,OnDestroy,OnInit, Output, SimpleChanges } from '@angular/core';
 import { Router } from '@angular/router';
 import { ButtonRounded } from '@progress/kendo-angular-buttons';
 import { CellClickEvent } from '@progress/kendo-angular-grid';
+import { Subscription } from 'rxjs';
 import { UserMapper } from 'src/app/mappers/user.mapper';
 import { DEFAULT_USER } from 'src/app/models/default-user';
 import { UserApiInterface } from 'src/app/models/user-api.interface';
@@ -15,12 +16,14 @@ import { UserService } from 'src/app/services/user.service';
   templateUrl: './user-table.component.html',
   styleUrls: ['./user-table.component.css'],
 })
-export class UserTableComponent implements OnInit {
+export class UserTableComponent implements OnInit, OnDestroy {
   public users: Array<UserTableInterface> = [];
   public usersFromApi: Array<UserApiInterface> = [];
   public user: UserApiInterface;
   public rounded: ButtonRounded = 'medium';
   public isUserModalDialogVisible: boolean;
+  public userModalStatusSubscription: Subscription;
+  public getAllUserSubscription: Subscription;
 
   constructor(
     private userService: UserService,
@@ -31,19 +34,24 @@ export class UserTableComponent implements OnInit {
     private router: Router
   ) {}
 
+  ngOnDestroy(): void {
+    this.userModalStatusSubscription.unsubscribe();
+    this.getAllUserSubscription.unsubscribe();
+  }
+
   public ngOnInit(): void {
     this.getAllUsers();
     this.getModalStatus();
   }
 
   private getModalStatus(): void {
-    this.userModalService.getModalStatus().subscribe((isModalDialogVisible) => {
+    this.userModalStatusSubscription = this.userModalService.getModalStatus().subscribe((isModalDialogVisible) => {
       this.isUserModalDialogVisible = isModalDialogVisible;
     });
   }
 
   public getAllUsers(): void {
-    this.userService.getUsers().subscribe((users: Array<UserApiInterface>) => {
+   this.getAllUserSubscription =  this.userService.getAllUsers().subscribe((users: Array<UserApiInterface>) => {
       this.users = this.userMapper.mapToViewModel(users);
       this.usersFromApi = users;
     });
@@ -61,11 +69,10 @@ export class UserTableComponent implements OnInit {
 
   public openModal(): void {
     this.userModalService.modalOpen();
-    console.log(this.isUserModalDialogVisible)
   }
 
   public addUser(): void {
-    this.user= this.userMapper.mapToCreateUpdateDto(DEFAULT_USER);
+    this.user = this.userMapper.mapToCreateUpdateDto(DEFAULT_USER);
     this.openModal();
     this.userFormStateService.changeFormStatus(false);
   }
