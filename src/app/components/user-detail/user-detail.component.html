@@ -53,6 +53,7 @@
 </app-user-form>
 
 <app-post-modal *ngIf="user && isPostModalDialogVisible"
+(createPosts)="getCreatedPost($event)"
 [post]="post"
 [userId]="user.id">
 </app-post-modal>

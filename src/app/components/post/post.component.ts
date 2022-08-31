@@ -17,11 +17,12 @@ export class PostComponent implements OnInit {
   public isPostModalDialogVisible: boolean = false;
   public updatedPost: Post;
 
-  constructor(private postModalService: PostModalService,
-              private postFormStateService: PostFormStateService,
-              private postService: PostService) {}
+  constructor(
+    private postModalService: PostModalService,
+    private postFormStateService: PostFormStateService,
+    private postService: PostService
+  ) {}
 
-              
   ngOnInit(): void {
     this.getModalStatus();
   }
@@ -30,7 +31,7 @@ export class PostComponent implements OnInit {
     this.postModalService.getModalStatus().subscribe((isModalDialogVisible) => {
       this.isPostModalDialogVisible = isModalDialogVisible;
     });
-  }          
+  }
 
   public addPost(): void {
     this.postModalService.modalOpen();
@@ -38,7 +39,7 @@ export class PostComponent implements OnInit {
     this.postFormStateService.setDefaultInitialFormState();
   }
 
-  public editPost(post: Post):void {
+  public editPost(post: Post): void {
     this.postModalService.modalOpen();
     this.isPostModalDialogVisible = true;
     this.postFormStateService.changeFormStatus(true);
@@ -47,11 +48,9 @@ export class PostComponent implements OnInit {
   }
 
   public deletePost(): void {
-    this.postService.deletePost(this.post.id).subscribe(
-       data => {
-        this.needUpdate.emit(true)
-       }
-    )
+    this.postService.deletePost(this.post.id).subscribe((data) => {
+      this.needUpdate.emit(true);
+    });
   }
 
   getUpdatedPost(event: Post): void {

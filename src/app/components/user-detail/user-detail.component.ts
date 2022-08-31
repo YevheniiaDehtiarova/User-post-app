@@ -100,4 +100,8 @@ export class UserDetailComponent implements OnInit {
       });
     }
   }
+
+  getCreatedPost(event: Post): void {
+    this.posts.push(event);
+  }
 }
