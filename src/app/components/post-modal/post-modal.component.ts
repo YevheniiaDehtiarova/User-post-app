@@ -3,7 +3,7 @@ import { Post } from 'src/app/models/post.interface';
 import { PostModalService } from 'src/app/services/post-modal.service';
 import { PostService } from 'src/app/services/post.service';
 import { PostFormComponent } from '../post-form/post-form.component';
-import { Subscribable, Subscription, take } from 'rxjs';
+import { Subscription, take } from 'rxjs';
 import { DEFAULT_POST } from 'src/app/models/default-post';
 
 @Component({
@@ -18,7 +18,6 @@ export class PostModalComponent implements OnInit, OnDestroy {
   @Output() updatePosts = new EventEmitter<Post>();
   @Output() createPosts = new EventEmitter<Post>();
   public postLength: number;
-  public isFirstChanges = true;
   public updatedPost: Post;
   public getAllPostSubscription: Subscription;
 

@@ -11,7 +11,6 @@ export class PostFormComponent implements OnInit {
   @Input() post: Post;
   @Input('userId') userId: string;
   public postForm: FormGroup;
-  public isFirstChanges = true;
 
   ngOnInit(): void {
     this.postForm = new FormGroup({
