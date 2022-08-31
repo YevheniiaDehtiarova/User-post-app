@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { createdPost, Post } from '../models/post.interface';
 import { postRoutes } from '../routes/post.routes';
+import { Comment } from '../models/comment.interface';
 
 @Injectable()
 export class PostService {
@@ -36,5 +37,11 @@ export class PostService {
     const apiUrl = postRoutes.delete.replace('${id}', id);
 
     return this.http.delete<Post>(apiUrl);
+  }
+
+  public getComments(): Observable<Array<Comment>>{
+    const apiUrl = postRoutes.getComments;
+
+    return this.http.get<Array<Comment>>(apiUrl)
   }
 }

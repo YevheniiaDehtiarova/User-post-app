@@ -25,6 +25,7 @@ import { PostFormStateService } from './services/post-form-state.service';
 import { PostFormComponent } from './components/post-form/post-form.component';
 import { UserModalService } from './services/user-modal.service';
 import { PostModalComponent } from './components/post-modal/post-modal.component';
+import { CommentComponent } from './components/comment/comment.component';
 
 @NgModule({
   declarations: [
@@ -34,7 +35,8 @@ import { PostModalComponent } from './components/post-modal/post-modal.component
     UserDetailComponent,
     PostComponent,
     PostFormComponent,
-    PostModalComponent
+    PostModalComponent,
+    CommentComponent
   ],
   imports: [
     BrowserModule,

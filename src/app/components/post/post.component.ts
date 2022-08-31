@@ -1,8 +1,9 @@
 import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
+import { map, Observable } from 'rxjs';
 import { Post } from 'src/app/models/post.interface';
 import { PostFormStateService } from 'src/app/services/post-form-state.service';
 import { PostModalService } from 'src/app/services/post-modal.service';
-
+import { Comment } from 'src/app/models/comment.interface'
 import { PostService } from 'src/app/services/post.service';
 
 
@@ -14,8 +15,10 @@ import { PostService } from 'src/app/services/post.service';
 export class PostComponent implements OnInit {
   @Input() post: Post;
   @Output() needUpdate = new EventEmitter<boolean>();
+  public comments$: Observable<Array<Comment>>;
   public isPostModalDialogVisible: boolean = false;
   public updatedPost: Post;
+  public showComments: boolean = false;
 
   constructor(
     private postModalService: PostModalService,
@@ -24,7 +27,15 @@ export class PostComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    console.log(this.post);
     this.getModalStatus();
+    this.comments$ = this.postService.getComments().pipe(
+      map((comments) => {
+        return comments.filter((comment: Comment) => {
+          return comment.postId == this.post.id;
+        });
+      })
+    );
   }
 
   public getModalStatus(): void {
@@ -55,5 +66,9 @@ export class PostComponent implements OnInit {
 
   getUpdatedPost(event: Post): void {
     this.post = event;
+  }
+
+  public showHideComments(): void {
+    this.showComments = !this.showComments;
   }
 }

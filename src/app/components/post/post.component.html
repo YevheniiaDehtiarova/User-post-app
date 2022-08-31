@@ -7,7 +7,18 @@
         <h1>{{post.title}}</h1>
         <p>{{post.body}}</p>
     </div>
+
+<div class="comments" *ngIf="comments$ | async as comments">
+    <button kendoButton [primary]="true" (click)="showHideComments()" class="comments-btn">
+        <span *ngIf="!showComments">show comments</span>
+        <span class="hide-comments-btn" *ngIf="showComments">hide comments</span>
+    </button>
+    <div *ngIf="showComments">
+        <app-comment *ngFor="let comment of comments" [comment]="comment"></app-comment>
+    </div>
 </div>
+</div>
+
 
 <app-post-modal
 *ngIf="isPostModalDialogVisible"
