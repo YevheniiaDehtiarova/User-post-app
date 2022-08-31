@@ -1,22 +1,22 @@
 
-<div class="form__container" *ngIf="isPostModalDialogVisible">
+<div class="form__container">
     <form class="k-form" [formGroup]="postForm">
       <kendo-formfield class="form-control">
         <kendo-label [for]="title" text="Enter title"></kendo-label>
         <input class="form-input" #title formControlName="title" kendoTextBox #UserName/>
         <div *ngIf="postForm.get('title')?.invalid && postForm.get('title')?.touched" class="validation">
           <small *ngIf="postForm.get('title')?.errors?.['required']">
-            title couldn't be empty
+            Title couldn't be empty
           </small>
         </div>
       </kendo-formfield>
   
       <kendo-formfield class="form-control">
-          <kendo-label [for]="body" text="Enter body"></kendo-label>
+          <kendo-label [for]="body" text="Enter description"></kendo-label>
           <input class="form-input" #body formControlName="body" kendoTextBox #UserName/>
           <div *ngIf="postForm.get('body')?.invalid && postForm.get('body')?.touched" class="validation">
             <small *ngIf="postForm.get('body')?.errors?.['required']">
-              body couldn't be empty
+              Description couldn't be empty
             </small>
           </div>
         </kendo-formfield>

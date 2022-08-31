@@ -16,7 +16,7 @@ export class PostModalComponent implements OnInit {
   @Input() userId: string;
   @Output() updatePosts = new EventEmitter<Post>();
   @Output() createPosts = new EventEmitter<Post>();
-  public postsLength: number;
+  public postLength: number;
 
   @ViewChild(PostFormComponent) public postFormComponent: PostFormComponent;
 
@@ -24,7 +24,7 @@ export class PostModalComponent implements OnInit {
                public postService: PostService) { }
 
   ngOnInit(): void {
-    !this.post ? this.postService.getAllPosts().pipe(take(1)).subscribe((posts: Post[]) => this.postsLength = posts.length) : null;
+    !this.post ? this.postService.getAllPosts().pipe(take(1)).subscribe((posts: Post[]) => this.postLength = posts.length) : null;
   }
 
   public close(): void {
@@ -33,7 +33,7 @@ export class PostModalComponent implements OnInit {
   public submit(): void{
     if(this.postFormComponent.postForm.valid) {
       const post: Post = {
-        id: this.postFormComponent.postForm.value.postId ? this.postFormComponent.postForm.value.postId : this.postsLength + 1,
+        id: this.postFormComponent.postForm.value.postId ? this.postFormComponent.postForm.value.postId : this.postLength + 1,
         userId:  this.userId,
         title: this.postFormComponent.postForm.value.title,
         body: this.postFormComponent.postForm.value.body,

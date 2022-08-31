@@ -24,10 +24,6 @@ export class PostFormStateService {
     this.initialPostFormState.next(initState);
   }
 
-  public setDefaultInitialFormState(): void {
-    this.initialPostFormState.next(DEFAULT_POST);
-  }
-
   public changeFormStatus(status: boolean): void {
     this.isPostFormForEdit.next(status);
   }

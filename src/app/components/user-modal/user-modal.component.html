@@ -10,7 +10,7 @@
 
     <div class="button-container">
         <button class="btn-add" type="submit" (click)="closeModal()">Cancel</button>
-        <button *ngIf="!isUserDetailFormEdit" class="btn-add" (click)="submit()">Add</button>
+        <button *ngIf="!isUserDetailFormEdit && !isFormForEdit" class="btn-add" (click)="submit()">Add</button>
         <button *ngIf="isFormForEdit || isUserDetailFormEdit" class="btn-add" (click)="updateSubmit()">Update</button>
       </div>
     </div>

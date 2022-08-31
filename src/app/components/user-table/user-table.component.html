@@ -1,9 +1,9 @@
-<button kendoButton class="k-primary open-user-modal-btn" (click)="addUser()" (click)="openModal()">Add user</button>
 
+<div>
+  <button kendoButton class="k-primary open-user-modal-btn" (click)="addUser()">Add user</button>
 <kendo-grid
   [data]="users"
   (edit)="editUser($event.dataItem)"
-  (add)="addUser()"
   (cellClick)="cellClickHandler($event)"
   (dblclick)="doubleClick()">
 
@@ -21,6 +21,7 @@
     </ng-template>
   </kendo-grid-command-column>
 </kendo-grid>
+</div>
 
 <app-user-modal
 *ngIf="isUserModalDialogVisible"

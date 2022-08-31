@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { ButtonRounded } from '@progress/kendo-angular-buttons';
 import { CellClickEvent } from '@progress/kendo-angular-grid';
 import { UserMapper } from 'src/app/mappers/user.mapper';
+import { DEFAULT_USER } from 'src/app/models/default-user';
 import { UserApiInterface } from 'src/app/models/user-api.interface';
 import { UserTableInterface } from 'src/app/models/user-table.interface';
 import { UserFormStateService } from 'src/app/services/user-form-state.service';
@@ -14,12 +15,12 @@ import { UserService } from 'src/app/services/user.service';
   templateUrl: './user-table.component.html',
   styleUrls: ['./user-table.component.css'],
 })
-export class UserTableComponent implements OnInit, OnChanges {
+export class UserTableComponent implements OnInit {
   public users: Array<UserTableInterface> = [];
   public usersFromApi: Array<UserApiInterface> = [];
   public user: UserApiInterface;
   public rounded: ButtonRounded = 'medium';
-  public isUserModalDialogVisible: boolean = false;
+  public isUserModalDialogVisible: boolean;
 
   constructor(
     private userService: UserService,
@@ -41,11 +42,6 @@ export class UserTableComponent implements OnInit, OnChanges {
     });
   }
 
-  public ngOnChanges(changes: SimpleChanges): void {
-    this.cd.detectChanges();
-    this.getAllUsers();
-  }
-
   public getAllUsers(): void {
     this.userService.getUsers().subscribe((users: Array<UserApiInterface>) => {
       this.users = this.userMapper.mapToViewModel(users);
@@ -59,27 +55,22 @@ export class UserTableComponent implements OnInit, OnChanges {
     ) as UserApiInterface;
 
     this.openModal();
-    this.isUserModalDialogVisible = true;
     this.userFormStateService.changeFormStatus(true);
     this.userFormStateService.setInitialFormState(this.user);
   }
 
   public openModal(): void {
     this.userModalService.modalOpen();
+    console.log(this.isUserModalDialogVisible)
   }
 
   public addUser(): void {
-    console.log(this.isUserModalDialogVisible);
+    this.user= this.userMapper.mapToCreateUpdateDto(DEFAULT_USER);
     this.openModal();
-    this.isUserModalDialogVisible = true;
     this.userFormStateService.changeFormStatus(false);
-    this.userFormStateService.setDefaultInitialFormState();
-    this.isUserModalDialogVisible = true;
-    console.log(this.isUserModalDialogVisible);
   }
 
   public doubleClick(): void {
-    console.log(this.user)
     this.router.navigate(['/user-detail', this.user.id]);
   }
   
@@ -93,7 +84,6 @@ export class UserTableComponent implements OnInit, OnChanges {
   }
 
   public createUser(event: UserApiInterface): void {
-   console.log(event);
    this.cd.detectChanges();
    this.getAllUsers();
   }

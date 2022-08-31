@@ -1,7 +1,4 @@
-<button (click)="clickAddUser()" *ngIf="!isUserModalDialogVisible" type="button" class="btn-add btn-add__main" (click)="openModal()">Add user
-</button>
-
-<div class="form__container" *ngIf="isUserModalDialogVisible">
+<div class="form__container">
   <form class="k-form" [formGroup]="userForm">
     <kendo-formfield class="form-control">
       <kendo-label [for]="firstName" text="Enter Firstname"></kendo-label>

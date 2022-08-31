@@ -46,7 +46,6 @@ export class PostComponent implements OnInit {
   public addPost(): void {
     this.postModalService.modalOpen();
     this.postFormStateService.changeFormStatus(false);
-    this.postFormStateService.setDefaultInitialFormState();
   }
 
   public editPost(post: Post): void {
@@ -63,7 +62,7 @@ export class PostComponent implements OnInit {
     });
   }
 
-  getUpdatedPost(event: Post): void {
+  public viewUpdatedPost(event: Post): void {
     this.post = event;
   }
 

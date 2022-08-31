@@ -25,7 +25,6 @@ export class UserDetailComponent implements OnInit {
   public post: Post;
   public isFormForEdit: boolean;
   public isUserDetailFormEdit: boolean;
-  public location: Location;
   public isPostModalDialogVisible: boolean;
   public isUserModalDialogVisible: boolean;
 
@@ -37,6 +36,7 @@ export class UserDetailComponent implements OnInit {
     private postModalService: PostModalService,
     private userFormStateService: UserFormStateService,
     private postFormStateService: PostFormStateService,
+    private location: Location
   ) {}
 
   ngOnInit(): void {
@@ -67,15 +67,14 @@ export class UserDetailComponent implements OnInit {
   private getUserFormStatus(): void {
     this.userFormStateService.getFormStatus().subscribe((isFormForEdit: boolean) => {
         this.isFormForEdit = isFormForEdit;
-        console.log(this.isFormForEdit)
+
       });
   }
 
   public addPost(): void {
     this.post = DEFAULT_POST;
     this.postModalService.modalOpen();
-    this.postFormStateService.changeFormStatus(false);
-    this.postFormStateService.setDefaultInitialFormState();
+    this.postFormStateService.changeFormStatus(false);;
     this. isPostModalDialogVisible = true;
   }
 
@@ -104,7 +103,7 @@ export class UserDetailComponent implements OnInit {
     }
   }
 
-  getCreatedPost(event: Post): void {
+  public viewCreatedPost(event: Post): void {
     this.posts.push(event);
   }
 }

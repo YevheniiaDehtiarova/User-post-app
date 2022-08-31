@@ -1,5 +1,5 @@
 <div *ngIf="user" class="container">
-    <button kendoButton class="k-primary" (click)="goBack()">Go back</button>
+    <button kendoButton class="k-primary" (click)="goBack()">Go to users</button>
     <button kendoButton class="k-primary open-user-modal-btn" (click)="openUserModal()">Edit User</button>
     <div class="user-info">
         <div class="user-info_person">
@@ -53,11 +53,11 @@
 *ngIf="isUserModalDialogVisible"
  [user]="user"
  [isUserDetailFormEdit]="isUserDetailFormEdit"
-  (updatingDetail)="updateUser($event)">
+ (updatingDetail)="updateUser($event)">
 </app-user-modal>
 
 <app-post-modal *ngIf="user && isPostModalDialogVisible"
-(createPosts)="getCreatedPost($event)"
+(createPosts)="viewCreatedPost($event)"
 [post]="post"
 [userId]="user.id">
 </app-post-modal>
