@@ -15,13 +15,11 @@ import { UserService } from 'src/app/services/user.service';
   styleUrls: ['./user-table.component.css'],
 })
 export class UserTableComponent implements OnInit, OnChanges {
-  public updatedUser: UserApiInterface;
-  public createdUser: UserApiInterface;
-
   public users: Array<UserTableInterface> = [];
   public usersFromApi: Array<UserApiInterface> = [];
   public user: UserApiInterface;
   public rounded: ButtonRounded = 'medium';
+  public isUserModalDialogVisible: boolean = false;
 
   constructor(
     private userService: UserService,
@@ -34,6 +32,13 @@ export class UserTableComponent implements OnInit, OnChanges {
 
   public ngOnInit(): void {
     this.getAllUsers();
+    this.getModalStatus();
+  }
+
+  private getModalStatus(): void {
+    this.userModalService.getModalStatus().subscribe((isModalDialogVisible) => {
+      this.isUserModalDialogVisible = isModalDialogVisible;
+    });
   }
 
   public ngOnChanges(changes: SimpleChanges): void {
@@ -48,12 +53,13 @@ export class UserTableComponent implements OnInit, OnChanges {
     });
   }
 
-  public onEdit(dataItem: UserTableInterface): void {
+  public editUser(dataItem: UserTableInterface): void {
     this.user = this.usersFromApi?.find(
       (user) => Number(user.id) === dataItem.id
     ) as UserApiInterface;
 
     this.openModal();
+    this.isUserModalDialogVisible = true;
     this.userFormStateService.changeFormStatus(true);
     this.userFormStateService.setInitialFormState(this.user);
   }
@@ -62,28 +68,32 @@ export class UserTableComponent implements OnInit, OnChanges {
     this.userModalService.modalOpen();
   }
 
-  public editModal(): void {
+  public addUser(): void {
+    console.log(this.isUserModalDialogVisible);
     this.openModal();
+    this.isUserModalDialogVisible = true;
     this.userFormStateService.changeFormStatus(false);
     this.userFormStateService.setDefaultInitialFormState();
+    this.isUserModalDialogVisible = true;
+    console.log(this.isUserModalDialogVisible);
   }
 
   public doubleClick(): void {
+    console.log(this.user)
     this.router.navigate(['/user-detail', this.user.id]);
   }
-
+  
   public cellClickHandler(cellData: CellClickEvent) {
     this.user = cellData.dataItem;
   }
 
   public updateUser(event: UserApiInterface): void {
-    this.updatedUser = event;
     this.cd.detectChanges();
     this.getAllUsers();
   }
 
   public createUser(event: UserApiInterface): void {
-   this.createdUser = event;
+   console.log(event);
    this.cd.detectChanges();
    this.getAllUsers();
   }

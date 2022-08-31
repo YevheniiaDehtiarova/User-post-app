@@ -38,7 +38,7 @@
                 <span>{{ user.company.name }} {{ user.company.scope }}</span>
             </div>
         </div>
-        <div class="user-info_posts" *ngIf="posts && !isModalDialogVisible">
+        <div class="user-info_posts" *ngIf="posts">
             <button kendoButton class="k-primary open-post-modal-btn" (click)="addPost()">Add post</button>
               <app-post *ngFor="let post of posts"
               (needUpdate)="deletePost($event)"
@@ -49,8 +49,12 @@
 
 </div>
 
-<app-user-form [user]="user" [isFormForEditDetails]="isFormForEdit" (update)="updateUser()">
-</app-user-form>
+<app-user-modal
+*ngIf="isUserModalDialogVisible"
+ [user]="user"
+ [isUserDetailFormEdit]="isUserDetailFormEdit"
+  (updatingDetail)="updateUser($event)">
+</app-user-modal>
 
 <app-post-modal *ngIf="user && isPostModalDialogVisible"
 (createPosts)="getCreatedPost($event)"

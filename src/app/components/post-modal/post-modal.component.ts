@@ -21,7 +21,7 @@ export class PostModalComponent implements OnInit {
   @ViewChild(PostFormComponent) public postFormComponent: PostFormComponent;
 
   constructor( public postModalService: PostModalService,
-              public postService: PostService) { }
+               public postService: PostService) { }
 
   ngOnInit(): void {
     !this.post ? this.postService.getAllPosts().pipe(take(1)).subscribe((posts: Post[]) => this.postsLength = posts.length) : null;

@@ -23,10 +23,11 @@ export class UserDetailComponent implements OnInit {
   public user: UserApiInterface;
   public posts: Array<Post>;
   public post: Post;
-  public isModalDialogVisible: boolean;
   public isFormForEdit: boolean;
+  public isUserDetailFormEdit: boolean;
   public location: Location;
   public isPostModalDialogVisible: boolean;
+  public isUserModalDialogVisible: boolean;
 
   constructor(
     private userService: UserService,
@@ -53,7 +54,7 @@ export class UserDetailComponent implements OnInit {
 
   private getUserModalStatus(): void {
     this.userModalService.getModalStatus().subscribe((isModalDialogVisible) => {
-      this.isModalDialogVisible = isModalDialogVisible;
+      this.isUserModalDialogVisible = isModalDialogVisible;
     });
   }
 
@@ -66,6 +67,7 @@ export class UserDetailComponent implements OnInit {
   private getUserFormStatus(): void {
     this.userFormStateService.getFormStatus().subscribe((isFormForEdit: boolean) => {
         this.isFormForEdit = isFormForEdit;
+        console.log(this.isFormForEdit)
       });
   }
 
@@ -77,16 +79,17 @@ export class UserDetailComponent implements OnInit {
     this. isPostModalDialogVisible = true;
   }
 
-  public updateUser(): void{
-    this.userService.getUser(this.userId).subscribe((user) => {
+  public updateUser(event: UserApiInterface): void{
+    this.userService.getUser(event.id).subscribe((user) => {
       this.user = user;
     });
   }
 
   public openUserModal(): void {
-    this.isModalDialogVisible = true;
+    this.isUserModalDialogVisible = true;
     this.userModalService.modalOpen();
     this.isFormForEdit = true;
+    this.isUserDetailFormEdit = true;
   }
 
   public goBack(): void {

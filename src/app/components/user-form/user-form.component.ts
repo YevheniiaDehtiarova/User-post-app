@@ -1,6 +1,5 @@
 import {
   Component,
-  EventEmitter,
   Input,
   OnChanges,
   OnInit,
@@ -13,7 +12,6 @@ import { UserApiInterface } from 'src/app/models/user-api.interface';
 import { UserTableInterface } from 'src/app/models/user-table.interface';
 import { UserFormStateService } from 'src/app/services/user-form-state.service';
 import { UserModalService } from 'src/app/services/user-modal.service';
-import { UserService } from 'src/app/services/user.service';
 
 @Component({
   selector: 'app-user-form',
@@ -22,30 +20,20 @@ import { UserService } from 'src/app/services/user.service';
 })
 export class UserFormComponent implements OnInit, OnChanges {
   @Input() user: UserApiInterface;
-  @Input() isFormForEditDetails: boolean;
-  @Output() update: EventEmitter<UserApiInterface> = new EventEmitter<UserApiInterface>();
-  @Output() create: EventEmitter<UserApiInterface> = new EventEmitter<UserApiInterface>();
 
-  public isModalDialogVisible: boolean;
+  public isUserModalDialogVisible: boolean;
   public users: Array<UserTableInterface>;
   public userForm: FormGroup;
-  public updatedUser: UserApiInterface;
-  public createdUser: UserApiInterface;
   public isFirstChanges = true;
   public isFormForEdit: boolean;
 
   constructor(
-    private userService: UserService,
     private userModalService: UserModalService,
     private userMapper: UserMapper,
     private userFormStateService: UserFormStateService
   ) {}
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (this.isFormForEditDetails) {
-      this.isFormForEdit = true;
-    }
-
     if (this.isFirstChanges) {
       this.isFirstChanges = false;
       return;
@@ -56,19 +44,19 @@ export class UserFormComponent implements OnInit, OnChanges {
 
   ngOnInit(): void {
     this.userForm = new FormGroup({
-      id: new FormControl(''),
-      firstName: new FormControl('', [Validators.required]),
-      lastName: new FormControl('', [Validators.required]),
-      userName: new FormControl('', [Validators.required]),
-      email: new FormControl('', [Validators.required, Validators.email]),
-      street: new FormControl('', Validators.required),
-      building: new FormControl('', Validators.required),
-      city: new FormControl('', Validators.required),
-      zipcode: new FormControl('', Validators.required),
-      phone: new FormControl('', Validators.required),
-      website: new FormControl('', Validators.required),
-      companyName: new FormControl('', Validators.required),
-      companyScope: new FormControl('', Validators.required),
+      id: new FormControl(this.user?.id ?? ''),
+      firstName: new FormControl(this.user?.firstName ??'', [Validators.required]),
+      lastName: new FormControl(this.user?.lastName ??'', [Validators.required]),
+      userName: new FormControl(this.user?.username ??'', [Validators.required]),
+      email: new FormControl(this.user?.email ??'', [Validators.required, Validators.email]),
+      street: new FormControl(this.user?.address.street ??'', Validators.required),
+      building: new FormControl(this.user?.address.building ??'', Validators.required),
+      city: new FormControl(this.user?.address.city ??'', Validators.required),
+      zipcode: new FormControl(this.user?.address.zipcode ??'', Validators.required),
+      phone: new FormControl(this.user?.phone ??'', Validators.required),
+      website: new FormControl(this.user?.website ??'', Validators.required),
+      companyName: new FormControl(this.user?.company.name ??'', Validators.required),
+      companyScope: new FormControl(this.user?.company.scope ??'', Validators.required),
     });
     this.getModalStatus();
     this.getFormStatus();
@@ -77,7 +65,7 @@ export class UserFormComponent implements OnInit, OnChanges {
 
   private getModalStatus(): void {
     this.userModalService.getModalStatus().subscribe((isModalDialogVisible) => {
-      this.isModalDialogVisible = isModalDialogVisible;
+      this.isUserModalDialogVisible = isModalDialogVisible;
     });
   }
   private getFormStatus(): void {
@@ -88,43 +76,16 @@ export class UserFormComponent implements OnInit, OnChanges {
       });
   }
 
-  public submit(): void {
-    if (this.userForm.valid) {
-      if (!this.isFormForEdit) {
-        this.userService.createUser(this.userMapper.mapToCreateUpdateDto(this.userForm.value))
-          .subscribe((user) => {
-            this.createdUser = user;
-            this.create.emit(this.createdUser);
-          });
-      }
-      this.clickAddUser();
-      this.userModalService.modalClose();
-      this.userForm.reset();
-    } else {
-      this.userForm.markAllAsTouched();
-    }
-  }
-
-  public updateSubmit(): void {
-    if (this.isFormForEdit) {
-      this.userService.updateUser(this.userForm.value.id,this.userMapper.mapToCreateUpdateDto(this.userForm.value))
-        .subscribe((user) => {
-          this.updatedUser = user;
-          this.update.emit(this.updatedUser);
-        });
-    }
-    this.userModalService.modalClose();
-  }
 
   public openModal(): void {
-    this.isModalDialogVisible = true;
+    this.isUserModalDialogVisible = true;
     this.userModalService.modalOpen()
   }
 
-  public closeModal(): void {
-    this.userForm.reset();
-    this.userModalService.modalClose();
-  }
+  // public closeModal(): void {
+  //   this.userForm.reset();
+  //   this.userModalService.modalClose();
+  // }
 
   public clickAddUser(): void {
     this.userForm.reset();

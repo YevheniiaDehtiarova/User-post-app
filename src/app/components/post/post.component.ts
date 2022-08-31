@@ -27,7 +27,6 @@ export class PostComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    console.log(this.post);
     this.getModalStatus();
     this.comments$ = this.postService.getComments().pipe(
       map((comments) => {
