@@ -22,7 +22,6 @@ export class PostComponent implements OnInit, OnDestroy {
   public userId: string;
   public commentsSubscription: Subscription;
   public modalStatusSubscription: Subscription;
-  public deletePostSubscription: Subscription;
 
   constructor(
     private postModalService: PostModalService,
@@ -34,7 +33,6 @@ export class PostComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.commentsSubscription.unsubscribe();
     this.modalStatusSubscription.unsubscribe();
-    this.deletePostSubscription.unsubscribe();
   }
 
   ngOnInit(): void {
@@ -80,7 +78,7 @@ export class PostComponent implements OnInit, OnDestroy {
   }
 
   public deletePost(post: Post): void {
-    this.deletePostSubscription = this.postService
+      this.postService
       .deletePost(post.id)
       .subscribe((data) => {
         this.posts = this.posts.filter((item) => post.id !== item.id);
