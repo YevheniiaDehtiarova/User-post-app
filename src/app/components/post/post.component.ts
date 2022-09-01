@@ -1,5 +1,5 @@
-import { Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
-import { map, Observable, Subscription } from 'rxjs';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Observable, Subscription } from 'rxjs';
 import { Post } from 'src/app/models/post.interface';
 import { PostFormStateService } from 'src/app/services/post-form-state.service';
 import { PostModalService } from 'src/app/services/post-modal.service';
