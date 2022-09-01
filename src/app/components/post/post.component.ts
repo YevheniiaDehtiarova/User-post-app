@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
 import { map, Observable, Subscription } from 'rxjs';
 import { Post } from 'src/app/models/post.interface';
 import { PostFormStateService } from 'src/app/services/post-form-state.service';
@@ -13,7 +13,7 @@ import { ActivatedRoute } from '@angular/router';
   templateUrl: './post.component.html',
   styleUrls: ['./post.component.css'],
 })
-export class PostComponent implements OnInit, OnDestroy {
+export class PostComponent implements OnInit, OnDestroy{
   @Input() posts: Array<Post>;
   public comments$: Observable<Array<Comment>>;
   public isPostModalDialogVisible: boolean = false;
@@ -22,6 +22,7 @@ export class PostComponent implements OnInit, OnDestroy {
   public userId: string;
   public commentsSubscription: Subscription;
   public modalStatusSubscription: Subscription;
+  public postsWithComments: Array<Post>;
 
   constructor(
     private postModalService: PostModalService,
@@ -47,6 +48,7 @@ export class PostComponent implements OnInit, OnDestroy {
               const index = this.posts.indexOf(post);
               post.comments = comment;
               this.posts.splice(index, 1, post);
+              this.postsWithComments = [...this.posts];
             }
           });
         }
@@ -78,15 +80,14 @@ export class PostComponent implements OnInit, OnDestroy {
   }
 
   public deletePost(post: Post): void {
-      this.postService
-      .deletePost(post.id)
-      .subscribe((data) => {
-        this.posts = this.posts.filter((item) => post.id !== item.id);
-      });
+    this.postService.deletePost(post.id).subscribe((data) => {
+      this.posts = this.posts.filter((item) => post.id !== item.id);
+    });
   }
 
   public viewUpdatedPost(event: Post): void {
     const findElement = this.posts.find((post) => post.id === event.id) as Post;
+    event.comments = this.postsWithComments.find((post) => post.id === event.id)?.comments;
     const index = this.posts.indexOf(findElement);
     this.posts.splice(index, 1, event);
   }

@@ -41,7 +41,7 @@
                 <span>{{ user.company.name }} {{ user.company.scope }}</span>
             </div>
         </div>
-        <app-post [posts]="posts">
+        <app-post *ngIf="posts" [posts]="posts">
         </app-post>
     </div>
 
