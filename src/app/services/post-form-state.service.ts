@@ -25,4 +25,12 @@ export class PostFormStateService {
   public changeFormStatus(status: boolean): void {
     this.isPostFormForEdit.next(status);
   }
+  
+  get initialPost() {
+    return this.initialPostFormState.asObservable();
+  }
+
+  get postState() {
+    return this.isPostFormForEdit.asObservable();
+  }
 }
