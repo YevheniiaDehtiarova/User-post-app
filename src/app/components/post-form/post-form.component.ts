@@ -9,10 +9,10 @@ import { Post } from 'src/app/models/post.interface';
 })
 export class PostFormComponent implements OnInit {
   @Input() post: Post;
-  @Input('userId') userId: string;
   public postForm: FormGroup;
 
   ngOnInit(): void {
+    console.log(this.post, 'post')
     this.postForm = new FormGroup({
       title: new FormControl(this.post?.title ?? '', Validators.required),
       body: new FormControl(this.post?.body ?? '', Validators.required),
