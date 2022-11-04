@@ -120,64 +120,32 @@ describe('Post Component', () => {
         //expect(component.posts).toEqual(filterPosts)
     })
 
-    /*it('check viewUpdatedPost', () => {
-      const testPost: Post = {
-          userId: '2',
-          id: '13',
-          title: "dolorum ut in voluptas mollitia et saepe quo animi",
-          body: "aut dicta possimus sint mollitia voluptas commodi quo doloremque\niste corrupti reiciendis voluptatem eius rerum\nsit cumque quod eligendi laborum minima\nperferendis recusandae assumenda consectetur porro architecto ipsum ipsam",
-          comments: [
-              {
-                  postId: '1',
-                  id: '1',
-                  name: "id labore ex et quam laborum",
-                  email: "Eliseo@gardner.biz",
-                  body: "laudantium enim quasi est quidem magnam voluptate ipsam eos\ntempora quo necessitatibus\ndolor quam autem quasi\nreiciendis et nam sapiente accusantium"
-              },
-          ]
-        }  
-      const testFindElement = component.posts.find((post) => post.id !== testPost.id) as Post;
-      //const tetstedComments = component.postsWithComments.find((post) => post.id !== testPost.id)?.comments
-      expect(component.findElement).toBe(testFindElement);
-      //expect(testPost.comments).toBe(tetstedComments);
-      //expect(component.viewUpdatedPost(testPost)).toBeTruthy();
-      //component.viewUpdatedPost(testPost);
-    })*/
+    it('check viewUpdatedPost', () => {
+        const testPost: Post = {
+            userId: '2',
+            id: '13',
+            title: "dolorum ut in voluptas mollitia et saepe quo animi",
+            body: "aut dicta possimus sint mollitia voluptas commodi quo doloremque\niste corrupti reiciendis voluptatem eius rerum\nsit cumque quod eligendi laborum minima\nperferendis recusandae assumenda consectetur porro architecto ipsum ipsam",
+            comments: [
+                {
+                    postId: '1',
+                    id: '1',
+                    name: "id labore ex et quam laborum",
+                    email: "Eliseo@gardner.biz",
+                    body: "laudantium enim quasi est quidem magnam voluptate ipsam eos\ntempora quo necessitatibus\ndolor quam autem quasi\nreiciendis et nam sapiente accusantium"
+                },
+            ]
+          }  
+        component.viewUpdatedPost(testPost);
+        const testedPosts = [];
+        testedPosts.push(testPost);
+        const testFindElement = component.posts?.find((post) => post.id !== testPost.id) as Post;
+        expect(component.findElement).toBe(testFindElement);
+    })
 
-    /*it('check findedElemnt', () => {
-   
-       const testPosts: Post[] = [
-           {
-             body: 'Hello September',
-             comments: [
-               { postId: '1', id: '3', name: 'odio adipisci rerum aut animi', email: 'Nikita@garfield.biz', body: 'quia molestiae reprehenderit quasi aspernatur\naut expedita occaecati aliquam eveniet laudantium\nomnis quibusdam delectus saepe quia accusamus maiores nam est\ncum et ducimus et vero voluptates excepturi deleniti ratione' },
-             ],
-             id: '122',
-             title: 'Hello autumm cvhnvfj',
-             userId: '1',
-           },
-         ];
-   
-       const testPost: Post = {
-           userId: '1',
-           id: '122',
-           title: "Hello autumm cvhnvfj",
-           body: "Hello September",
-           comments: [
-               {
-                   postId: '1',
-                   id: '3',
-                   name: "odio adipisci rerum aut animi",
-                   email: "Nikita@garfield.biz",
-                   body: "quia molestiae reprehenderit quasi aspernatur\naut expedita occaecati aliquam eveniet laudantium\nomnis quibusdam delectus saepe quia accusamus maiores nam est\ncum et ducimus et vero voluptates excepturi deleniti ratione"
-               },
-           ]
-         } 
-       const findElement = testPosts.find((post) => post.id === testPost.id) as Post;
-       component.viewUpdatedPost(testPost);
-       expect(component.findElement).toEqual(findElement);
-       
-   
-    })/*
-   })*/
+    it('check showHidecomments method', () => {
+        const testShowComments = !component.showComments;
+        component.showHideComments();
+        expect(component.showComments).toBe(testShowComments);
+    })
 })

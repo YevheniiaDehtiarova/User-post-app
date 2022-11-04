@@ -92,14 +92,15 @@ export class PostComponent implements OnInit, OnDestroy {
   }
 
   public viewUpdatedPost(event: Post): void {
-    //const findElement = this.posts.find((post) => post.id === event.id) as Post;
-    this.findElement = this.posts.find((post) => post.id === event.id) as Post;
-    event.comments = this.postsWithComments.find(
+    console.log (event, 'event');
+    this.findElement = this.posts?.find((post) => post.id === event.id) as Post;
+    event.comments = this.postsWithComments?.find(
       (post) => post.id === event.id
-    )?.comments;
-    //const index = this.posts.indexOf(findElement);
-    const index = this.posts.indexOf(this.findElement);
-    this.posts.splice(index, 1, event);
+    )?.comments || [];
+    console.log(event.comments, ' event comments')
+    const index = this.posts?.indexOf(this.findElement);
+    console.log(index, 'index');
+    this.posts?.splice(index, 1, event);
   }
 
   public showHideComments(): void {
