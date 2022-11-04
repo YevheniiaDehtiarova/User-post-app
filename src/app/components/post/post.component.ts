@@ -43,7 +43,6 @@ export class PostComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.userId = this.activateRoute.snapshot.paramMap.get('id') as string; // find how to test
-    console.log(this.activateRoute.snapshot);
     this.getModalStatus();
     this.posts?.map((post: Post) => {
       this.comments$ = this.postService.getCommentById(post.id);
@@ -51,9 +50,9 @@ export class PostComponent implements OnInit, OnDestroy {
         (comment: Array<Comment>) => {
           this.posts.forEach((post) => {
             if (post.id == comment[0]?.postId) {
-              const index = this.posts.indexOf(post);
+              //const index = this.findIndex(post)
               post.comments = comment;
-              this.posts.splice(index, 1, post);
+              this.splicePosts(post, this.posts);
               this.postsWithComments = [...this.posts];
             }
           });
@@ -72,17 +71,20 @@ export class PostComponent implements OnInit, OnDestroy {
 
   public addPost(): void {
     this.post = DEFAULT_POST;
-    this.postModalService.modalOpen();
     this.postFormStateService.changeFormStatus(false);
-    this.isPostModalDialogVisible = true;
+   this.changePostModalDialogVisible();
   }
 
   public editPost(post: Post): void {
     this.post = post;
-    this.postModalService.modalOpen();
-    this.isPostModalDialogVisible = true;
+    this.changePostModalDialogVisible();
     this.postFormStateService.changeFormStatus(true);
     this.postFormStateService.setInitialFormState(post);
+  }
+
+  public changePostModalDialogVisible(): void {
+    this.isPostModalDialogVisible = true;
+    this.postModalService.modalOpen();
   }
 
   public deletePost(post: Post): void {
@@ -92,15 +94,12 @@ export class PostComponent implements OnInit, OnDestroy {
   }
 
   public viewUpdatedPost(event: Post): void {
-    console.log (event, 'event');
     this.findElement = this.posts?.find((post) => post.id === event.id) as Post;
     event.comments = this.postsWithComments?.find(
       (post) => post.id === event.id
     )?.comments || [];
-    console.log(event.comments, ' event comments')
-    const index = this.posts?.indexOf(this.findElement);
-    console.log(index, 'index');
-    this.posts?.splice(index, 1, event);
+    //const index = this.findIndex(this.findElement)
+    this.splicePosts(this.findElement, this.posts);
   }
 
   public showHideComments(): void {
@@ -109,6 +108,11 @@ export class PostComponent implements OnInit, OnDestroy {
 
   public viewCreatedPost(event: Post): void {
     this.posts.push(event);
+  }
+
+  public splicePosts(post: Post, posts: Post[]): Post [] {
+    const index = posts.indexOf(post);
+    return posts.splice(index, 1, post);
   }
 
 }

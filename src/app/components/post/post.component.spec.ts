@@ -39,22 +39,36 @@ describe('Post Component', () => {
     expect(component).toBeTruthy();
   });
 
-  /*it('should test subscription in getModalStatus', () => {
+  it('should test subscription in getModalStatus', () => {
     const fakeValue = false;
     postModalService.getModalStatus().subscribe((value) => {
       expect(value).toBe(fakeValue);
     });
-  });*/
+  });
 
   it('check comments in ngOnInit', () => {
     const testComments: Comment[] = [
       { postId: '1', id: '2', name: '', email: 'acfzasgvf', body: 'svgxdsebg' },
     ];
-    const testPostId = '2';
-    postService.getCommentById(testPostId).subscribe((value) => {
-      expect(value).toEqual(testComments);
+    postService.getCommentById(component.post?.id).subscribe((value) => {
+      expect(value).toBe(testComments);
     });
   });
+
+  it('check splicePosts', () => {
+    const testPost: Post = {
+        body: '',
+        comments: [
+          { postId: '2', id: '3', name: 'aaa', email: 'bbb', body: 'cccc' },
+        ],
+        id: '22',
+        title: '',
+        userId: '3',
+      };
+    component.splicePosts(testPost,component.posts);
+    const index = component.posts.indexOf(testPost);
+    expect(component.posts?.splice(index,1,testPost)).toBeTruthy()
+  })
 
   it('check input posts when post conponent init', () => {
     const testPosts: Post[] = [
@@ -79,6 +93,11 @@ describe('Post Component', () => {
     component.addPost();
     expect(component.post).toBe(testPost);
   });
+
+  it('check changePostModalDialogVisible', () => {
+    component.changePostModalDialogVisible();
+    expect(component.isPostModalDialogVisible).toBeTruthy();
+  })
 
   it('check status in method addPost', () => {
     component.addPost();
@@ -158,7 +177,7 @@ describe('Post Component', () => {
     const testedPosts = [];
     testedPosts.push(testPost);
     const testFindElement = component.posts?.find(
-      (post) => post.id !== testPost.id
+      (post) => post?.id !== testPost.id
     ) as Post;
     expect(component.findElement).toBe(testFindElement);
   });
