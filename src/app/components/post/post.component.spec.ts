@@ -6,9 +6,8 @@ import { PostComponent } from './post.component';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { Comment } from '../../models/comment.interface';
-import { HttpClient, HttpHandler } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Post } from 'src/app/models/post.interface';
-import { findElement } from '@progress/kendo-angular-common';
 import { DEFAULT_POST } from 'src/app/models/default-post';
 
 describe('Post Component', () => {
