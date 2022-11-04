@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import {Comment} from '../../models/comment.interface'
 
 @Component({
@@ -6,6 +6,7 @@ import {Comment} from '../../models/comment.interface'
   templateUrl: './comment.component.html',
   styleUrls: ['./comment.component.css']
 })
-export class CommentComponent  {
+export class CommentComponent {
   @Input()comment: Comment;
+
 }

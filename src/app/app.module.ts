@@ -5,7 +5,7 @@ import { GridModule } from '@progress/kendo-angular-grid';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule } from '@angular/common/http';
 import { DropDownsModule } from '@progress/kendo-angular-dropdowns';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
 import { DateInputsModule } from '@progress/kendo-angular-dateinputs';
 import { InputsModule } from '@progress/kendo-angular-inputs';
 import { LabelModule } from '@progress/kendo-angular-label';
@@ -43,7 +43,6 @@ import { UserModalComponent } from './components/user-modal/user-modal.component
   imports: [
     BrowserModule,
     AppRoutingModule,
-    FormsModule,
     GridModule,
     BrowserAnimationsModule,
     HttpClientModule,
