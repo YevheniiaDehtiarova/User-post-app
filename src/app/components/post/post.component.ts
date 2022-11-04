@@ -13,7 +13,7 @@ import { ActivatedRoute } from '@angular/router';
   templateUrl: './post.component.html',
   styleUrls: ['./post.component.css'],
 })
-export class PostComponent implements OnInit, OnDestroy{
+export class PostComponent implements OnInit, OnDestroy {
   @Input() posts: Array<Post>;
   public comments$: Observable<Array<Comment>>;
   public isPostModalDialogVisible: boolean = false;
@@ -32,8 +32,12 @@ export class PostComponent implements OnInit, OnDestroy{
   ) {}
 
   ngOnDestroy(): void {
-    this.commentsSubscription.unsubscribe();
-    this.modalStatusSubscription.unsubscribe();
+    if (this.commentsSubscription) {
+      this.commentsSubscription.unsubscribe();
+    }
+    if (this.modalStatusSubscription) {
+      this.modalStatusSubscription.unsubscribe();
+    }
   }
 
   ngOnInit(): void {
@@ -87,7 +91,9 @@ export class PostComponent implements OnInit, OnDestroy{
 
   public viewUpdatedPost(event: Post): void {
     const findElement = this.posts.find((post) => post.id === event.id) as Post;
-    event.comments = this.postsWithComments.find((post) => post.id === event.id)?.comments;
+    event.comments = this.postsWithComments.find(
+      (post) => post.id === event.id
+    )?.comments;
     const index = this.posts.indexOf(findElement);
     this.posts.splice(index, 1, event);
   }
