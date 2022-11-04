@@ -1,6 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormControl, FormGroup } from '@angular/forms';
-import { first } from 'rxjs';
 import { Post } from 'src/app/models/post.interface';
 import { PostFormComponent } from './post-form.component';
 
@@ -11,7 +10,7 @@ describe('PostForm Component', () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [PostFormComponent]
+            declarations: [PostFormComponent],
         })
             .compileComponents();
 

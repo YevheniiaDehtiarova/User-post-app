@@ -6,12 +6,6 @@ import {Comment} from '../../models/comment.interface'
   templateUrl: './comment.component.html',
   styleUrls: ['./comment.component.css']
 })
-export class CommentComponent implements OnInit {
+export class CommentComponent  {
   @Input()comment: Comment;
-
-  constructor() { }
-
-  ngOnInit(): void {
-  }
-
 }

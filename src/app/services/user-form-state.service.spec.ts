@@ -21,18 +21,18 @@ describe('UserFormStateService', () => {
     expect(service).toBeTruthy();
   });
 
-  it('check value from initialFormState'), () => {
-    const defaultValue: UserFormInterface = DEFAULT_USER;
-    service.initialFormState.subscribe((value) => {
-      expect(value).toBe(defaultValue);
-    })
-  }
-
-  it('check value isFormForEdit'), () => {
-    service.isFormForEdit.subscribe((value) => {
+  it('should return observable from getFormStatus', () => {
+    service.getFormStatus().subscribe((value) => {
       expect(value).toBe(false);
     })
-  }
+  })
+
+  it('should return observable from getFormState', () => {
+    const userForm = DEFAULT_USER;
+    service.getFormState().subscribe((value) => {
+      expect(value).toBe(DEFAULT_USER);
+    })
+  })
 
 
   it('should  check setInitialFormState', () => {
