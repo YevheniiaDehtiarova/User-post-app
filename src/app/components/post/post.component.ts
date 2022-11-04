@@ -14,7 +14,7 @@ import { ActivatedRoute } from '@angular/router';
   styleUrls: ['./post.component.css'],
 })
 export class PostComponent implements OnInit, OnDestroy {
-  @Input() posts: Array<Post>;
+  @Input() posts: Array<Post> = [];
   public comments$: Observable<Array<Comment>>;
   public isPostModalDialogVisible: boolean = false;
   public showComments: boolean = false;
