@@ -9,8 +9,8 @@ import { UserFormInterface } from '../models/user-form.interface';
   providedIn: 'root'
 })
 export class UserFormStateService {
-  private initialFormState: BehaviorSubject<UserFormInterface> = new BehaviorSubject<UserFormInterface>(DEFAULT_USER);
-  private isFormForEdit: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+  public initialFormState: BehaviorSubject<UserFormInterface> = new BehaviorSubject<UserFormInterface>(DEFAULT_USER);
+  public isFormForEdit: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
 
   constructor(private userMapper: UserMapper){}
 
@@ -18,8 +18,12 @@ export class UserFormStateService {
     return this.isFormForEdit.asObservable();
   }
 
+  public getFormState(): Observable<UserFormInterface>{
+    return this.initialFormState.asObservable();
+  }
+
   public setInitialFormState(initState: UserApiInterface): void {
-    this.initialFormState.next(this.userMapper.mapToFormValue(initState));
+    this.initialFormState.next(this.userMapper.mapToFormValue(initState))
   }
 
   public changeFormStatus(status: boolean): void {
