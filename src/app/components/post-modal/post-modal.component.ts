@@ -1,10 +1,10 @@
 import { ChangeDetectorRef, Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
-import { Post } from 'src/app/models/post.interface';
 import { PostModalService } from 'src/app/services/post-modal.service';
 import { PostService } from 'src/app/services/post.service';
 import { PostFormComponent } from '../post-form/post-form.component';
 import { Subscription, take } from 'rxjs';
 import { DEFAULT_POST } from 'src/app/models/default-post';
+import { Post } from 'src/app/models/post.class';
 
 @Component({
   selector: 'app-post-modal',

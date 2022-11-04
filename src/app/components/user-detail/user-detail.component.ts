@@ -1,6 +1,5 @@
 import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Post } from 'src/app/models/post.interface';
 import { UserApiInterface } from 'src/app/models/user-api.interface';
 import { PostService } from 'src/app/services/post.service';
 import { UserFormStateService } from 'src/app/services/user-form-state.service';
@@ -8,6 +7,7 @@ import { UserService } from 'src/app/services/user.service';
 import { Location } from '@angular/common';
 import { UserModalService } from 'src/app/services/user-modal.service';
 import { Subscription } from 'rxjs';
+import { Post } from 'src/app/models/post.class';
 
 
 @Component({

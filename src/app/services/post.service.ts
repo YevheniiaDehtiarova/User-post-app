@@ -1,9 +1,10 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { map, Observable } from 'rxjs';
-import { createdPost, Post } from '../models/post.interface';
 import { postRoutes } from '../routes/post.routes';
 import { Comment } from '../models/comment.interface';
+import { Post } from '../models/post.class';
+import { createdPost } from '../models/created-post.interface';
 
 @Injectable()
 export class PostService {

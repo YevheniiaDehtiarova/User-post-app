@@ -1,12 +1,12 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { Observable, Subscription } from 'rxjs';
-import { Post } from 'src/app/models/post.interface';
 import { PostFormStateService } from 'src/app/services/post-form-state.service';
 import { PostModalService } from 'src/app/services/post-modal.service';
 import { Comment } from 'src/app/models/comment.interface';
 import { PostService } from 'src/app/services/post.service';
 import { DEFAULT_POST } from 'src/app/models/default-post';
 import { ActivatedRoute } from '@angular/router';
+import { Post } from 'src/app/models/post.class';
 
 @Component({
   selector: 'app-post',
@@ -45,20 +45,23 @@ export class PostComponent implements OnInit, OnDestroy {
     this.userId = this.activateRoute.snapshot.paramMap.get('id') as string; // find how to test
     this.getModalStatus();
     this.posts?.map((post: Post) => {
-      this.comments$ = this.postService.getCommentById(post.id);
-      this.commentsSubscription = this.comments$.subscribe(
-        (comment: Array<Comment>) => {
-          this.posts.forEach((post) => {
-            if (post.id == comment[0]?.postId) {
-              //const index = this.findIndex(post)
-              post.comments = comment;
-              this.splicePosts(post, this.posts);
-              this.postsWithComments = [...this.posts];
-            }
-          });
-        }
-      );
+      this.createCommentSubscription(post)
     });
+  }
+
+  public createCommentSubscription(post: Post): Subscription {
+    this.comments$ = this.postService.getCommentById(post.id);
+    return this.commentsSubscription = this.comments$.subscribe(
+      (comment: Array<Comment>) => {
+        this.posts.forEach((post) => {
+          if (post.id == comment[0]?.postId) {
+            post.comments = comment;
+            this.splicePosts(post, this.posts);
+            this.postsWithComments = [...this.posts];
+          }
+        });
+      }
+    );
   }
 
   public getModalStatus(): void {
@@ -98,7 +101,6 @@ export class PostComponent implements OnInit, OnDestroy {
     event.comments = this.postsWithComments?.find(
       (post) => post.id === event.id
     )?.comments || [];
-    //const index = this.findIndex(this.findElement)
     this.splicePosts(this.findElement, this.posts);
   }
 

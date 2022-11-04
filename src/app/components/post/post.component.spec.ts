@@ -7,8 +7,9 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { Comment } from '../../models/comment.interface';
 import { HttpClient } from '@angular/common/http';
-import { Post } from 'src/app/models/post.interface';
 import { DEFAULT_POST } from 'src/app/models/default-post';
+import { of } from 'rxjs';
+import { Post } from 'src/app/models/post.class';
 
 describe('Post Component', () => {
   let component: PostComponent;
@@ -17,6 +18,7 @@ describe('Post Component', () => {
   let postService: PostService;
   let http: HttpClient;
   let postFormStateService: PostFormStateService;
+  let testedPost: Post;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -32,6 +34,15 @@ describe('Post Component', () => {
     http = TestBed.get(HttpClient);
     postService = new PostService(http);
     postFormStateService = new PostFormStateService();
+    testedPost = {
+      body: '',
+      comments: [
+        { postId: '2', id: '3', name: 'aaa', email: 'bbb', body: 'cccc' },
+      ],
+      id: '22',
+      title: '',
+      userId: '3',
+    };
   });
 
   it('should create', () => {
@@ -55,32 +66,27 @@ describe('Post Component', () => {
   });
 
   it('check splicePosts', () => {
-    const testPost: Post = {
-        body: '',
-        comments: [
-          { postId: '2', id: '3', name: 'aaa', email: 'bbb', body: 'cccc' },
-        ],
-        id: '22',
-        title: '',
-        userId: '3',
-      };
-    component.splicePosts(testPost,component.posts);
+    const testPost: Post = testedPost;
+    component.splicePosts(testPost, component.posts);
     const index = component.posts.indexOf(testPost);
-    expect(component.posts?.splice(index,1,testPost)).toBeTruthy()
-  })
+    expect(component.posts?.splice(index, 1, testPost)).toBeTruthy();
+  });
+
+  it('check commentSubscriprion', () => {
+    const testPost: Post = testedPost;
+
+    const testComments: Comment[] = [
+      { postId: '1', id: '2', name: '', email: 'acfzasgvf', body: 'svgxdsebg' },
+    ];
+    component.createCommentSubscription(testPost);
+    postService.getCommentById(testPost.id).subscribe((value) => {
+      expect(value).toBe(testComments);
+    });
+  });
 
   it('check input posts when post conponent init', () => {
-    const testPosts: Post[] = [
-      {
-        body: '',
-        comments: [
-          { postId: '2', id: '3', name: 'aaa', email: 'bbb', body: 'cccc' },
-        ],
-        id: '22',
-        title: '',
-        userId: '3',
-      },
-    ];
+    const testPosts: Post[] = [];
+    testPosts.push(testedPost);
     component.posts = testPosts;
 
     fixture.detectChanges();
@@ -96,7 +102,7 @@ describe('Post Component', () => {
   it('check changePostModalDialogVisible', () => {
     component.changePostModalDialogVisible();
     expect(component.isPostModalDialogVisible).toBeTruthy();
-  })
+  });
 
   it('check status in method addPost', () => {
     component.addPost();
@@ -104,15 +110,7 @@ describe('Post Component', () => {
   });
 
   it('check method editPost', () => {
-    const testPost: Post = {
-      body: '',
-      comments: [
-        { postId: '2', id: '3', name: 'aaa', email: 'bbb', body: 'cccc' },
-      ],
-      id: '22',
-      title: '',
-      userId: '3',
-    };
+    const testPost: Post = testedPost;
     const testStatus = true;
     component.editPost(testPost);
     expect(component.post).toBe(testPost);
@@ -121,57 +119,13 @@ describe('Post Component', () => {
   });
 
   it('check delete method', () => {
-    const testPost: Post = {
-      body: '',
-      id: '22',
-      title: '',
-      userId: '3',
-      comments: [
-        { postId: '2', id: '3', name: 'aaa', email: 'bbb', body: 'cccc' },
-      ],
-    };
-    const testPosts = [
-      {
-        body: '',
-        id: '22',
-        title: '',
-        userId: '32',
-        comments: [
-          { postId: '2', id: '3', name: 'aaa', email: 'bbb', body: 'cccc' },
-        ],
-      },
-      {
-        body: '',
-        id: '23',
-        title: '',
-        userId: '33',
-        comments: [
-          { postId: '2', id: '3', name: 'aaa', email: 'bbb', body: 'cccc' },
-        ],
-      },
-    ];
-    //const filterPosts = testPosts.filter((item) => testPost.id === item.id)
+    const testPost: Post = testedPost;
     component.deletePost(testPost);
     expect(postService.deletePost(testPost.id)).toBeTruthy();
-    //expect(component.posts).toEqual(filterPosts)
   });
 
   it('check viewUpdatedPost', () => {
-    const testPost: Post = {
-      userId: '2',
-      id: '13',
-      title: 'dolorum ut in voluptas mollitia et saepe quo animi',
-      body: 'aut dicta possimus sint mollitia voluptas commodi quo doloremque\niste corrupti reiciendis voluptatem eius rerum\nsit cumque quod eligendi laborum minima\nperferendis recusandae assumenda consectetur porro architecto ipsum ipsam',
-      comments: [
-        {
-          postId: '1',
-          id: '1',
-          name: 'id labore ex et quam laborum',
-          email: 'Eliseo@gardner.biz',
-          body: 'laudantium enim quasi est quidem magnam voluptate ipsam eos\ntempora quo necessitatibus\ndolor quam autem quasi\nreiciendis et nam sapiente accusantium',
-        },
-      ],
-    };
+    const testPost: Post = testedPost;
     component.viewUpdatedPost(testPost);
     const testedPosts = [];
     testedPosts.push(testPost);
@@ -188,22 +142,28 @@ describe('Post Component', () => {
   });
 
   it('check viewCreatedPost', () => {
-    const testPost: Post = {
-        userId: '2',
-        id: '13',
-        title: 'dolorum ut in voluptas mollitia et saepe quo animi',
-        body: 'aut dicta possimus sint mollitia voluptas commodi quo doloremque\niste corrupti reiciendis voluptatem eius rerum\nsit cumque quod eligendi laborum minima\nperferendis recusandae assumenda consectetur porro architecto ipsum ipsam',
-        comments: [
-          {
-            postId: '1',
-            id: '1',
-            name: 'id labore ex et quam laborum',
-            email: 'Eliseo@gardner.biz',
-            body: 'laudantium enim quasi est quidem magnam voluptate ipsam eos\ntempora quo necessitatibus\ndolor quam autem quasi\nreiciendis et nam sapiente accusantium',
-          },
-        ],
-      };
-      component.viewCreatedPost(testPost);
-      expect(component.posts?.push(testPost)).toBeTruthy()
-  })
+    const testPost: Post = testedPost;
+    component.viewCreatedPost(testPost);
+    expect(component.posts?.push(testPost)).toBeTruthy();
+  });
+
+  it('should comment unsubscribe', () => {
+    component.commentsSubscription = of().subscribe();
+    const unsubscriptionSpy = spyOn(
+      component.commentsSubscription,
+      'unsubscribe'
+    );
+    component.ngOnDestroy();
+    expect(unsubscriptionSpy).toHaveBeenCalledTimes(1);
+  });
+
+  it('should modal status unsubscribe', () => {
+    component.modalStatusSubscription = of().subscribe();
+    const unsubscriptionSpy = spyOn(
+      component.modalStatusSubscription,
+      'unsubscribe'
+    );
+    component.ngOnDestroy();
+    expect(unsubscriptionSpy).toHaveBeenCalledTimes(1);
+  });
 });

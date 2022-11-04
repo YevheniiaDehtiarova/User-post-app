@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { DEFAULT_POST } from '../models/default-post';
-import { Post } from '../models/post.interface';
+import { Post } from '../models/post.class';
 
 @Injectable({
   providedIn: 'root',
