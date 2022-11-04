@@ -23,6 +23,7 @@ export class PostComponent implements OnInit, OnDestroy {
   public commentsSubscription: Subscription;
   public modalStatusSubscription: Subscription;
   public postsWithComments: Array<Post>;
+  public findElement: Post;
 
   constructor(
     private postModalService: PostModalService,
@@ -41,7 +42,8 @@ export class PostComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.userId = this.activateRoute.snapshot.paramMap.get('id') as string;
+    this.userId = this.activateRoute.snapshot.paramMap.get('id') as string; // find how to test
+    console.log(this.activateRoute.snapshot);
     this.getModalStatus();
     this.posts?.map((post: Post) => {
       this.comments$ = this.postService.getCommentById(post.id);
@@ -90,11 +92,13 @@ export class PostComponent implements OnInit, OnDestroy {
   }
 
   public viewUpdatedPost(event: Post): void {
-    const findElement = this.posts.find((post) => post.id === event.id) as Post;
+    //const findElement = this.posts.find((post) => post.id === event.id) as Post;
+    this.findElement = this.posts.find((post) => post.id === event.id) as Post;
     event.comments = this.postsWithComments.find(
       (post) => post.id === event.id
     )?.comments;
-    const index = this.posts.indexOf(findElement);
+    //const index = this.posts.indexOf(findElement);
+    const index = this.posts.indexOf(this.findElement);
     this.posts.splice(index, 1, event);
   }
 
@@ -105,4 +109,5 @@ export class PostComponent implements OnInit, OnDestroy {
   public viewCreatedPost(event: Post): void {
     this.posts.push(event);
   }
+
 }
