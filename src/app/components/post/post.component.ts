@@ -42,11 +42,17 @@ export class PostComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.userId = this.activateRoute.snapshot.paramMap.get('id') as string; // find how to test
+    //this.userId = this.activateRoute.snapshot.paramMap.get('id') as string; // find how to test
+   this.calculateUserId();
     this.getModalStatus();
     this.posts?.map((post: Post) => {
       this.createCommentSubscription(post)
     });
+  }
+
+  public calculateUserId(): string{
+    this.userId = this.activateRoute.snapshot.paramMap.get('id') as string;
+    return this.userId;
   }
 
   public createCommentSubscription(post: Post): Subscription {

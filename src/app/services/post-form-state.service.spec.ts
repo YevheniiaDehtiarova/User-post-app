@@ -1,7 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { DEFAULT_POST } from '../models/default-post';
+import { Post } from '../models/post.class';
 import { PostFormStateService } from './post-form-state.service';
-import { Post } from '../models/post.interface';
 
 
 describe('PostFormStateService', () => {

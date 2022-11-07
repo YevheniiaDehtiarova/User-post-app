@@ -10,6 +10,7 @@ import { HttpClient } from '@angular/common/http';
 import { DEFAULT_POST } from 'src/app/models/default-post';
 import { of } from 'rxjs';
 import { Post } from 'src/app/models/post.class';
+import { ActivatedRoute } from '@angular/router';
 
 describe('Post Component', () => {
   let component: PostComponent;
@@ -19,6 +20,7 @@ describe('Post Component', () => {
   let http: HttpClient;
   let postFormStateService: PostFormStateService;
   let testedPost: Post;
+  let route: ActivatedRoute;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -28,6 +30,7 @@ describe('Post Component', () => {
     }).compileComponents();
 
     fixture = TestBed.createComponent(PostComponent);
+    route = TestBed.inject(ActivatedRoute);
     component = fixture.componentInstance;
     fixture.detectChanges();
     postModalService = new PostModalService();
@@ -44,6 +47,15 @@ describe('Post Component', () => {
       userId: '3',
     };
   });
+  
+  it('test userId', () => {
+    component.calculateUserId();
+    const spyRoute = spyOn(route.snapshot.paramMap, 'get');
+    const testId = '22';
+    spyRoute.and.returnValue(testId);
+    expect(component.userId).toBe(testId);
+  });
+
 
   it('should create', () => {
     expect(component).toBeTruthy();

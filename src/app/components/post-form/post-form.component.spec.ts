@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormControl, FormGroup } from '@angular/forms';
-import { Post } from 'src/app/models/post.interface';
+import { Post } from 'src/app/models/post.class';
 import { PostFormComponent } from './post-form.component';
 
 
