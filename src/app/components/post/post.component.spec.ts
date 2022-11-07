@@ -81,15 +81,6 @@ describe('Post Component', () => {
     });
   });
 
-  /*it('should test subscription in getModalStatus', () => {
-    let response: boolean = false;
-    component.getModalStatus();
-    fixture.detectChanges();
-    fixture.whenStable().then(() => {
-      expect(component.isPostModalDialogVisible).toEqual(response);
-    })
-  });*/
-
   it('check comments in ngOnInit', () => {
     const testComments: Comment[] = [
       { postId: '1', id: '2', name: '', email: 'acfzasgvf', body: 'svgxdsebg' },
@@ -141,7 +132,15 @@ describe('Post Component', () => {
   it('check modalopen in changePostModalDialogVisible', () => {
     const spy = spyOn(postModalService,'modalOpen').and.callThrough();
     postModalService.modalOpen();
-    component.changePostModalDialogVisible();
+    component.postModalOpen();
+    expect(spy).toHaveBeenCalled();
+  })
+
+  it('check value from changeFormStatus', () => {
+    const fakeValue = false;
+    const spy = spyOn(postFormStateService,'changeFormStatus').and.callThrough();
+    postFormStateService.changeFormStatus(fakeValue);
+    component.changeFormStatus(fakeValue);
     expect(spy).toHaveBeenCalled();
   })
 

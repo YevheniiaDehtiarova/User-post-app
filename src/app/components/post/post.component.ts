@@ -79,19 +79,27 @@ export class PostComponent implements OnInit, OnDestroy {
 
   public addPost(): void {
     this.post = DEFAULT_POST;
-    this.postFormStateService.changeFormStatus(false);
+    this.changeFormStatus(false);
     this.changePostModalDialogVisible();
   }
 
   public editPost(post: Post): void {
     this.post = post;
     this.changePostModalDialogVisible();
-    this.postFormStateService.changeFormStatus(true);
+    this.changeFormStatus(true);
     this.postFormStateService.setInitialFormState(post);
+  }
+
+  public changeFormStatus(value: boolean): void {
+    this.postFormStateService.changeFormStatus(value);
   }
 
   public changePostModalDialogVisible(): void {
     this.isPostModalDialogVisible = true;
+    this.postModalOpen();
+  }
+
+  public postModalOpen(): void {
     this.postModalService.modalOpen();
   }
 

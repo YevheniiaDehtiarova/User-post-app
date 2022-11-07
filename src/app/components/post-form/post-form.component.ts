@@ -12,7 +12,6 @@ export class PostFormComponent implements OnInit {
   public postForm: FormGroup;
 
   ngOnInit(): void {
-    console.log(this.post, 'post')
     this.postForm = new FormGroup({
       title: new FormControl(this.post?.title ?? '', Validators.required),
       body: new FormControl(this.post?.body ?? '', Validators.required),
