@@ -11,6 +11,7 @@ import { DEFAULT_POST } from 'src/app/models/default-post';
 import { of } from 'rxjs';
 import { Post } from 'src/app/models/post.class';
 import { ActivatedRoute } from '@angular/router';
+import { util } from '@progress/kendo-drawing';
 
 describe('Post Component', () => {
   let component: PostComponent;
@@ -21,6 +22,7 @@ describe('Post Component', () => {
   let postFormStateService: PostFormStateService;
   let testedPost: Post;
   let route: ActivatedRoute;
+  let testedPosts: Array<Post> = [];
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -60,6 +62,7 @@ describe('Post Component', () => {
       title: '',
       userId: '3',
     };
+    testedPosts.push(testedPost);
   });
 
   it('should test userId in activated route', () => {
@@ -81,32 +84,11 @@ describe('Post Component', () => {
     });
   });
 
-  it('check comments in ngOnInit', () => {
-    const testComments: Comment[] = [
-      { postId: '1', id: '2', name: '', email: 'acfzasgvf', body: 'svgxdsebg' },
-    ];
-    postService.getCommentById(component.post?.id).subscribe((value) => {
-      expect(value).toBe(testComments);
-    });
-  });
-
   it('check splicePosts', () => {
     const testPost: Post = testedPost;
     component.splicePosts(testPost, component.posts);
     const index = component.posts.indexOf(testPost);
     expect(component.posts?.splice(index, 1, testPost)).toBeTruthy();
-  });
-
-  it('check commentSubscription', () => {
-    const testPost: Post = testedPost;
-
-    const testComments: Comment[] = [
-      { postId: '1', id: '2', name: '', email: 'acfzasgvf', body: 'svgxdsebg' },
-    ];
-    component.createCommentSubscription(testPost);
-    postService.getCommentById(testPost.id).subscribe((value) => {
-      expect(value).toBe(testComments);
-    });
   });
 
   it('check input posts when post conponent init', () => {
@@ -117,6 +99,32 @@ describe('Post Component', () => {
     fixture.detectChanges();
     expect(component.posts).toEqual(testPosts);
   });
+
+  it('check modifyPosts', () => {
+    let testedComments = testedPost.comments as Comment[];
+    const testCommentFromPost  = testedPost.comments as Comment[];
+    component.modifyPosts(testedPosts,testedComments);
+    expect(testedComments).toBe(testCommentFromPost);
+  })
+
+  it('check initPostWithComments', () => {
+     component.initPostsWithcomments(testedPosts);
+     expect(testedPosts).toBeTruthy();
+  });
+
+  it('check commentObservable', () => {
+    let id = testedPost.id;
+    component.commentObservable(id);
+    expect(postService.getCommentById(id)).toBeTruthy();
+  })
+
+  it('check work of service in commentObservable', () => {
+    let id = testedPost.id;
+    const spy = spyOn(postService,'getCommentById').and.callThrough();
+    postService.getCommentById(id)
+    component.commentObservable(id);
+    expect(spy).toHaveBeenCalled();
+  })
 
   it('check post in method addPost', () => {
     const testPost = DEFAULT_POST;
@@ -167,8 +175,6 @@ describe('Post Component', () => {
   it('check viewUpdatedPost', () => {
     const testPost: Post = testedPost;
     component.viewUpdatedPost(testPost);
-    const testedPosts = [];
-    testedPosts.push(testPost);
     const testFindElement = component.posts?.find(
       (post) => post?.id !== testPost.id
     ) as Post;

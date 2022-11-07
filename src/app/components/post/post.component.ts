@@ -44,7 +44,12 @@ export class PostComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.calculateUserId();
     this.getModalStatus();
-    this.posts?.map((post: Post) => {
+    this.initPostsWithcomments(this.posts);
+  }
+
+
+  public initPostsWithcomments(posts: Post[]): void {
+    posts?.map((post: Post) => {
       this.createCommentSubscription(post);
     });
   }
@@ -55,18 +60,27 @@ export class PostComponent implements OnInit, OnDestroy {
   }
 
   public createCommentSubscription(post: Post): Subscription {
-    this.comments$ = this.postService.getCommentById(post.id);
-    return (this.commentsSubscription = this.comments$.subscribe(
+    this.comments$ = this.commentObservable(post.id);
+    this.commentsSubscription = this.comments$.subscribe(
       (comment: Array<Comment>) => {
-        this.posts.forEach((post) => {
-          if (post.id == comment[0]?.postId) {
-            post.comments = comment;
-            this.splicePosts(post, this.posts);
-            this.postsWithComments = [...this.posts];
-          }
-        });
+        this.modifyPosts(this.posts, comment);
       }
-    ));
+    );
+    return this.commentsSubscription;
+  }
+
+  public commentObservable(id: string): Observable<Array<Comment>>{
+    return this.postService.getCommentById(id)
+  }
+
+  public modifyPosts(posts: Post [],comment: Array<Comment>): void {
+    posts.forEach((post) => {
+      if (post.id == comment[0]?.postId) {
+        post.comments = comment;
+        this.splicePosts(post, this.posts);
+        this.postsWithComments = [...this.posts];
+      }
+    });
   }
 
   public getModalStatus(): void {
