@@ -26,7 +26,10 @@ describe('Post Component', () => {
     await TestBed.configureTestingModule({
       imports: [HttpClientTestingModule, RouterTestingModule],
       declarations: [PostComponent],
-      providers: [PostModalService, PostFormStateService, PostService,
+      providers: [
+        PostModalService,
+        PostFormStateService,
+        PostService,
         {
           provide: ActivatedRoute,
           useValue: {
@@ -34,9 +37,9 @@ describe('Post Component', () => {
               paramMap: {
                 get: () => '1',
               },
-        }
-      }
-    }
+            },
+          },
+        },
       ],
     }).compileComponents();
 
@@ -58,7 +61,7 @@ describe('Post Component', () => {
       userId: '3',
     };
   });
-  
+
   it('should test userId in activated route', () => {
     component.calculateUserId();
     const spyRoute = spyOn(route.snapshot.paramMap, 'get');
@@ -66,7 +69,6 @@ describe('Post Component', () => {
     spyRoute.and.returnValue(testId);
     expect(component.userId).toBe(testId);
   });
-
 
   it('should create', () => {
     expect(component).toBeTruthy();
@@ -78,6 +80,15 @@ describe('Post Component', () => {
       expect(value).toBe(fakeValue);
     });
   });
+
+  /*it('should test subscription in getModalStatus', () => {
+    let response: boolean = false;
+    component.getModalStatus();
+    fixture.detectChanges();
+    fixture.whenStable().then(() => {
+      expect(component.isPostModalDialogVisible).toEqual(response);
+    })
+  });*/
 
   it('check comments in ngOnInit', () => {
     const testComments: Comment[] = [

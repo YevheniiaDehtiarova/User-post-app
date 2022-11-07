@@ -28,19 +28,27 @@ export class PostModalComponent implements OnInit, OnDestroy {
                public cd: ChangeDetectorRef) { }
 
   ngOnDestroy(): void {
-    this.getAllPostSubscription.unsubscribe();
+    if(this.getAllPostSubscription){
+      this.getAllPostSubscription.unsubscribe();
+    }
   }
 
 
   ngOnInit(): void {
-    this.getAllPostSubscription = this.postService.getAllPosts().pipe(take(1)).subscribe((posts: Post[]) => this.postLength = posts.length);
-    !this.post ? this.getAllPostSubscription : null;
+    this.getAllPostSubscription = this.postService.getAllPosts().pipe(take(1)).
+    subscribe((posts: Post[]) => this.postLength = posts.length);
+    this.checkInitPost(this.post);
+  }
+
+  public checkInitPost(post: Post): Subscription | null {
+    this.post = post;
+    return !post ? this.getAllPostSubscription : null;
   }
 
 
   public close(): void {
     this.postModalService.modalClose();
-    this.postFormComponent.postForm.reset(); 
+    this.postFormComponent?.postForm.reset();
   }
 
   public submit(): void{
