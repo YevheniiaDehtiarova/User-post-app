@@ -42,7 +42,6 @@ export class PostComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    //this.userId = this.activateRoute.snapshot.paramMap.get('id') as string; // find how to test
    this.calculateUserId();
     this.getModalStatus();
     this.posts?.map((post: Post) => {

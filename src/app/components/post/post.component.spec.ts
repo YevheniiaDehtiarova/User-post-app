@@ -26,7 +26,18 @@ describe('Post Component', () => {
     await TestBed.configureTestingModule({
       imports: [HttpClientTestingModule, RouterTestingModule],
       declarations: [PostComponent],
-      providers: [PostModalService, PostFormStateService, PostService],
+      providers: [PostModalService, PostFormStateService, PostService,
+        {
+          provide: ActivatedRoute,
+          useValue: {
+            snapshot: {
+              paramMap: {
+                get: () => '1',
+              },
+        }
+      }
+    }
+      ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(PostComponent);
@@ -48,10 +59,10 @@ describe('Post Component', () => {
     };
   });
   
-  it('test userId', () => {
+  it('should test userId in activated route', () => {
     component.calculateUserId();
     const spyRoute = spyOn(route.snapshot.paramMap, 'get');
-    const testId = '22';
+    const testId = '1';
     spyRoute.and.returnValue(testId);
     expect(component.userId).toBe(testId);
   });
