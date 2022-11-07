@@ -16,7 +16,6 @@ import { Post } from 'src/app/models/post.class';
   styleUrls: ['./user-detail.component.css'],
 })
 export class UserDetailComponent implements OnInit, OnDestroy {
-  @Output() formStatus = new EventEmitter<boolean>();
 
   public userId: string;
   public user: UserApiInterface;
@@ -39,42 +38,70 @@ export class UserDetailComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnDestroy(): void {
-    this.userSubscription.unsubscribe();
-    this.getAllPostsSubcription.unsubscribe();
-    this.userModalStatusSubscription.unsubscribe();
-    this.userFormStatusSubscription.unsubscribe();
+    if (this.userSubscription) {
+      this.userSubscription.unsubscribe();
+    }
+    if (this.getAllPostsSubcription) {
+      this.getAllPostsSubcription.unsubscribe();
+    }
+    if (this.userModalStatusSubscription) {
+      this.userModalStatusSubscription.unsubscribe();
+    }
+    if (this.userFormStatusSubscription) {
+      this.userFormStatusSubscription.unsubscribe();
+    }
   }
 
   ngOnInit(): void {
-    this.userId = this.activateRoute.snapshot.paramMap.get('id') as string;
-    this.userSubscription = this.userService.getUser(this.userId).subscribe((user) => {
-      this.user = user;
-    });
-    this.getAllPostsSubcription = this.postService.getAllPosts().subscribe((posts) => {
-      this.posts = posts.filter((post) => post.userId == this.userId);
-    });
+    this.calculateUserId();
+    this.initUser();
     this.getUserModalStatus();
     this.getUserFormStatus();
-
   }
 
-  private getUserModalStatus(): void {
-   this.userModalStatusSubscription =  this.userModalService.getModalStatus().subscribe((isModalDialogVisible) => {
-      this.isUserModalDialogVisible = isModalDialogVisible;
+  public initUser(): void {
+    this.userSubscription = this.userService
+    .getUser(this.userId)
+    .subscribe((user) => {
+      this.user = user;
     });
   }
 
-  private getUserFormStatus(): void {
-   this.userFormStatusSubscription =  this.userFormStateService.getFormStatus().subscribe((isFormForEdit: boolean) => {
+  public calculateUserId(): string{
+    this.userId =  this.activateRoute.snapshot.paramMap.get('id') as string;
+    return this.userId;
+  }
+
+  public initAllPosts(): void {
+    this.getAllPostsSubcription = this.postService
+    .getAllPosts()
+    .subscribe((posts) => {
+      this.posts = posts.filter((post) => post.userId == this.userId);
+    });
+  }
+
+  public getUserModalStatus(): void {
+    this.userModalStatusSubscription = this.userModalService
+      .getModalStatus()
+      .subscribe((isModalDialogVisible) => {
+        this.isUserModalDialogVisible = isModalDialogVisible;
+      });
+  }
+
+  public getUserFormStatus(): void {
+    this.userFormStatusSubscription = this.userFormStateService
+      .getFormStatus()
+      .subscribe((isFormForEdit: boolean) => {
         this.isFormForEdit = isFormForEdit;
       });
   }
 
-
-public updateUser(event: UserApiInterface): void{
-  this.userSubscription = this.userService.getUser(event.id).subscribe((user) => {
-      this.user = user;
-    });
+  public updateUser(event: UserApiInterface): void {
+    this.userSubscription = this.userService
+      .getUser(event.id)
+      .subscribe((user) => {
+        this.user = user;
+      });
   }
 
   public openUserModal(): void {
@@ -87,5 +114,4 @@ public updateUser(event: UserApiInterface): void{
   public goBack(): void {
     this.location.back();
   }
-
 }

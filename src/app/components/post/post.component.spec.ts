@@ -97,7 +97,7 @@ describe('Post Component', () => {
     expect(component.posts?.splice(index, 1, testPost)).toBeTruthy();
   });
 
-  it('check commentSubscriprion', () => {
+  it('check commentSubscription', () => {
     const testPost: Post = testedPost;
 
     const testComments: Comment[] = [

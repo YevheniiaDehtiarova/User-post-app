@@ -30,15 +30,6 @@ describe('PostModal Component', () => {
     http = TestBed.get(HttpClient);
     postService = new PostService(http);
     postModalService = new PostModalService();
-    testedPost = {
-        body: '',
-        comments: [
-          { postId: '2', id: '3', name: 'aaa', email: 'bbb', body: 'cccc' },
-        ],
-        id: '22',
-        title: '',
-        userId: '3',
-      };
   });
 
 
