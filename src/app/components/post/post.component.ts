@@ -78,9 +78,13 @@ export class PostComponent implements OnInit, OnDestroy {
       if (post.id == comment[0]?.postId) {
         post.comments = comment;
         this.splicePosts(post, this.posts);
-        this.postsWithComments = [...this.posts];
+        this.definePostsWithComments(this.posts)
       }
     });
+  }
+
+  public definePostsWithComments(posts: Post []): void {
+    this.postsWithComments = [...posts];
   }
 
   public getModalStatus(): void {

@@ -91,6 +91,11 @@ describe('Post Component', () => {
     expect(component.posts?.splice(index, 1, testPost)).toBeTruthy();
   });
 
+  it('check definePostsWithComments', () => {
+    component.definePostsWithComments(testedPosts);
+    expect(component.postsWithComments).toEqual(testedPosts)
+  })
+
   it('check input posts when post conponent init', () => {
     const testPosts: Post[] = [];
     testPosts.push(testedPost);
@@ -100,11 +105,22 @@ describe('Post Component', () => {
     expect(component.posts).toEqual(testPosts);
   });
 
+  it('should test createCommentSubscription', () => {
+    component.createCommentSubscription(testedPost);
+    expect(component.createCommentSubscription(testedPost)).toBeTruthy();
+  })
+
   it('check modifyPosts', () => {
     let testedComments = testedPost.comments as Comment[];
     const testCommentFromPost  = testedPost.comments as Comment[];
     component.modifyPosts(testedPosts,testedComments);
     expect(testedComments).toBe(testCommentFromPost);
+  })
+
+  it('check comment in modifyPosts', () => {
+    let testedComments = testedPost.comments as Comment[];
+    component.modifyPosts(testedPosts,testedComments);
+    expect(testedPost.comments).toBe(testedComments);
   })
 
   it('check initPostWithComments', () => {
