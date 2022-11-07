@@ -18,7 +18,6 @@ export class PostModalComponent implements OnInit, OnDestroy {
   @Output() updatePosts = new EventEmitter<Post>();
   @Output() createPosts = new EventEmitter<Post>();
   public postLength: number;
-  public updatedPost: Post;
   public getAllPostSubscription: Subscription;
 
   @ViewChild(PostFormComponent) public postFormComponent: PostFormComponent;
@@ -75,5 +74,6 @@ export class PostModalComponent implements OnInit, OnDestroy {
       }
     }
   }
+
 
 }

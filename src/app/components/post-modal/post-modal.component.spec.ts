@@ -85,8 +85,23 @@ describe('PostModal Component', () => {
     spyOn(component.createPosts, 'emit');
     component.post = testedPost;
     component.submit();
-    
+
     expect(component.createPosts.emit).not.toHaveBeenCalled();
   })
+
+  it('should test input userId in submit', () => {
+     let id = '2';
+     component.userId = id;;
+     component.submit();
+     fixture.detectChanges();
+     expect(component.userId).toEqual(id);
+  })
+
+  it('should test input post', () => {
+    component.post = testedPost;
+    component.submit();
+    fixture.detectChanges();
+    expect(component.post).toEqual(testedPost);
+  });
 
 });
