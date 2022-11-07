@@ -52,24 +52,24 @@ export class PostModalComponent implements OnInit, OnDestroy {
   }
 
   public submit(): void{
-    if(this.postFormComponent.postForm.valid) {
+    if(this.postFormComponent?.postForm?.valid) {
       const post: Post = {
-        id: this.postFormComponent.postForm.value.postId ? this.postFormComponent.postForm.value.postId : this.postLength + 1,
+        id: this.postFormComponent?.postForm?.value.postId ? this.postFormComponent.postForm.value.postId : this.postLength + 1,
         userId:  this.userId,
-        title: this.postFormComponent.postForm.value.title,
-        body: this.postFormComponent.postForm.value.body,
+        title: this.postFormComponent?.postForm?.value.title,
+        body: this.postFormComponent?.postForm?.value.body,
       }
 
       if(this.post != DEFAULT_POST){
         this.postService.updatePost(this.post.id, post).subscribe((post)=> {
             this.updatePosts.emit(post);
-            this.postFormComponent.postForm.reset();
+            this.postFormComponent?.postForm?.reset();
             this.close();
         })
       } else {
         this.postService.createPost(post).subscribe((post)=> {
           this.createPosts.emit(post);
-          this.postFormComponent.postForm.reset();
+          this.postFormComponent?.postForm?.reset();
           this.close();
         })
       }

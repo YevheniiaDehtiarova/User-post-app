@@ -138,6 +138,13 @@ describe('Post Component', () => {
     expect(component.isPostModalDialogVisible).toBeTruthy();
   });
 
+  it('check modalopen in changePostModalDialogVisible', () => {
+    const spy = spyOn(postModalService,'modalOpen').and.callThrough();
+    postModalService.modalOpen();
+    component.changePostModalDialogVisible();
+    expect(spy).toHaveBeenCalled();
+  })
+
   it('check status in method addPost', () => {
     component.addPost();
     expect(component.isPostModalDialogVisible).toBeTrue();

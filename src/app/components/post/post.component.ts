@@ -42,21 +42,21 @@ export class PostComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-   this.calculateUserId();
+    this.calculateUserId();
     this.getModalStatus();
     this.posts?.map((post: Post) => {
-      this.createCommentSubscription(post)
+      this.createCommentSubscription(post);
     });
   }
 
-  public calculateUserId(): string{
+  public calculateUserId(): string {
     this.userId = this.activateRoute.snapshot.paramMap.get('id') as string;
     return this.userId;
   }
 
   public createCommentSubscription(post: Post): Subscription {
     this.comments$ = this.postService.getCommentById(post.id);
-    return this.commentsSubscription = this.comments$.subscribe(
+    return (this.commentsSubscription = this.comments$.subscribe(
       (comment: Array<Comment>) => {
         this.posts.forEach((post) => {
           if (post.id == comment[0]?.postId) {
@@ -66,7 +66,7 @@ export class PostComponent implements OnInit, OnDestroy {
           }
         });
       }
-    );
+    ));
   }
 
   public getModalStatus(): void {
@@ -80,7 +80,7 @@ export class PostComponent implements OnInit, OnDestroy {
   public addPost(): void {
     this.post = DEFAULT_POST;
     this.postFormStateService.changeFormStatus(false);
-   this.changePostModalDialogVisible();
+    this.changePostModalDialogVisible();
   }
 
   public editPost(post: Post): void {
@@ -103,9 +103,9 @@ export class PostComponent implements OnInit, OnDestroy {
 
   public viewUpdatedPost(event: Post): void {
     this.findElement = this.posts?.find((post) => post.id === event.id) as Post;
-    event.comments = this.postsWithComments?.find(
-      (post) => post.id === event.id
-    )?.comments || [];
+    event.comments =
+      this.postsWithComments?.find((post) => post.id === event.id)?.comments ||
+      [];
     this.splicePosts(this.findElement, this.posts);
   }
 
@@ -117,9 +117,8 @@ export class PostComponent implements OnInit, OnDestroy {
     this.posts.push(event);
   }
 
-  public splicePosts(post: Post, posts: Post[]): Post [] {
+  public splicePosts(post: Post, posts: Post[]): Post[] {
     const index = posts.indexOf(post);
     return posts.splice(index, 1, post);
   }
-
 }

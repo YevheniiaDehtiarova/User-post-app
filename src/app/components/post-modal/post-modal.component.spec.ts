@@ -72,4 +72,21 @@ describe('PostModal Component', () => {
    component.close();
    expect(spy).toHaveBeenCalled()
   })
+
+  it('should test output updatePosts', () => {
+    spyOn(component.updatePosts, 'emit');
+    component.post = testedPost;
+    component.submit();
+
+    expect(component.updatePosts.emit).not.toHaveBeenCalled();
+  })
+
+  it('should test output createPosts', () => {
+    spyOn(component.createPosts, 'emit');
+    component.post = testedPost;
+    component.submit();
+    
+    expect(component.createPosts.emit).not.toHaveBeenCalled();
+  })
+
 });
