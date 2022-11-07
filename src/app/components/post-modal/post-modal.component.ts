@@ -59,7 +59,7 @@ export class PostModalComponent implements OnInit, OnDestroy {
         body: this.postFormComponent?.postForm?.value.body,
       }
 
-      if(this.post != DEFAULT_POST){
+      /*if(this.post != DEFAULT_POST){
         this.postService.updatePost(this.post.id, post).subscribe((post)=> {
             this.updatePosts.emit(post);
             this.postFormComponent?.postForm?.reset();
@@ -71,9 +71,35 @@ export class PostModalComponent implements OnInit, OnDestroy {
           this.postFormComponent?.postForm?.reset();
           this.close();
         })
-      }
+      }*/
+      this.checkPostOnDefault(post);
     }
   }
 
 
+  public checkPostOnDefault(post:Post): void {
+    if(this.post != DEFAULT_POST){
+      this.updatePost(post);
+    } else {
+      this.createPost(post);
+    }
+  }
+
+  public createPost(post: Post): void {
+    this.postService.createPost(post).subscribe((post)=> {
+      this.createPosts.emit(post);
+      this.postFormComponent?.postForm?.reset();
+      this.close();
+  })
 }
+
+public updatePost(post: Post): void{
+  this.postService.updatePost(this.post?.id, post).subscribe((post)=> {
+    this.updatePosts.emit(post);
+    this.postFormComponent?.postForm?.reset();
+    this.close();
+})
+}
+
+}
+

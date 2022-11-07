@@ -67,7 +67,7 @@ describe('PostModal Component', () => {
   it('should test output updatePosts', () => {
     spyOn(component.updatePosts, 'emit');
     component.post = testedPost;
-    component.submit();
+    component.updatePost(testedPost);
 
     expect(component.updatePosts.emit).not.toHaveBeenCalled();
   })
@@ -75,7 +75,7 @@ describe('PostModal Component', () => {
   it('should test output createPosts', () => {
     spyOn(component.createPosts, 'emit');
     component.post = testedPost;
-    component.submit();
+    component.createPost(testedPost);
 
     expect(component.createPosts.emit).not.toHaveBeenCalled();
   })
@@ -94,5 +94,20 @@ describe('PostModal Component', () => {
     fixture.detectChanges();
     expect(component.post).toEqual(testedPost);
   });
+
+  it('should check post in checkPostOnDefault', () => {
+    component.checkPostOnDefault(testedPost);
+    expect(component.checkPostOnDefault(testedPost)).toBeTruthy;
+  })
+
+  it('should check create post', () => {
+    component.createPost(testedPost);
+    expect(component.createPost(testedPost)).toBeTruthy;
+  })
+
+  it('should check update post', () => {
+    component.updatePost(testedPost);
+    expect(component.updatePost(testedPost)).toBeTruthy;
+  })
 
 });

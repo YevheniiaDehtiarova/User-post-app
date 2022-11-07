@@ -172,6 +172,14 @@ describe('Post Component', () => {
     expect(postService.deletePost(testPost.id)).toBeTruthy();
   });
 
+  it('check delete method in service', () => {
+    let id  = testedPost.id;
+    const spy = spyOn(postService,'deletePost').and.callThrough();
+    postService.deletePost(id);
+    component.deletePost(testedPost);
+    expect(spy).toHaveBeenCalled();
+  })
+
   it('check viewUpdatedPost', () => {
     const testPost: Post = testedPost;
     component.viewUpdatedPost(testPost);
