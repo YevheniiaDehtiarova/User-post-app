@@ -191,6 +191,7 @@ describe('Post Component', () => {
     postService.deletePost(id).subscribe((value) => {
       expect(component.filterPost(testedPosts, testedPost))
     })
+    expect(component.filterPost(testedPosts, testedPost)).toBeTruthy;
   });
 
 
