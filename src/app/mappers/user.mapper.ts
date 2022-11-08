@@ -1,7 +1,9 @@
+import { Inject, Injectable } from '@angular/core';
 import { UserApiInterface } from '../models/user-api.interface';
 import { UserFormInterface } from '../models/user-form.interface';
 import { UserTableInterface } from '../models/user-table.interface';
 
+@Injectable({providedIn: 'root'})
 export class UserMapper {
   public mapToViewModel(
     users: Array<UserApiInterface>

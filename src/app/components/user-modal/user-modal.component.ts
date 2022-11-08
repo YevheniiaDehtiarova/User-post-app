@@ -10,6 +10,7 @@ import {
 import { Subscription } from 'rxjs';
 import { UserMapper } from 'src/app/mappers/user.mapper';
 import { UserApiInterface } from 'src/app/models/user-api.interface';
+import { UserFormInterface } from 'src/app/models/user-form.interface';
 import { UserFormStateService } from 'src/app/services/user-form-state.service';
 import { UserModalService } from 'src/app/services/user-modal.service';
 import { UserService } from 'src/app/services/user.service';
@@ -35,61 +36,67 @@ export class UserModalComponent implements OnInit, OnDestroy {
     private userService: UserService,
     private userMapper: UserMapper,
     private userFormStateService: UserFormStateService
-  ) {}
+  ) { }
 
   ngOnDestroy(): void {
-    this.userFormSubscription.unsubscribe();
+    if (this.userFormSubscription) {
+      this.userFormSubscription.unsubscribe();
+    }
   }
 
   ngOnInit(): void {
     this.getFormStatus();
   }
 
-  private getFormStatus(): void {
-    this.userFormSubscription = this.userFormStateService.getFormStatus().subscribe((isFormForEdit: boolean) => {
+  public getFormStatus(): void {
+    this.userFormSubscription = this.userFormStateService.getFormStatus().
+      subscribe((isFormForEdit: boolean) => {
         this.isFormForEdit = isFormForEdit;
       });
   }
 
   public closeModal(): void {
-    this.userFormComponent.userForm.reset();
+    this.userFormComponent?.userForm.reset();
     this.userModalService.modalClose();
   }
 
   public submit(): void {
-    if (this.userFormComponent.userForm.valid) {
-      if (!this.isFormForEdit) {
-        this.userService
-          .createUser(
-            this.userMapper.mapToCreateUpdateDto(
-              this.userFormComponent.userForm.value
-            )
-          )
-          .subscribe((user) => {
-            this.creating.emit(user);
-            this.closeModal();
-          });
-      }
-    } else {
-      this.userFormComponent.userForm.markAllAsTouched();
-    }
-  }
-
-  public updateSubmit(): void {
-    if (this.isFormForEdit || this.isUserDetailFormEdit) {
-      this.userService.updateUser(
-          this.userFormComponent.userForm.value.id,
+    if (this.userFormComponent?.userForm?.valid) {
+      this.userService
+        .createUser(
           this.userMapper.mapToCreateUpdateDto(
-            this.userFormComponent.userForm.value
+            this.userFormComponent?.userForm?.value
           )
         )
         .subscribe((user) => {
-          this.updating.emit(user);
-          this.updatingDetail.emit(user);
-          this.isFormForEdit = false;
-          this.closeModal();
-          this.isUserDetailFormEdit = false;
+          this.createOutputUser(user);
         });
+    } else {
+      this.userFormComponent?.userForm.markAllAsTouched();
     }
+  }
+
+  public createOutputUser(user:UserApiInterface) {
+    this.creating.emit(user);
+    this.closeModal();
+  }
+
+  public updateSubmit(): void {
+    this.userService.updateUser(this.userFormComponent?.userForm?.value?.id, this.userFormComponent?.userForm?.value)
+      .subscribe((user) => {
+        this.updateOutputUser(user);
+        this.changeUpdatedProperty(false);
+      });
+  }
+
+  public changeUpdatedProperty(value: boolean): void {
+    this.isFormForEdit = value;
+    this.isUserDetailFormEdit = value;
+  }
+
+  public updateOutputUser(user: UserApiInterface):void {
+    this.updating.emit(user);
+    this.updatingDetail.emit(user);
+    this.closeModal();
   }
 }
