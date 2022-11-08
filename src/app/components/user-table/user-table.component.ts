@@ -44,7 +44,7 @@ export class UserTableComponent implements OnInit, OnDestroy {
     this.getModalStatus();
   }
 
-  private getModalStatus(): void {
+  public getModalStatus(): void {
     this.userModalStatusSubscription = this.userModalService.getModalStatus().subscribe((isModalDialogVisible) => {
       this.isUserModalDialogVisible = isModalDialogVisible;
     });

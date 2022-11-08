@@ -10,4 +10,8 @@ describe('Phone Pipe', () => {
     it('Transform case 2 sucessfully', () => {
         expect(pipe.transform('+380661618617')).toBe('066-161-86-17');
       });
+
+    it('if phone empty', () => {
+      expect(pipe.transform('')).toBe('null')
+    })
   });
