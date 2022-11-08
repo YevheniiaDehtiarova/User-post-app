@@ -123,8 +123,12 @@ export class PostComponent implements OnInit, OnDestroy {
 
   public deletePost(post: Post): void {
     this.postService.deletePost(post.id).subscribe((data) => {
-      this.posts = this.posts.filter((item) => post.id !== item.id);
+      this.filterPost(this.posts, post)
     });
+  }
+
+  public filterPost(posts: Post[], post: Post): void {
+    this.posts = posts.filter((item) => post.id !== item.id);
   }
 
   public viewUpdatedPost(event: Post): void {

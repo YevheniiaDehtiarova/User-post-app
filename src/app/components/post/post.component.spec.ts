@@ -114,13 +114,10 @@ describe('Post Component', () => {
     let testedComments = testedPost.comments as Comment[];
     const testCommentFromPost  = testedPost.comments as Comment[];
     component.modifyPosts(testedPosts,testedComments);
+    expect(testedPost.id === testedComments[0].postId).toBeFalse();
     expect(testedComments).toBe(testCommentFromPost);
-  })
-
-  it('check comment in modifyPosts', () => {
-    let testedComments = testedPost.comments as Comment[];
-    component.modifyPosts(testedPosts,testedComments);
-    expect(testedPost.comments).toBe(testedComments);
+    expect(component.splicePosts(testedPost, component.posts)).toBeTruthy;
+    expect(component.definePostsWithComments(component.posts)).toBeTruthy;
   })
 
   it('check initPostWithComments', () => {
@@ -182,26 +179,39 @@ describe('Post Component', () => {
     expect(postFormStateService.setInitialFormState(testPost)).toBeTruthy;
   });
 
-  it('check delete method', () => {
+  it('check deletePost method', () => {
     const testPost: Post = testedPost;
     component.deletePost(testPost);
     expect(postService.deletePost(testPost.id)).toBeTruthy();
-  });
-
-  it('check delete method in service', () => {
     let id  = testedPost.id;
     const spy = spyOn(postService,'deletePost').and.callThrough();
     postService.deletePost(id);
     component.deletePost(testedPost);
     expect(spy).toHaveBeenCalled();
+    postService.deletePost(id).subscribe((value) => {
+      expect(component.filterPost(testedPosts, testedPost))
+    })
+  });
+
+
+  it('check post in filterPost', () => {
+      component.filterPost(testedPosts, testedPost);
+      const filteredPosts = testedPosts.filter((item) => testedPost.id === item.id);
+      expect(testedPosts).toEqual(filteredPosts);  
   })
 
   it('check viewUpdatedPost', () => {
-    const testPost: Post = testedPost;
-    component.viewUpdatedPost(testPost);
+    component.viewUpdatedPost(testedPost);
     const testFindElement = component.posts?.find(
-      (post) => post?.id !== testPost.id
+      (post) => post?.id !== testedPost.id
     ) as Post;
+    testedPosts.find(post => {
+      expect(post.id ===testedPost.id).toBeTruthy;
+    })
+    component.postsWithComments?.find((post)=> {
+      expect(post.id === testedPost.id).toBeTruthy;
+    })
+ 
     expect(component.findElement).toBe(testFindElement);
   });
 
