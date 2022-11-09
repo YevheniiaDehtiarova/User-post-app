@@ -75,7 +75,7 @@ describe('UserFormComponent', () => {
         expect(component.userForm.valid).toBeFalsy();
     });
 
-    it('email field validity', () => {
+    it('should test email field validity', () => {
         const email = component.userForm.get('email') as FormControl;
         expect(email.valid).toBeFalsy();
 
