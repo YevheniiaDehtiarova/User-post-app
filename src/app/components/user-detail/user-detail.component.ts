@@ -54,6 +54,7 @@ export class UserDetailComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.calculateUserId();
+    this.initAllPosts();
     this.initUser();
     this.getUserModalStatus();
     this.getUserFormStatus();
@@ -67,9 +68,8 @@ export class UserDetailComponent implements OnInit, OnDestroy {
     });
   }
 
-  public calculateUserId(): string{
+  public calculateUserId(): void {
     this.userId =  this.activateRoute.snapshot.paramMap.get('id') as string;
-    return this.userId;
   }
 
   public initAllPosts(): void {

@@ -6,7 +6,7 @@ import { Comment } from '../models/comment.interface';
 import { Post } from '../models/post.class';
 import { createdPost } from '../models/created-post.interface';
 
-@Injectable()
+@Injectable({providedIn: 'root'})
 export class PostService {
   constructor(private http: HttpClient) {}
 
@@ -14,12 +14,6 @@ export class PostService {
     const apiUrl = postRoutes.getAll;
 
     return this.http.get<Array<Post>>(apiUrl);
-  }
-
-  public getPostById(id: string): Observable<Post> {
-    const apiUrl = postRoutes.getById.replace('${id}', id);
-
-    return this.http.get<Post>(apiUrl);
   }
 
   public createPost(post: createdPost): Observable<Post> {
