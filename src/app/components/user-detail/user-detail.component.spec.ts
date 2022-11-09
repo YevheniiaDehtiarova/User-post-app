@@ -56,7 +56,7 @@ describe('UserDetailComponent', () => {
     postService = new PostService(http);
     userService = new UserService(http);
     userModalService = new UserModalService();
-    userFormStateService = new UserFormStateService(new UserMapper());
+    userFormStateService = new UserFormStateService();
     testedUser = {
       id: '1',
       firstName: 'aaaa',

@@ -74,15 +74,15 @@ export class PostModalComponent implements OnInit, OnDestroy {
   public createPost(post: Post): void {
     this.postService.createPost(post).subscribe((post)=> {
       this.createPosts.emit(post);
-      this.resetForm();
   })
+  this.resetForm();
 }
 
   public updatePost(post: Post): void {
     this.postService.updatePost(this.post?.id, post).subscribe((post) => {
       this.updatePosts.emit(post);
-      this.resetForm();
     })
+    this.resetForm();
 
   }
   public resetForm(): void {

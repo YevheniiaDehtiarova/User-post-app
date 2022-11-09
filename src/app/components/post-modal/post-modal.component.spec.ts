@@ -134,40 +134,32 @@ describe('PostModal Component', () => {
     );
   });
 
-  it('check call resetFrom in createPost method', () => {
+  it('check call resetFrom in createPost  and updatePost method', () => {
     component.createPost(testedPost);
+    component.updatePost(testedPost);
     const createResetSpy = spyOn(component, 'resetForm');
     component.resetForm();
     expect(createResetSpy).toHaveBeenCalled();
   })
 
-  it('check call resetFrom in updatePost method', () => {
-    component.updatePost(testedPost);
-    const updateResetSpy = spyOn(component, 'resetForm');
-    component.resetForm();
-    expect(updateResetSpy).toHaveBeenCalled();
-  })
-
-  it('should check update post', () => {
+  it('should check updatePost', () => {
     component.updatePost(testedPost);
     expect(component.updatePost(testedPost)).toBeTruthy;
-
     component.updatePosts.subscribe((post) => {
       expect(post).toBe(testedPost);
     });
-
-    spyOn(postService, 'updatePost').and.callThrough();
-    postService.updatePost(testedPost.id, testedPost).subscribe(
-      response => expect(response).toEqual(testedPost)
-    );
-
-
+    const spy = spyOn(postService, 'updatePost');
+    postService.updatePost(testedPost.id, testedPost);
+    expect(spy).toHaveBeenCalled();
 
   });
 
   it('should be test resetForm', () => {
     component.resetForm();
-    expect(component.postFormComponent?.postForm.reset()).toBeTruthy;
-    expect(component.close()).toBeTruthy;
+    expect(component.resetForm()).toBeTruthy;
+    const funcSpy = spyOn(component, 'close');
+    component.close();
+    expect(funcSpy).toHaveBeenCalled();
+ 
   })
 });

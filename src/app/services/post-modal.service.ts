@@ -8,6 +8,10 @@ export class PostModalService {
   public isModalDialogVisible: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   public isAddingState: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
 
+  public getInitialAddingState(): Observable<boolean> {
+    return this.isAddingState.asObservable();
+  }
+
   public getModalStatus(): Observable<boolean> {
     return this.isModalDialogVisible.asObservable();
   }

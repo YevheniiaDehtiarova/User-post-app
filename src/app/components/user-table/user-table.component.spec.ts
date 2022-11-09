@@ -1,25 +1,35 @@
 import { HttpClient } from '@angular/common/http';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
+import {
+  ComponentFixture,
+  fakeAsync,
+  TestBed,
+  tick,
+} from '@angular/core/testing';
+import { Router } from '@angular/router';
+import { CellClickEvent, GridComponent } from '@progress/kendo-angular-grid';
 import { of } from 'rxjs';
 import { UserMapper } from 'src/app/mappers/user.mapper';
+import { DEFAULT_USER } from 'src/app/models/default-user';
 import { UserApiInterface } from 'src/app/models/user-api.interface';
-import { UserFormInterface } from 'src/app/models/user-form.interface';
+import { UserTableInterface } from 'src/app/models/user-table.interface';
 import { UserFormStateService } from 'src/app/services/user-form-state.service';
 import { UserModalService } from 'src/app/services/user-modal.service';
 import { UserService } from 'src/app/services/user.service';
 import { UserTableComponent } from './user-table.component';
 
-
 describe('User Table Component', () => {
   let component: UserTableComponent;
   let fixture: ComponentFixture<UserTableComponent>;
   let testedUser: UserApiInterface;
+  let testedUsers: Array<UserApiInterface> = [];
+  let testedUserTable: UserTableInterface;
   let userModalService: UserModalService;
   let userService: UserService;
   let userMapper: UserMapper;
   let http: HttpClient;
   let userFormStateService: UserFormStateService;
+  let routerSpy = {navigate: jasmine.createSpy('navigate')};
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -30,6 +40,7 @@ describe('User Table Component', () => {
         UserModalService,
         UserFormStateService,
         { provide: UserMapper, useValue: {} },
+        { provide: Router, useValue: routerSpy }
       ],
     }).compileComponents();
 
@@ -39,7 +50,7 @@ describe('User Table Component', () => {
     userService = new UserService(http);
     userModalService = new UserModalService();
     userMapper = new UserMapper();
-    userFormStateService = new UserFormStateService(new UserMapper());
+    userFormStateService = new UserFormStateService();
 
     fixture.detectChanges();
     testedUser = {
@@ -61,52 +72,136 @@ describe('User Table Component', () => {
         scope: '',
       },
     };
+    testedUserTable = { id: 1, name: '', email: '', address: '', phone: '' };
   });
-
+  
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  it(`should navigate to user-detail`, () => {
+    component.doubleClick();
+    const id = undefined;
+    expect(routerSpy.navigate).toHaveBeenCalledWith(['/user-detail', id ]);
+ });
 
   it('should test service in getAllUsers method', () => {
     const spy = spyOn(userService, 'getAllUsers');
     userService.getAllUsers();
     component.getAllUsers();
     expect(spy).toHaveBeenCalled();
-  })
+  });
 
   it('should test subscribe in getAllUsers method', fakeAsync(() => {
     const response: UserApiInterface[] = [];
-    spyOn(userService, 'getAllUsers').and.returnValue(of(response))
+    spyOn(userService, 'getAllUsers').and.returnValue(of(response));
     component.getAllUsers();
     tick();
     expect(component.usersFromApi).toEqual(response);
-    expect(component.users).toEqual(userMapper.mapToViewModel(response))
+    expect(component.users).toEqual(userMapper.mapToViewModel(response));
   }));
 
-  it('should test getModalStatus' , () => {
+  it('should test map in getAllUsers', () => {
+    let mockedData: any = [];
+    const spy = spyOn(userService, 'getAllUsers').and.returnValue(
+      of(mockedData)
+    );
+    userService.getAllUsers();
+    expect(spy).toHaveBeenCalled();
+    expect(component.usersFromApi).toEqual(mockedData);
+    expect(component.users).toEqual(userMapper.mapToViewModel(mockedData));
+  });
+
+  it('should test getModalStatus', () => {
     component.getModalStatus();
-    userModalService.getModalStatus().subscribe((value)=> {
-        expect(component.isUserModalDialogVisible).toBe(value)
-    })
-  })
+    userModalService.getModalStatus().subscribe((value) => {
+      expect(component.isUserModalDialogVisible).toBe(value);
+    });
+  });
 
   it('should test subscr in getModalStatus', fakeAsync(() => {
     const response: boolean = false;
-    spyOn(userModalService, 'getModalStatus').and.returnValue(of(response))
+    spyOn(userModalService, 'getModalStatus').and.returnValue(of(response));
     component.getModalStatus();
     tick();
-    expect(component.isUserModalDialogVisible).toBe(response)
-  }))
+    expect(component.isUserModalDialogVisible).toBe(response);
+  }));
 
   it('should test work of service in getModalStatus', () => {
-    const spy = spyOn(userModalService,'getModalStatus');
+    const spy = spyOn(userModalService, 'getModalStatus');
     userModalService.getModalStatus();
     component.getModalStatus();
     expect(spy).toHaveBeenCalled();
+  });
+
+  it('should test editUser', () => {
+    component.editUser(testedUserTable);
+    expect(component.editUser(testedUserTable)).toBeTruthy;
+    testedUsers.push(testedUser);
+    const findedUser = testedUsers.find(
+      (user) => Number(user.id) === testedUserTable.id
+    ) as UserApiInterface;
+    expect(component.user).toEqual(findedUser);
+  });
+
+  it('should check equal in EditUser', () => {
+    component.editUser(testedUserTable);
+    const testExpr = Number(testedUser.id) === testedUserTable.id
+    expect(testExpr).toBeFalsy();
   })
 
+  it('should test call openModal in editUser', () => {
+    const funcModalSpy = spyOn(component, 'openModal');
+    const funcChangeSpy = spyOn(component, 'changeUserFormstate');
+    component.editUser(testedUserTable);
+    expect(funcModalSpy).toHaveBeenCalled();
+    expect(funcChangeSpy).toHaveBeenCalled();
+  });
+
+  it('should test openModal', () => {
+    const spy = spyOn(userModalService, 'modalOpen');
+    userModalService.modalOpen();
+    component.openModal();
+    expect(spy).toHaveBeenCalled();
+  });
+
+  it('should test changeUserFormstate', () => {
+    const inputValue = true;
+    component.changeUserFormstate(inputValue);
+    expect(component.changeUserFormstate(inputValue)).toBeTruthy;
+    const spy = spyOn(userFormStateService, 'changeFormStatus');
+    userFormStateService.changeFormStatus(inputValue);
+    expect(spy).toHaveBeenCalled();
+  });
+
+  it('should test addUser', () => {
+    const addedUser = userMapper.mapToCreateUpdateDto(DEFAULT_USER);
+    component.addUser();
+    expect(testedUser).toEqual(addedUser);
+  });
+
+  it('should test call methods in addUser', () => {
+    const funcModalSpy = spyOn(component, 'openModal');
+    const funcChangeSpy = spyOn(component, 'changeUserFormstate');
+    component.addUser();
+    expect(funcModalSpy).toHaveBeenCalled();
+    expect(funcChangeSpy).toHaveBeenCalled();
+  });
+
+  it('should test cellClickHandler', () => {
+    const testCellData: CellClickEvent = {
+      column: '', columnIndex: 1, dataItem: '', originalEvent: '', rowIndex: 2, isEdited: true, sender: {} as GridComponent, type: 'click'
+    }
+    component.cellClickHandler(testCellData);
+    expect(component.user).toBe(testCellData.dataItem)
+  })
+
+  it('should test createUser and  updateUser', () => {
+    component.updateUser(testedUser);
+    component.createUser(testedUser);
+    expect(component.updateUser(testedUser)).toBeTruthy; 
+    const funcSpy = spyOn(component, 'getAllUsers');
+    component.getAllUsers();
+    expect(funcSpy).toHaveBeenCalled();
+  })
 });
-
-
-
-

@@ -11,8 +11,7 @@ import { UserFormInterface } from '../models/user-form.interface';
 export class UserFormStateService {
   public initialFormState: BehaviorSubject<UserFormInterface> = new BehaviorSubject<UserFormInterface>(DEFAULT_USER);
   public isFormForEdit: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
-
-  constructor(private userMapper: UserMapper){}
+  public  userMapper = new UserMapper()
 
   public getFormStatus(): Observable<boolean> {
     return this.isFormForEdit.asObservable();

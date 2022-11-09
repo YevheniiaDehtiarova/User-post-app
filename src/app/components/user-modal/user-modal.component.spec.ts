@@ -39,7 +39,7 @@ describe('User Modal Component', () => {
     userService = new UserService(http);
     userModalService = new UserModalService();
     userMapper = new UserMapper();
-    userFormStateService = new UserFormStateService(new UserMapper());
+    userFormStateService = new UserFormStateService();
 
     fixture.detectChanges();
     testedUser = {

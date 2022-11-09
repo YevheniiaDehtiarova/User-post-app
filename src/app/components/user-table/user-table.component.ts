@@ -24,10 +24,10 @@ export class UserTableComponent implements OnInit, OnDestroy {
   public isUserModalDialogVisible: boolean;
   public userModalStatusSubscription: Subscription;
   public getAllUserSubscription: Subscription;
+  public userMapper = new UserMapper();
 
   constructor(
     private userService: UserService,
-    private userMapper: UserMapper,
     private userModalService: UserModalService,
     private userFormStateService: UserFormStateService,
     private cd: ChangeDetectorRef,
@@ -63,22 +63,26 @@ export class UserTableComponent implements OnInit, OnDestroy {
     ) as UserApiInterface;
 
     this.openModal();
-    this.userFormStateService.changeFormStatus(true);
-    this.userFormStateService.setInitialFormState(this.user);
+    this.changeUserFormstate(true);
+    //this.userFormStateService.setInitialFormState(this.user);
   }
 
   public openModal(): void {
     this.userModalService.modalOpen();
   }
 
+  public changeUserFormstate(value: boolean): void {
+    this.userFormStateService.changeFormStatus(value);
+  }
+
   public addUser(): void {
     this.user = this.userMapper.mapToCreateUpdateDto(DEFAULT_USER);
     this.openModal();
-    this.userFormStateService.changeFormStatus(false);
+    this.changeUserFormstate(false);
   }
 
   public doubleClick(): void {
-    this.router.navigate(['/user-detail', this.user.id]);
+      this.router.navigate(['/user-detail', this.user?.id]);
   }
   
   public cellClickHandler(cellData: CellClickEvent) {
