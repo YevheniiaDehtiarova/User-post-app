@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
 import { of } from 'rxjs';
 import { Post } from '../models/post.class';
@@ -8,16 +8,17 @@ import { PostService } from './post.service';
 
 describe('PostService', () => {
   let service: PostService;
-  let httpClientSpy: jasmine.SpyObj<HttpClient>;
+  let httpController: HttpTestingController;
   let testedPost: Post;
+  let url = 'http://localhost:3000/api';
 
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [HttpClientTestingModule],
     });
     service = TestBed.inject(PostService);
-    httpClientSpy = jasmine.createSpyObj('HttpClient', ['get']);
-    service = new PostService(httpClientSpy);
+    httpController = TestBed.inject(HttpTestingController);
+
     testedPost = {
       body: '',
       comments: [
@@ -37,19 +38,47 @@ describe('PostService', () => {
   it('should return posts from getAllPosts', () => {
     const expectedPosts: Post[] = [];
     expectedPosts.push(testedPost);
-    httpClientSpy.get.and.returnValue(of(expectedPosts));
-
-    service.getAllPosts().subscribe({
-      next: (posts) => {
-        expect(posts).withContext('expected posts').toEqual(expectedPosts);
-      },
-    });
-    expect(httpClientSpy.get.calls.count()).withContext('one call').toBe(1);
+    service.getAllPosts().subscribe((posts) => {
+      expect(posts).toEqual(expectedPosts);
+  });
+    const req = httpController.expectOne({method: 'GET',url: `${url}/posts`});
+    req.flush(expectedPosts);
   });
 
-  it('should test getCommentById', () => {
-    const spy = spyOn(service, 'getComments');
-    service.getComments();
-    expect(spy).toHaveBeenCalled();
+  it('should create post in createPost', () => {
+    service.createPost(testedPost).subscribe((post) => {
+      expect(post).toEqual(testedPost);
+  });
+  const req = httpController.expectOne({ method: 'POST', url: `${url}/posts` })
+  req.flush(testedPost);
+  })
+
+  it('should update post in updatePost', () => {
+    const id ='1';
+    service.updatePost(id, testedPost).subscribe((post)=>{
+      expect(post).toEqual(testedPost);
+    });
+    const req = httpController.expectOne({method: 'PUT',url: `${url}/posts/${id}`});
+    req.flush(testedPost);
+  })
+
+  it('should delete post in deletePost', () => {
+    const id ='1';
+    service.deletePost(id).subscribe((post)=>{
+      expect(post).toEqual(testedPost);
+    });
+    const req = httpController.expectOne({method: 'DELETE',url: `${url}/posts/${id}`});
+    req.flush(testedPost);
+  })
+
+  it('should return comments in getComments and in getCommentById', () => {
+    const expectedComments = [
+      { postId: '2', id: '3', name: 'aaa', email: 'bbb', body: 'cccc' },
+    ]
+    service.getComments().subscribe((comments) => {
+      expect(comments).toEqual(expectedComments);
+  });
+    const req = httpController.expectOne({method: 'GET',url: `${url}/comments`});
+    req.flush(expectedComments);
   })
 });
