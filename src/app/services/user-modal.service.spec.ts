@@ -14,21 +14,21 @@ describe('UserModalService', () => {
         expect(service).toBeTruthy();
     });
 
-    it('should return observable boolean from getModalStatus', () => {
+    it('should test return observable boolean from getModalStatus method', () => {
         const state: boolean = false;
         service.getModalStatus().subscribe((value) => {
             expect(value).toBe(state)
         })
     })
 
-    it('should return observable boolean from getAddingState', () => {
+    it('should test return observable boolean from getAddingState method', () => {
         const state: boolean = false;
         service.getAddingState().subscribe((value) => {
             expect(value).toBe(state)
         })
     })
 
-    it('should check modalStatus for open', () => {
+    it('should test modalStatus for open method', () => {
         service.modalOpen()
         service.isModalDialog.subscribe(state => {
             expect(state).toBe(true);
@@ -38,7 +38,7 @@ describe('UserModalService', () => {
         })
     })
 
-    it('should check modalStatus for close', () => {
+    it('should test modalStatus for close method', () => {
         service.modalClose();
         service.isModalDialog.subscribe(state => {
             expect(state).toBe(false);

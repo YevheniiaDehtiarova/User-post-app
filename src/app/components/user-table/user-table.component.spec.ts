@@ -79,7 +79,7 @@ describe('User Table Component', () => {
     expect(component).toBeTruthy();
   });
 
-  it(`should navigate to user-detail`, () => {
+  it(`should test navigate to user-detail`, () => {
     component.doubleClick();
     const id = undefined;
     expect(routerSpy.navigate).toHaveBeenCalledWith(['/user-detail', id ]);
@@ -101,7 +101,7 @@ describe('User Table Component', () => {
     expect(component.users).toEqual(userMapper.mapToViewModel(response));
   }));
 
-  it('should test map in getAllUsers', () => {
+  it('should test map in getAllUsers method', () => {
     let mockedData: any = [];
     const spy = spyOn(userService, 'getAllUsers').and.returnValue(
       of(mockedData)
@@ -112,14 +112,14 @@ describe('User Table Component', () => {
     expect(component.users).toEqual(userMapper.mapToViewModel(mockedData));
   });
 
-  it('should test getModalStatus', () => {
+  it('should test getModalStatus method', () => {
     component.getModalStatus();
     userModalService.getModalStatus().subscribe((value) => {
       expect(component.isUserModalDialogVisible).toBe(value);
     });
   });
 
-  it('should test subscr in getModalStatus', fakeAsync(() => {
+  it('should test subscr in getModalStatus method', fakeAsync(() => {
     const response: boolean = false;
     spyOn(userModalService, 'getModalStatus').and.returnValue(of(response));
     component.getModalStatus();
@@ -127,14 +127,14 @@ describe('User Table Component', () => {
     expect(component.isUserModalDialogVisible).toBe(response);
   }));
 
-  it('should test work of service in getModalStatus', () => {
+  it('should test work of service in getModalStatus method', () => {
     const spy = spyOn(userModalService, 'getModalStatus');
     userModalService.getModalStatus();
     component.getModalStatus();
     expect(spy).toHaveBeenCalled();
   });
 
-  it('should test editUser', () => {
+  it('should test editUser method', () => {
     component.editUser(testedUserTable);
     expect(component.editUser(testedUserTable)).toBeTruthy;
     testedUsers.push(testedUser);
@@ -144,13 +144,13 @@ describe('User Table Component', () => {
     expect(component.user).toEqual(findedUser);
   });
 
-  it('should check equal in EditUser', () => {
+  it('should check equal in EditUser method', () => {
     component.editUser(testedUserTable);
     const testExpr = Number(testedUser.id) === testedUserTable.id
     expect(testExpr).toBeFalsy();
   })
 
-  it('should test call openModal in editUser', () => {
+  it('should test call openModal in editUser method', () => {
     const funcModalSpy = spyOn(component, 'openModal');
     const funcChangeSpy = spyOn(component, 'changeUserFormstate');
     component.editUser(testedUserTable);
@@ -158,14 +158,14 @@ describe('User Table Component', () => {
     expect(funcChangeSpy).toHaveBeenCalled();
   });
 
-  it('should test openModal', () => {
+  it('should test openModal method', () => {
     const spy = spyOn(userModalService, 'modalOpen');
     userModalService.modalOpen();
     component.openModal();
     expect(spy).toHaveBeenCalled();
   });
 
-  it('should test changeUserFormstate', () => {
+  it('should test changeUserFormstate method', () => {
     const inputValue = true;
     component.changeUserFormstate(inputValue);
     expect(component.changeUserFormstate(inputValue)).toBeTruthy;
@@ -174,13 +174,13 @@ describe('User Table Component', () => {
     expect(spy).toHaveBeenCalled();
   });
 
-  it('should test addUser', () => {
+  it('should test addUser method', () => {
     const addedUser = userMapper.mapToCreateUpdateDto(DEFAULT_USER);
     component.addUser();
     expect(testedUser).toEqual(addedUser);
   });
 
-  it('should test call methods in addUser', () => {
+  it('should test call methods in addUser method', () => {
     const funcModalSpy = spyOn(component, 'openModal');
     const funcChangeSpy = spyOn(component, 'changeUserFormstate');
     component.addUser();
@@ -188,7 +188,7 @@ describe('User Table Component', () => {
     expect(funcChangeSpy).toHaveBeenCalled();
   });
 
-  it('should test cellClickHandler', () => {
+  it('should test cellClickHandler method', () => {
     const testCellData: CellClickEvent = {
       column: '', columnIndex: 1, dataItem: '', originalEvent: '', rowIndex: 2, isEdited: true, sender: {} as GridComponent, type: 'click'
     }
@@ -196,7 +196,7 @@ describe('User Table Component', () => {
     expect(component.user).toBe(testCellData.dataItem)
   })
 
-  it('should test createUser and  updateUser', () => {
+  it('should test createUser and updateUser methods', () => {
     component.updateUser(testedUser);
     component.createUser(testedUser);
     expect(component.updateUser(testedUser)).toBeTruthy; 

@@ -41,7 +41,7 @@ describe('UserService', () => {
         expect(service).toBeTruthy();
     });
 
-    it('should return users from getAllUsers', () => {
+    it('should test return users from getAllUsers method', () => {
         let testedUsers: Array<UserApiInterface> = [];
         testedUsers.push(testedUser);
         service.getAllUsers().subscribe((res) => {
@@ -51,7 +51,7 @@ describe('UserService', () => {
         req.flush(testedUsers);
     });
 
-    it('should return user from getUser', () => {
+    it('should test return user from getUser method', () => {
         const id = '1';
         service.getUser(id).subscribe((user) => {
             expect(user).toEqual(testedUser);
@@ -60,7 +60,7 @@ describe('UserService', () => {
         req.flush(testedUser);
     })
 
-    it('should test createUser', () => {
+    it('should test createUser method', () => {
         service.createUser(testedUser).subscribe((user) => {
             expect(user).toEqual(testedUser);
         });
@@ -68,7 +68,7 @@ describe('UserService', () => {
         req.flush(testedUser);
     })
 
-    it('should test updateUser', () => {
+    it('should test updateUser method', () => {
         const id = '1';
         service.updateUser(id, testedUser).subscribe((user) => {
             expect(user).toEqual(testedUser);

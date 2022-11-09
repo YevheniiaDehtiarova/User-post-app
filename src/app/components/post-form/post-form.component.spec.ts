@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { FormControl, FormGroup } from '@angular/forms';
+import { FormControl } from '@angular/forms';
 import { Post } from 'src/app/models/post.class';
 import { PostFormComponent } from './post-form.component';
 
@@ -24,25 +24,25 @@ describe('PostForm Component', () => {
         expect(component).toBeTruthy();
     });
 
-    it('should create form with 3 controls', () => {
+    it('should test creating form with 3 controls', () => {
         expect(component.postForm.contains('title')).toBeTruthy()
         expect(component.postForm.contains('body')).toBeTruthy()
         expect(component.postForm.contains('postId')).toBeTruthy()
     })
 
-    it('should mark title control as invalid if empty value', () => {
+    it('should test mark title control as invalid if empty value', () => {
         const control = component.postForm.get('title') as FormControl;
         control.setValue('')
         expect(control.valid).toBeFalsy()
     })
 
-    it('should mark body control as invalid if empty value', () => {
+    it('should test mark body control as invalid if empty value', () => {
         const control = component.postForm.get('body') as FormControl;
         control.setValue('')
         expect(control.valid).toBeFalsy()
     })
 
-    it('check input data when post form conponent init', () => {
+    it('should test input data when post form conponent ngOnInit', () => {
         const post: Post = {
             body: "",
             comments: [{ postId: '2', id: '3', name: 'aaa', email: 'bbb', body: 'cccc' }],

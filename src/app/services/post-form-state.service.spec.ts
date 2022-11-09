@@ -9,8 +9,6 @@ describe('PostFormStateService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      // imports: [ HttpClientTestingModule],
-      // providers: [UserService]
     });
     service = TestBed.inject(PostFormStateService);
   });
@@ -19,19 +17,7 @@ describe('PostFormStateService', () => {
     expect(service).toBeTruthy();
   });
 
-  /*it('check value from initial post form state'), () => {
-    service.initialPostFormState.subscribe((value) => {
-      expect(value).toBe(DEFAULT_POST);
-    })
-  }*/
-
-  /*it('check is post form for edit state'), () => {
-    service.isPostFormForEdit.subscribe((value) => {
-      expect(value).toBe(false);
-    })
-  }*/
-
-  it('should return observable boolean from getFormStatus', () => {
+  it('should test return observable boolean from getFormStatus method', () => {
     const state: boolean = false;
     service.getFormStatus().subscribe((value) => {
       expect(value).toBe(state)
@@ -39,14 +25,14 @@ describe('PostFormStateService', () => {
   })
 
 
-  it('should return post value from getInitialFormState', () => {
+  it('should test return post value from getInitialFormState method', () => {
     const post: Post = DEFAULT_POST;
     service.getInitialFormState().subscribe((value) => {
       expect(value).toBe(post)
     })
   })
 
-  it('should  check setInitialFormState', () => {
+  it('should test setInitialFormState method', () => {
     const testPost: Post = DEFAULT_POST;
     service.setInitialFormState(testPost);
     service.initialPost.subscribe(post => {
@@ -54,7 +40,7 @@ describe('PostFormStateService', () => {
     })
   })
 
-  it('should check changeFormStatus', () => {
+  it('should test changeFormStatus method', () => {
     service.changeFormStatus(false);
     service.postState.subscribe(state => {
       expect(state).toBe(false);

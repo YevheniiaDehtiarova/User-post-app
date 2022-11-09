@@ -90,14 +90,14 @@ describe('UserDetailComponent', () => {
     expect(component.userId).toBe(testId);
   });
 
-  it('should check work userService in initUser', () => {
+  it('should test work userService in initUser', () => {
     const spy = spyOn(userService, 'getUser').and.callThrough();
     userService.getUser(testedUser.id);
     component.initUser();
     expect(spy).toHaveBeenCalled();
   });
 
-  it('should check user in initUser', fakeAsync(() => {
+  it('should test user in initUser', fakeAsync(() => {
     let response: UserApiInterface;
     component.initUser();
     fixture.detectChanges();
@@ -106,14 +106,14 @@ describe('UserDetailComponent', () => {
     });
   }));
 
-  it('should check work postService in initAllPosts', () => {
+  it('should test work postService in initAllPosts', () => {
     const spy = spyOn(postService, 'getAllPosts').and.callThrough();
     postService.getAllPosts();
     component.initAllPosts();
     expect(spy).toHaveBeenCalled();
   });
 
-  it('should check posts in initAllPosts', fakeAsync(() => {
+  it('should test posts in initAllPosts', fakeAsync(() => {
     let response: Post[];
     fixture.detectChanges();
     component.initAllPosts();
@@ -129,7 +129,7 @@ describe('UserDetailComponent', () => {
     });
   });
 
-  it('should work service in getUserModalStatus', () => {
+  it('should test work service in getUserModalStatus', () => {
     const spy = spyOn(userModalService, 'getModalStatus').and.callThrough();
     userModalService.getModalStatus();
     component.getUserModalStatus();
@@ -143,14 +143,14 @@ describe('UserDetailComponent', () => {
     });
   });
 
-  it('should work service in getUserFormStatus', () => {
+  it('should test work service in getUserFormStatus', () => {
     const spy = spyOn(userFormStateService, 'getFormStatus').and.callThrough();
     userFormStateService.getFormStatus();
     component.getUserFormStatus();
     expect(spy).toHaveBeenCalled();
   });
 
-  it('should test updateUser', () => {
+  it('should test updateUser method', () => {
     component.updateUser(testedUser);
     userService.getUser(testedUser.id).subscribe((value) => {
       expect(value).toBe(component.user);
@@ -158,7 +158,7 @@ describe('UserDetailComponent', () => {
     expect(testedUser).toBeTruthy();
   });
 
-  it('should user unsubscribe', () => {
+  it('should  test unsubscribe in ngOnDestroy', () => {
     component.userSubscription = of().subscribe();
     component.getAllPostsSubcription = of().subscribe();
     component.userModalStatusSubscription = of().subscribe();
@@ -167,18 +167,9 @@ describe('UserDetailComponent', () => {
       component.userSubscription,
       'unsubscribe'
     );
-    const unsubscriptionPostsSpy = spyOn(
-      component.getAllPostsSubcription,
-      'unsubscribe'
-    );
-    const unsubscriptionUserModalSpy = spyOn(
-      component.userModalStatusSubscription,
-      'unsubscribe'
-    );
-    const unsubscriptionUserFormSpy = spyOn(
-      component.userFormStatusSubscription,
-      'unsubscribe'
-    );
+    const unsubscriptionPostsSpy = spyOn(component.getAllPostsSubcription,'unsubscribe');
+    const unsubscriptionUserModalSpy = spyOn(component.userModalStatusSubscription,'unsubscribe');
+    const unsubscriptionUserFormSpy = spyOn(component.userFormStatusSubscription,'unsubscribe');
     component.ngOnDestroy();
     expect(unsubscriptionUserSpy).toHaveBeenCalledTimes(1);
     expect(unsubscriptionPostsSpy).toHaveBeenCalledTimes(1);
@@ -186,7 +177,7 @@ describe('UserDetailComponent', () => {
     expect(unsubscriptionUserFormSpy).toHaveBeenCalledTimes(1);
   });
 
-  it('should test isUserModalDialogVisible in  openUserModal', () => {
+  it('should test isUserModalDialogVisible in openUserModal method', () => {
     const value = true;
     component.openUserModal();
     expect(component.isUserModalDialogVisible).toBe(value);

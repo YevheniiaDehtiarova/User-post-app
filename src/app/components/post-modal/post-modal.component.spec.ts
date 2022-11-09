@@ -50,21 +50,13 @@ describe('PostModal Component', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
-
-  it('should test post length in init', () => {
-    component.ngOnInit();
-    let mockedPosts = testedPosts;
-    postService.getAllPosts().pipe(take(1)).subscribe((posts) => {
-      expect(posts.length).toEqual(mockedPosts.length);
-    });
-  });
-
-  it('should check post in checkInitPost', () => {
+  
+  it('should  test post in checkInitPost method', () => {
     component.checkInitPost(testedPost);
     expect(component.post).toEqual(testedPost);
   });
 
-  it('should post unsubscribe', () => {
+  it('should  test post unsubscribe in ngOnDestroy', () => {
     component.getAllPostSubscription = of().subscribe();
     const unsubscriptionSpy = spyOn(
       component.getAllPostSubscription,
@@ -103,14 +95,14 @@ describe('PostModal Component', () => {
     expect(callSpy).toHaveBeenCalled();
   })
 
-  it('should check post exist in checkPostOnDefault', () => {
+  it('should test post exist in checkPostOnDefault', () => {
     const Spy = spyOn(component, 'updatePost');
     component.checkPostOnDefault(testedPost);
     expect(component.checkPostOnDefault(testedPost)).toBeTruthy;
     expect(Spy).toHaveBeenCalled();
   });
 
-  it('should check post does not exist in checkPostOnDefault', () => {
+  it('should test if post does not exist in checkPostOnDefault', () => {
     let defaulPost = DEFAULT_POST;
     const createSpy = spyOn(component, 'createPost');
     component.createPost(defaulPost);
@@ -119,22 +111,7 @@ describe('PostModal Component', () => {
     expect(createSpy).toHaveBeenCalled();
   });
 
-
-  it('should check create post', () => {
-    component.createPost(testedPost);
-    expect(component.createPost(testedPost)).toBeTruthy;
-
-    component.createPosts.subscribe((post) => {
-      expect(post).toBe(testedPost);
-    });
-
-    spyOn(postService, 'createPost').and.callThrough();
-    postService.createPost(testedPost).subscribe(
-      response => expect(response).toEqual(testedPost)
-    );
-  });
-
-  it('check call resetFrom in createPost  and updatePost method', () => {
+  it('check test resetFrom in createPost and updatePost methods', () => {
     component.createPost(testedPost);
     component.updatePost(testedPost);
     const createResetSpy = spyOn(component, 'resetForm');
@@ -142,7 +119,7 @@ describe('PostModal Component', () => {
     expect(createResetSpy).toHaveBeenCalled();
   })
 
-  it('should check updatePost', () => {
+  it('should test updatePost method', () => {
     component.updatePost(testedPost);
     expect(component.updatePost(testedPost)).toBeTruthy;
     component.updatePosts.subscribe((post) => {
@@ -154,7 +131,7 @@ describe('PostModal Component', () => {
 
   });
 
-  it('should be test resetForm', () => {
+  it('should test resetForm method', () => {
     component.resetForm();
     expect(component.resetForm()).toBeTruthy;
     const funcSpy = spyOn(component, 'close');

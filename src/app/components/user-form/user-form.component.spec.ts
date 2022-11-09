@@ -43,7 +43,7 @@ describe('UserFormComponent', () => {
         expect(component).toBeTruthy();
     });
 
-    it('should create form with 13 controls', () => {
+    it('should test creating form with 13 controls', () => {
         expect(component.userForm.contains('id')).toBeTruthy();
         expect(component.userForm.contains('firstName')).toBeTruthy();
         expect(component.userForm.contains('lastName')).toBeTruthy();
@@ -58,7 +58,7 @@ describe('UserFormComponent', () => {
         expect(component.userForm.contains('companyScope')).toBeTruthy();
     })
 
-    it('form invalid when empty', () => {
+    it('should test if form invalid', () => {
         component.userForm.get('firstName')?.setValue('');
         component.userForm.get('lastName')?.setValue('');
         component.userForm.get('userName')?.setValue('');
@@ -83,7 +83,7 @@ describe('UserFormComponent', () => {
         expect(email.hasError('required')).toBeTruthy();
     });
 
-    it('check input data when userformComponent init', () => {
+    it('should test input data when userFormComponent init', () => {
         component.user = testedUser;
         fixture.detectChanges();
 

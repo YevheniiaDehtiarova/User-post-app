@@ -35,7 +35,7 @@ describe('PostService', () => {
     expect(service).toBeTruthy();
   });
 
-  it('should return posts from getAllPosts', () => {
+  it('should test return posts from getAllPosts', () => {
     const expectedPosts: Post[] = [];
     expectedPosts.push(testedPost);
     service.getAllPosts().subscribe((posts) => {
@@ -45,7 +45,7 @@ describe('PostService', () => {
     req.flush(expectedPosts);
   });
 
-  it('should create post in createPost', () => {
+  it('should test create post in createPost', () => {
     service.createPost(testedPost).subscribe((post) => {
       expect(post).toEqual(testedPost);
   });
@@ -53,7 +53,7 @@ describe('PostService', () => {
   req.flush(testedPost);
   })
 
-  it('should update post in updatePost', () => {
+  it('should test update post in updatePost', () => {
     const id ='1';
     service.updatePost(id, testedPost).subscribe((post)=>{
       expect(post).toEqual(testedPost);
@@ -62,7 +62,7 @@ describe('PostService', () => {
     req.flush(testedPost);
   })
 
-  it('should delete post in deletePost', () => {
+  it('should test delete post in deletePost', () => {
     const id ='1';
     service.deletePost(id).subscribe((post)=>{
       expect(post).toEqual(testedPost);
@@ -71,7 +71,7 @@ describe('PostService', () => {
     req.flush(testedPost);
   })
 
-  it('should return comments in getComments and in getCommentById', () => {
+  it('should test return comments in getComments and in getCommentById', () => {
     const expectedComments = [
       { postId: '2', id: '3', name: 'aaa', email: 'bbb', body: 'cccc' },
     ]

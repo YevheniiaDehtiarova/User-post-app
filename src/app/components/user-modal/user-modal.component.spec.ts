@@ -83,13 +83,13 @@ describe('User Modal Component', () => {
     expect(spy).toHaveBeenCalled();
   });
 
-  it('should call function in init', () => {
+  it('should test call function in OnInit', () => {
     const getStatusSpy = spyOn(component, 'getFormStatus');
     component.ngOnInit();
     expect(getStatusSpy).toHaveBeenCalled();
   });
 
-  it('should userForm unSubscribe', () => {
+  it('should  test userForm unSubscription', () => {
     component.userFormSubscription = of().subscribe();
     const unsubscriptionSpy = spyOn(
       component.userFormSubscription,
@@ -99,27 +99,20 @@ describe('User Modal Component', () => {
     expect(unsubscriptionSpy).toHaveBeenCalledTimes(1);
   });
 
-  it('should test closeModal', () => {
+  it('should test closeModal method', () => {
     const spy = spyOn(userModalService, 'modalClose');
     userModalService.modalClose();
     component.closeModal();
     expect(spy).toHaveBeenCalled();
   });
 
-  it('should test submit if form valid', () => {
+  it('should test submit method if form valid', () => {
     const mockedUserFormValue = component.userFormComponent?.userForm;
     mockedUserFormValue?.valid;
     const spyService = spyOn(userService, 'createUser');
     userService.createUser(testedUser);
     component.submit();
     expect(spyService).toHaveBeenCalled();
-  });
-
-  it('should test submit if form invalid', () => {
-    const mockedUserFormValue = component.userFormComponent?.userForm;
-    mockedUserFormValue?.invalid;
-    component.submit();
-    expect(component.userFormComponent?.userForm.markAllAsTouched()).toBeTruthy;
   });
 
   it('should test subscribe in submit', () => {
@@ -133,7 +126,7 @@ describe('User Modal Component', () => {
     expect(spy).toHaveBeenCalled();
   });
 
-  it('test creating in createOutputUser', () => {
+  it('should test creating in createOutputUser method', () => {
     component.createOutputUser(testedUser);
     component.creating.subscribe((value: UserApiInterface) => {
       expect(value.email).toBe('test@example.com');
@@ -147,7 +140,7 @@ describe('User Modal Component', () => {
     expect(spy).toHaveBeenCalled();
   });
 
-  it('should test updateSubmit', () => {
+  it('should test updateSubmit method', () => {
     const spyService = spyOn(userService, 'updateUser');
     userService.updateUser(testedUser.id, testedUser);
     component.updateSubmit();
@@ -161,7 +154,7 @@ describe('User Modal Component', () => {
     expect(spyFunc).toHaveBeenCalled();
   });
 
-  it('should test createOutputUser', () => {
+  it('should test createOutputUser method', () => {
     component.updateOutputUser(testedUser);
     component.updating.subscribe((value: UserApiInterface) => {
       expect(value).toBe(testedUser);
@@ -175,7 +168,7 @@ describe('User Modal Component', () => {
     expect(spy).toHaveBeenCalled();
   });
 
-  it('should test changeUpdatedProperty', () => {
+  it('should test changeUpdatedProperty method', () => {
     const fakedValue =false;
     component.changeUpdatedProperty(false)
     expect(component.isFormForEdit).toBe(fakedValue);

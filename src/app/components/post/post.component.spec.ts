@@ -84,19 +84,19 @@ describe('Post Component', () => {
     });
   });
 
-  it('check splicePosts', () => {
+  it('should test method splicePosts', () => {
     const testPost: Post = testedPost;
     component.splicePosts(testPost, component.posts);
     const index = component.posts.indexOf(testPost);
     expect(component.posts?.splice(index, 1, testPost)).toBeTruthy();
   });
 
-  it('check definePostsWithComments', () => {
+  it('should test method definePostsWithComments', () => {
     component.definePostsWithComments(testedPosts);
     expect(component.postsWithComments).toEqual(testedPosts)
   })
 
-  it('check input posts when post conponent init', () => {
+  it('should test input posts when PostComponent init', () => {
     const testPosts: Post[] = [];
     testPosts.push(testedPost);
     component.posts = testPosts;
@@ -105,12 +105,12 @@ describe('Post Component', () => {
     expect(component.posts).toEqual(testPosts);
   });
 
-  it('should test createCommentSubscription', () => {
+  it('should test method createCommentSubscription', () => {
     component.createCommentSubscription(testedPost);
     expect(component.createCommentSubscription(testedPost)).toBeTruthy();
   })
 
-  it('check modifyPosts', () => {
+  it('should test method modifyPosts', () => {
     let testedComments = testedPost.comments as Comment[];
     const testCommentFromPost  = testedPost.comments as Comment[];
     component.modifyPosts(testedPosts,testedComments);
@@ -120,18 +120,18 @@ describe('Post Component', () => {
     expect(component.definePostsWithComments(component.posts)).toBeTruthy;
   })
 
-  it('check initPostWithComments', () => {
+  it('should test method initPostWithComments', () => {
      component.initPostsWithcomments(testedPosts);
      expect(testedPosts).toBeTruthy();
   });
 
-  it('check commentObservable', () => {
+  it('should test method commentObservable', () => {
     let id = testedPost.id;
     component.commentObservable(id);
     expect(postService.getCommentById(id)).toBeTruthy();
   })
 
-  it('check work of service in commentObservable', () => {
+  it('should test work of service in commentObservable', () => {
     let id = testedPost.id;
     const spy = spyOn(postService,'getCommentById').and.callThrough();
     postService.getCommentById(id)
@@ -139,25 +139,25 @@ describe('Post Component', () => {
     expect(spy).toHaveBeenCalled();
   })
 
-  it('check post in method addPost', () => {
+  it('should test post in method addPost', () => {
     const testPost = DEFAULT_POST;
     component.addPost();
     expect(component.post).toBe(testPost);
   });
 
-  it('check changePostModalDialogVisible', () => {
+  it('should test method changePostModalDialogVisible', () => {
     component.changePostModalDialogVisible();
     expect(component.isPostModalDialogVisible).toBeTruthy();
   });
 
-  it('check modalopen in changePostModalDialogVisible', () => {
+  it('should test modalopen method from service in changePostModalDialogVisible', () => {
     const spy = spyOn(postModalService,'modalOpen').and.callThrough();
     postModalService.modalOpen();
     component.postModalOpen();
     expect(spy).toHaveBeenCalled();
   })
 
-  it('check value from changeFormStatus', () => {
+  it('should test value from changeFormStatus', () => {
     const fakeValue = false;
     const spy = spyOn(postFormStateService,'changeFormStatus').and.callThrough();
     postFormStateService.changeFormStatus(fakeValue);
@@ -165,12 +165,12 @@ describe('Post Component', () => {
     expect(spy).toHaveBeenCalled();
   })
 
-  it('check status in method addPost', () => {
+  it('should test status in addPost method', () => {
     component.addPost();
     expect(component.isPostModalDialogVisible).toBeTrue();
   });
 
-  it('check method editPost', () => {
+  it('should test editPost method', () => {
     const testPost: Post = testedPost;
     const testStatus = true;
     component.editPost(testPost);
@@ -179,7 +179,7 @@ describe('Post Component', () => {
     expect(postFormStateService.setInitialFormState(testPost)).toBeTruthy;
   });
 
-  it('check deletePost method', () => {
+  it('should test deletePost method', () => {
     const testPost: Post = testedPost;
     component.deletePost(testPost);
     expect(postService.deletePost(testPost.id)).toBeTruthy();
@@ -195,13 +195,13 @@ describe('Post Component', () => {
   });
 
 
-  it('check post in filterPost', () => {
+  it('should test post in filterPost method', () => {
       component.filterPost(testedPosts, testedPost);
       const filteredPosts = testedPosts.filter((item) => testedPost.id === item.id);
       expect(testedPosts).toEqual(filteredPosts);  
   })
 
-  it('check viewUpdatedPost', () => {
+  it('should test viewUpdatedPost method', () => {
     component.viewUpdatedPost(testedPost);
     const testFindElement = component.posts?.find(
       (post) => post?.id !== testedPost.id
@@ -216,35 +216,31 @@ describe('Post Component', () => {
     expect(component.findElement).toBe(testFindElement);
   });
 
-  it('check showHidecomments method', () => {
+  it('should test showHidecomments method', () => {
     const testShowComments = !component.showComments;
     component.showHideComments();
     expect(component.showComments).toBe(testShowComments);
   });
 
-  it('check viewCreatedPost', () => {
+  it('should test viewCreatedPost method', () => {
     const testPost: Post = testedPost;
     component.viewCreatedPost(testPost);
     expect(component.posts?.push(testPost)).toBeTruthy();
   });
 
-  it('should comment unsubscribe', () => {
+  it('should test unsubscribe in ngOnDestroy', () => {
     component.commentsSubscription = of().subscribe();
-    const unsubscriptionSpy = spyOn(
+    component.modalStatusSubscription = of().subscribe();
+    const unsubscriptionCommentSpy = spyOn(
       component.commentsSubscription,
       'unsubscribe'
     );
-    component.ngOnDestroy();
-    expect(unsubscriptionSpy).toHaveBeenCalledTimes(1);
-  });
-
-  it('should modal status unsubscribe', () => {
-    component.modalStatusSubscription = of().subscribe();
-    const unsubscriptionSpy = spyOn(
+    const unsubscriptionModalSpy = spyOn(
       component.modalStatusSubscription,
       'unsubscribe'
     );
     component.ngOnDestroy();
-    expect(unsubscriptionSpy).toHaveBeenCalledTimes(1);
+    expect(unsubscriptionCommentSpy).toHaveBeenCalledTimes(1);
+    expect(unsubscriptionModalSpy).toHaveBeenCalledTimes(1);
   });
 });
