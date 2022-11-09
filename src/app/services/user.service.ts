@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 import { UserApiInterface } from '../models/user-api.interface';
 import { userRoutes } from '../routes/user.routes';
 
-@Injectable()
+@Injectable({providedIn: 'root'})
 export class UserService {
   constructor(private http: HttpClient) {}
 
