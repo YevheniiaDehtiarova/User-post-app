@@ -13,6 +13,10 @@ export class UserModalService {
     return this.isModalDialog.asObservable();
   }
 
+  public getAddingState(): Observable<boolean>{
+    return this.isAddingState.asObservable();
+  }
+
   public modalOpen(): void {
     this.isModalDialog.next(true);
     this.isAddingState.next(false);
