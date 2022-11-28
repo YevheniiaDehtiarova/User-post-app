@@ -27,7 +27,7 @@ export class UserModalComponent extends BaseComponent implements OnInit {
   @Input() isUserDetailFormEdit: boolean;
   //@Output() creating = new EventEmitter<UserApiInterface>();
  // @Output() updating = new EventEmitter<UserApiInterface>();
-  @Output() updatingUserDetail = new EventEmitter<UserApiInterface>();
+  @Output() updatingUserDetail = new EventEmitter<string>();
   public isFormForEdit: boolean;
 
   constructor(
@@ -59,7 +59,7 @@ export class UserModalComponent extends BaseComponent implements OnInit {
   public submit(): void {
     if (this.userFormComponent?.userForm?.valid) {
       this.defineRequest().pipe(takeUntil(this.destroy$)).subscribe((user) => {
-        this.createOutputUser(user);
+        this.changeUser(user.id);
         this.changeUpdatedProperty(false);
       })
     } else {
@@ -73,8 +73,8 @@ export class UserModalComponent extends BaseComponent implements OnInit {
     : this.userService.updateUser(this.userFormComponent?.userForm?.value?.id, this.userFormComponent?.userForm?.value)         
   }
 
-  public createOutputUser(user:UserApiInterface) {
-    this.updatingUserDetail.emit(user);
+  public changeUser(id:string) {
+    this.updatingUserDetail.emit(id);
     this.closeModal();
   }
 

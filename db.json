@@ -2108,20 +2108,16 @@
       "id": 6,
       "firstName": "Евгения",
       "lastName": "Дегтярева",
-      "username": "123",
+      "userName": "1234",
       "email": "jeni4ka2509@gmail.com",
-      "address": {
-        "street": "просп. Победы, 78",
-        "building": "191",
-        "city": "Харьков",
-        "zipcode": "61204-####"
-      },
+      "street": "просп. Победы, 78",
+      "building": "191",
+      "city": "Харьков",
+      "zipcode": "61204-####",
       "phone": "+380661618617",
       "website": "7",
-      "company": {
-        "name": "8",
-        "scope": "10"
-      }
+      "companyName": "8",
+      "companyScope": "10"
     },
     {
       "id": 7,
@@ -2179,21 +2175,6 @@
         "name": "7",
         "scope": "7"
       }
-    },
-    {
-      "id": 10,
-      "firstName": "Евгения4555",
-      "lastName": "Дегтярева",
-      "userName": "444",
-      "email": "jeni4ka2509@gmail.com",
-      "street": "просп. Победы, 78",
-      "building": "1114444",
-      "city": "Харьков",
-      "zipcode": "61204-####",
-      "phone": "+380661618617",
-      "website": "1",
-      "companyName": "1",
-      "companyScope": "1"
     },
     {
       "id": 11,
