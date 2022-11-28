@@ -48,6 +48,7 @@ export class UserTableComponent extends BaseComponent implements OnInit {
 
   public getAllUsers(): void {
   this.userService.getAllUsers().pipe(takeUntil(this.destroy$)).subscribe((users: Array<UserApiInterface>) => {
+    console.log(users, 'users form api')
       this.users = this.userMapper.mapToViewModel(users);
       this.usersFromApi = users;
     });
@@ -60,6 +61,7 @@ export class UserTableComponent extends BaseComponent implements OnInit {
 
     this.openModal();
     this.changeUserFormstate(true);
+     this.userFormStateService.setInitialFormState(this.user);
   }
 
   public openModal(): void {
@@ -84,13 +86,9 @@ export class UserTableComponent extends BaseComponent implements OnInit {
     this.user = cellData.dataItem;
   }
 
-  public updateUser(event: UserApiInterface): void {
+  public changeUser(): void {
     this.cd.detectChanges();
     this.getAllUsers();
   }
 
-  public createUser(event: UserApiInterface): void {
-   this.cd.detectChanges();
-   this.getAllUsers();
-  }
 }

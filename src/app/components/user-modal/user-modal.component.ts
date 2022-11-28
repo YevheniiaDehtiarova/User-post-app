@@ -7,7 +7,7 @@ import {
   Output,
   ViewChild,
 } from '@angular/core';
-import { Subscription, takeUntil } from 'rxjs';
+import { Observable, Subscription, takeUntil } from 'rxjs';
 import { UserMapper } from 'src/app/mappers/user.mapper';
 import { UserApiInterface } from 'src/app/models/user-api.interface';
 import { UserFormStateService } from 'src/app/services/user-form-state.service';
@@ -58,33 +58,24 @@ export class UserModalComponent extends BaseComponent implements OnInit {
 
   public submit(): void {
     if (this.userFormComponent?.userForm?.valid) {
-      this.userService
-        .createUser(
-          this.userMapper.mapToCreateUpdateDto(
-            this.userFormComponent?.userForm?.value
-          )
-        )
-        .pipe(takeUntil(this.destroy$))
-        .subscribe((user) => {
-          this.createOutputUser(user);
-        });
+      this.defineRequest().pipe(takeUntil(this.destroy$)).subscribe((user) => {
+        this.createOutputUser(user);
+        this.changeUpdatedProperty(false);
+      })
     } else {
-      this.userFormComponent?.userForm.markAllAsTouched();
+      this.userFormComponent?.userForm.markAllAsTouched(); 
     }
+  }
+
+  public defineRequest(): Observable<UserApiInterface> {
+    return (!this.isFormForEdit || !this.isUserDetailFormEdit) 
+    ? this.userService.createUser(this.userMapper.mapToCreateUpdateDto(this.userFormComponent?.userForm?.value))
+    : this.userService.updateUser(this.userFormComponent?.userForm?.value?.id, this.userFormComponent?.userForm?.value)         
   }
 
   public createOutputUser(user:UserApiInterface) {
     this.creating.emit(user);
     this.closeModal();
-  }
-
-  public updateSubmit(): void {
-    this.userService.updateUser(this.userFormComponent?.userForm?.value?.id, this.userFormComponent?.userForm?.value)
-    .pipe(takeUntil(this.destroy$))
-    .subscribe((user) => {
-        this.updateOutputUser(user);
-        this.changeUpdatedProperty(false);
-      });
   }
 
   public changeUpdatedProperty(value: boolean): void {

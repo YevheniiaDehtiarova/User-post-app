@@ -18,7 +18,7 @@ export class UserMapper {
       };
     });
   }
-
+ 
   public mapToCreateUpdateDto(user: UserFormInterface): UserApiInterface {
     return {
       id: user.id as string,
