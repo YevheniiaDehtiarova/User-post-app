@@ -82,9 +82,9 @@ export class UserDetailComponent extends BaseComponent implements OnInit {
       });
   }
 
-  public updateUser(event: UserApiInterface): void {
+  public updateUser(id: string): void {
     this.userService
-      .getUser(event.id)
+      .getUser(id)
       .pipe(takeUntil(this.destroy$))
       .subscribe((user) => {
         this.user = user;

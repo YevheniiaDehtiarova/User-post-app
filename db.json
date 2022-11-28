@@ -2184,20 +2184,16 @@
       "id": 10,
       "firstName": "Евгения4555",
       "lastName": "Дегтярева",
-      "username": "444",
+      "userName": "444",
       "email": "jeni4ka2509@gmail.com",
-      "address": {
-        "street": "просп. Победы, 78",
-        "building": "111",
-        "city": "Харьков",
-        "zipcode": "61204-####"
-      },
+      "street": "просп. Победы, 78",
+      "building": "1114444",
+      "city": "Харьков",
+      "zipcode": "61204-####",
       "phone": "+380661618617",
       "website": "1",
-      "company": {
-        "name": "1",
-        "scope": "1"
-      }
+      "companyName": "1",
+      "companyScope": "1"
     },
     {
       "id": 11,
