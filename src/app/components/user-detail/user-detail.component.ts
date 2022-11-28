@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { UserApiInterface } from 'src/app/models/user-api.interface';
 import { PostService } from 'src/app/services/post.service';
@@ -6,27 +6,22 @@ import { UserFormStateService } from 'src/app/services/user-form-state.service';
 import { UserService } from 'src/app/services/user.service';
 import { Location } from '@angular/common';
 import { UserModalService } from 'src/app/services/user-modal.service';
-import { Subscription } from 'rxjs';
+import { Subject, Subscription, takeUntil } from 'rxjs';
 import { Post } from 'src/app/models/post.class';
-
+import { BaseComponent } from '../base/base.component';
 
 @Component({
   selector: 'app-user-detail',
   templateUrl: './user-detail.component.html',
   styleUrls: ['./user-detail.component.css'],
 })
-export class UserDetailComponent implements OnInit, OnDestroy {
-
+export class UserDetailComponent extends BaseComponent implements OnInit {
   public userId: string;
   public user: UserApiInterface;
   public posts: Array<Post>;
   public isFormForEdit: boolean;
   public isUserDetailFormEdit: boolean;
   public isUserModalDialogVisible: boolean;
-  public userSubscription: Subscription;
-  public getAllPostsSubcription: Subscription;
-  public userModalStatusSubscription: Subscription;
-  public userFormStatusSubscription: Subscription;
 
   constructor(
     private userService: UserService,
@@ -35,21 +30,8 @@ export class UserDetailComponent implements OnInit, OnDestroy {
     private userModalService: UserModalService,
     private userFormStateService: UserFormStateService,
     private location: Location
-  ) {}
-
-  ngOnDestroy(): void {
-    if (this.userSubscription) {
-      this.userSubscription.unsubscribe();
-    }
-    if (this.getAllPostsSubcription) {
-      this.getAllPostsSubcription.unsubscribe();
-    }
-    if (this.userModalStatusSubscription) {
-      this.userModalStatusSubscription.unsubscribe();
-    }
-    if (this.userFormStatusSubscription) {
-      this.userFormStatusSubscription.unsubscribe();
-    }
+  ) {
+    super();
   }
 
   ngOnInit(): void {
@@ -61,44 +43,49 @@ export class UserDetailComponent implements OnInit, OnDestroy {
   }
 
   public initUser(): void {
-    this.userSubscription = this.userService
-    .getUser(this.userId)
-    .subscribe((user) => {
-      this.user = user;
-    });
+    this.userService
+      .getUser(this.userId)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((user) => {
+        this.user = user;
+      });
   }
 
   public calculateUserId(): void {
-    this.userId =  this.activateRoute.snapshot.paramMap.get('id') as string;
+    this.userId = this.activateRoute.snapshot.paramMap.get('id') as string;
   }
 
   public initAllPosts(): void {
-    this.getAllPostsSubcription = this.postService
-    .getAllPosts()
-    .subscribe((posts) => {
-      this.posts = posts.filter((post) => post.userId == this.userId);
-    });
+    this.postService
+      .getAllPosts()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((posts) => {
+        this.posts = posts.filter((post) => post.userId == this.userId);
+      });
   }
 
   public getUserModalStatus(): void {
-    this.userModalStatusSubscription = this.userModalService
+    this.userModalService
       .getModalStatus()
+      .pipe(takeUntil(this.destroy$))
       .subscribe((isModalDialogVisible) => {
         this.isUserModalDialogVisible = isModalDialogVisible;
       });
   }
 
   public getUserFormStatus(): void {
-    this.userFormStatusSubscription = this.userFormStateService
+    this.userFormStateService
       .getFormStatus()
+      .pipe(takeUntil(this.destroy$))
       .subscribe((isFormForEdit: boolean) => {
         this.isFormForEdit = isFormForEdit;
       });
   }
 
   public updateUser(event: UserApiInterface): void {
-    this.userSubscription = this.userService
+    this.userService
       .getUser(event.id)
+      .pipe(takeUntil(this.destroy$))
       .subscribe((user) => {
         this.user = user;
       });

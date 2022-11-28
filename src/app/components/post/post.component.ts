@@ -1,5 +1,5 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { Observable, Subscription } from 'rxjs';
+import { Component, Input, OnInit } from '@angular/core';
+import { Observable, takeUntil } from 'rxjs';
 import { PostFormStateService } from 'src/app/services/post-form-state.service';
 import { PostModalService } from 'src/app/services/post-modal.service';
 import { Comment } from 'src/app/models/comment.interface';
@@ -7,39 +7,31 @@ import { PostService } from 'src/app/services/post.service';
 import { DEFAULT_POST } from 'src/app/models/default-post';
 import { ActivatedRoute } from '@angular/router';
 import { Post } from 'src/app/models/post.class';
+import { BaseComponent } from '../base/base.component';
 
 @Component({
   selector: 'app-post',
   templateUrl: './post.component.html',
   styleUrls: ['./post.component.css'],
 })
-export class PostComponent implements OnInit, OnDestroy {
+export class PostComponent extends BaseComponent implements OnInit {
   @Input() posts: Array<Post> = [];
   public comments$: Observable<Array<Comment>>;
   public isPostModalDialogVisible: boolean = false;
   public showComments: boolean = false;
   public post: Post;
   public userId: string;
-  public commentsSubscription: Subscription;
-  public modalStatusSubscription: Subscription;
   public postsWithComments: Array<Post>;
-  public findElement: Post;
 
   constructor(
     private postModalService: PostModalService,
     private postFormStateService: PostFormStateService,
     private postService: PostService,
     private activateRoute: ActivatedRoute
-  ) {}
-
-  ngOnDestroy(): void {
-    if (this.commentsSubscription) {
-      this.commentsSubscription.unsubscribe();
-    }
-    if (this.modalStatusSubscription) {
-      this.modalStatusSubscription.unsubscribe();
-    }
+  ) {
+    super();
   }
+
 
   ngOnInit(): void {
     this.calculateUserId();
@@ -59,14 +51,14 @@ export class PostComponent implements OnInit, OnDestroy {
     return this.userId;
   }
 
-  public createCommentSubscription(post: Post): Subscription {
+  public createCommentSubscription(post: Post): void {
     this.comments$ = this.commentObservable(post.id);
-    this.commentsSubscription = this.comments$.subscribe(
+     this.comments$.pipe(takeUntil(this.destroy$)).subscribe(
       (comment: Array<Comment>) => {
         this.modifyPosts(this.posts, comment);
       }
     );
-    return this.commentsSubscription;
+  
   }
 
   public commentObservable(id: string): Observable<Array<Comment>>{
@@ -88,8 +80,9 @@ export class PostComponent implements OnInit, OnDestroy {
   }
 
   public getModalStatus(): void {
-    this.modalStatusSubscription = this.postModalService
+   this.postModalService
       .getModalStatus()
+      .pipe(takeUntil(this.destroy$))
       .subscribe((isModalDialogVisible) => {
         this.isPostModalDialogVisible = isModalDialogVisible;
       });
@@ -122,7 +115,9 @@ export class PostComponent implements OnInit, OnDestroy {
   }
 
   public deletePost(post: Post): void {
-    this.postService.deletePost(post.id).subscribe((data) => {
+    this.postService.deletePost(post.id)
+    .pipe(takeUntil(this.destroy$))
+    .subscribe(() => {
       this.filterPost(this.posts, post)
     });
   }
@@ -132,11 +127,13 @@ export class PostComponent implements OnInit, OnDestroy {
   }
 
   public viewUpdatedPost(event: Post): void {
-    this.findElement = this.posts?.find((post) => post.id === event.id) as Post;
-    event.comments =
+    const findElement = this.posts.find((post) => post.id === event.id);
+    if (findElement){
+      findElement.comments =
       this.postsWithComments?.find((post) => post.id === event.id)?.comments ||
-      [];
-    this.splicePosts(this.findElement, this.posts);
+      []; 
+      this.splicePosts(findElement, this.posts);
+    }
   }
 
   public showHideComments(): void {

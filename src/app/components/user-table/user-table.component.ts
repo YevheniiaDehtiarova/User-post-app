@@ -2,7 +2,7 @@ import { ChangeDetectorRef, Component,EventEmitter,Input,OnChanges,OnDestroy,OnI
 import { Router } from '@angular/router';
 import { ButtonRounded } from '@progress/kendo-angular-buttons';
 import { CellClickEvent } from '@progress/kendo-angular-grid';
-import { Subscription } from 'rxjs';
+import { Subscription, takeUntil } from 'rxjs';
 import { UserMapper } from 'src/app/mappers/user.mapper';
 import { DEFAULT_USER } from 'src/app/models/default-user';
 import { UserApiInterface } from 'src/app/models/user-api.interface';
@@ -10,20 +10,19 @@ import { UserTableInterface } from 'src/app/models/user-table.interface';
 import { UserFormStateService } from 'src/app/services/user-form-state.service';
 import { UserModalService } from 'src/app/services/user-modal.service';
 import { UserService } from 'src/app/services/user.service';
+import { BaseComponent } from '../base/base.component';
 
 @Component({
   selector: 'app-user-table',
   templateUrl: './user-table.component.html',
   styleUrls: ['./user-table.component.css'],
 })
-export class UserTableComponent implements OnInit, OnDestroy {
+export class UserTableComponent extends BaseComponent implements OnInit {
   public users: Array<UserTableInterface> = [];
   public usersFromApi: Array<UserApiInterface> = [];
   public user: UserApiInterface;
   public rounded: ButtonRounded = 'medium';
   public isUserModalDialogVisible: boolean;
-  public userModalStatusSubscription: Subscription;
-  public getAllUserSubscription: Subscription;
   public userMapper = new UserMapper();
 
   constructor(
@@ -32,11 +31,8 @@ export class UserTableComponent implements OnInit, OnDestroy {
     private userFormStateService: UserFormStateService,
     private cd: ChangeDetectorRef,
     private router: Router
-  ) {}
-
-  ngOnDestroy(): void {
-    this.userModalStatusSubscription.unsubscribe();
-    this.getAllUserSubscription.unsubscribe();
+  ) {
+    super();
   }
 
   public ngOnInit(): void {
@@ -45,13 +41,13 @@ export class UserTableComponent implements OnInit, OnDestroy {
   }
 
   public getModalStatus(): void {
-    this.userModalStatusSubscription = this.userModalService.getModalStatus().subscribe((isModalDialogVisible) => {
+  this.userModalService.getModalStatus().pipe(takeUntil(this.destroy$)).subscribe((isModalDialogVisible) => {
       this.isUserModalDialogVisible = isModalDialogVisible;
     });
   }
 
   public getAllUsers(): void {
-   this.getAllUserSubscription =  this.userService.getAllUsers().subscribe((users: Array<UserApiInterface>) => {
+  this.userService.getAllUsers().pipe(takeUntil(this.destroy$)).subscribe((users: Array<UserApiInterface>) => {
       this.users = this.userMapper.mapToViewModel(users);
       this.usersFromApi = users;
     });
@@ -64,7 +60,6 @@ export class UserTableComponent implements OnInit, OnDestroy {
 
     this.openModal();
     this.changeUserFormstate(true);
-    //this.userFormStateService.setInitialFormState(this.user);
   }
 
   public openModal(): void {

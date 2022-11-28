@@ -7,13 +7,13 @@ import {
   Output,
   ViewChild,
 } from '@angular/core';
-import { Subscription } from 'rxjs';
+import { Subscription, takeUntil } from 'rxjs';
 import { UserMapper } from 'src/app/mappers/user.mapper';
 import { UserApiInterface } from 'src/app/models/user-api.interface';
-import { UserFormInterface } from 'src/app/models/user-form.interface';
 import { UserFormStateService } from 'src/app/services/user-form-state.service';
 import { UserModalService } from 'src/app/services/user-modal.service';
 import { UserService } from 'src/app/services/user.service';
+import { BaseComponent } from '../base/base.component';
 import { UserFormComponent } from '../user-form/user-form.component';
 
 @Component({
@@ -21,7 +21,7 @@ import { UserFormComponent } from '../user-form/user-form.component';
   templateUrl: './user-modal.component.html',
   styleUrls: ['./user-modal.component.css'],
 })
-export class UserModalComponent implements OnInit, OnDestroy {
+export class UserModalComponent extends BaseComponent implements OnInit {
   @ViewChild(UserFormComponent) public userFormComponent: UserFormComponent;
   @Input('user') user: UserApiInterface;
   @Input() isUserDetailFormEdit: boolean;
@@ -29,19 +29,14 @@ export class UserModalComponent implements OnInit, OnDestroy {
   @Output() updating = new EventEmitter<UserApiInterface>();
   @Output() updatingDetail = new EventEmitter<UserApiInterface>();
   public isFormForEdit: boolean;
-  public userFormSubscription: Subscription;
 
   constructor(
     private userModalService: UserModalService,
     private userService: UserService,
     private userMapper: UserMapper,
     private userFormStateService: UserFormStateService
-  ) { }
-
-  ngOnDestroy(): void {
-    if (this.userFormSubscription) {
-      this.userFormSubscription.unsubscribe();
-    }
+  ) {
+    super();
   }
 
   ngOnInit(): void {
@@ -49,8 +44,9 @@ export class UserModalComponent implements OnInit, OnDestroy {
   }
 
   public getFormStatus(): void {
-    this.userFormSubscription = this.userFormStateService.getFormStatus().
-      subscribe((isFormForEdit: boolean) => {
+  this.userFormStateService.getFormStatus()
+  .pipe(takeUntil(this.destroy$))
+  .subscribe((isFormForEdit: boolean) => {
         this.isFormForEdit = isFormForEdit;
       });
   }
@@ -68,6 +64,7 @@ export class UserModalComponent implements OnInit, OnDestroy {
             this.userFormComponent?.userForm?.value
           )
         )
+        .pipe(takeUntil(this.destroy$))
         .subscribe((user) => {
           this.createOutputUser(user);
         });
@@ -83,7 +80,8 @@ export class UserModalComponent implements OnInit, OnDestroy {
 
   public updateSubmit(): void {
     this.userService.updateUser(this.userFormComponent?.userForm?.value?.id, this.userFormComponent?.userForm?.value)
-      .subscribe((user) => {
+    .pipe(takeUntil(this.destroy$))
+    .subscribe((user) => {
         this.updateOutputUser(user);
         this.changeUpdatedProperty(false);
       });
