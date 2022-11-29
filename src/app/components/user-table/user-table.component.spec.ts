@@ -197,9 +197,8 @@ describe('User Table Component', () => {
   })
 
   it('should test createUser and updateUser methods', () => {
-    component.updateUser(testedUser);
-    component.createUser(testedUser);
-    expect(component.updateUser(testedUser)).toBeTruthy; 
+    component.changeUser();
+    expect(component.changeUser()).toBeTruthy; 
     const funcSpy = spyOn(component, 'getAllUsers');
     component.getAllUsers();
     expect(funcSpy).toHaveBeenCalled();

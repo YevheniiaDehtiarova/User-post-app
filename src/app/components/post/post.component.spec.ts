@@ -8,10 +8,8 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { Comment } from '../../models/comment.interface';
 import { HttpClient } from '@angular/common/http';
 import { DEFAULT_POST } from 'src/app/models/default-post';
-import { of } from 'rxjs';
 import { Post } from 'src/app/models/post.class';
 import { ActivatedRoute } from '@angular/router';
-import { util } from '@progress/kendo-drawing';
 
 describe('Post Component', () => {
   let component: PostComponent;
@@ -77,6 +75,12 @@ describe('Post Component', () => {
     expect(component).toBeTruthy();
   });
 
+  it('should ckeck if in initPostsWithcomments', () => {
+    component.initPostsWithcomments(testedPosts);
+    let testedComments = testedPost.comments as Comment[];
+    expect(testedPost.id === testedComments[0].postId).toBeFalse();
+  })
+
   it('should test subscription in getModalStatus', () => {
     const fakeValue = false;
     postModalService.getModalStatus().subscribe((value) => {
@@ -105,37 +109,21 @@ describe('Post Component', () => {
     expect(component.posts).toEqual(testPosts);
   });
 
-  it('should test method createCommentSubscription', () => {
-    component.createCommentSubscription(testedPost);
-    expect(component.createCommentSubscription(testedPost)).toBeTruthy();
-  })
-
-  it('should test method modifyPosts', () => {
+  it('should test method initPostsWithcomments', () => {
     let testedComments = testedPost.comments as Comment[];
     const testCommentFromPost  = testedPost.comments as Comment[];
-    component.modifyPosts(testedPosts,testedComments);
+    component.initPostsWithcomments(testedPosts);
     expect(testedPost.id === testedComments[0].postId).toBeFalse();
     expect(testedComments).toBe(testCommentFromPost);
     expect(component.splicePosts(testedPost, component.posts)).toBeTruthy;
     expect(component.definePostsWithComments(component.posts)).toBeTruthy;
   })
 
-  it('should test method initPostWithComments', () => {
-     component.initPostsWithcomments(testedPosts);
-     expect(testedPosts).toBeTruthy();
-  });
-
-  it('should test method commentObservable', () => {
-    let id = testedPost.id;
-    component.commentObservable(id);
-    expect(postService.getCommentById(id)).toBeTruthy();
-  })
-
-  it('should test work of service in commentObservable', () => {
+  it('should test work of service in initPostsWithcomments', () => {
     let id = testedPost.id;
     const spy = spyOn(postService,'getCommentById').and.callThrough();
     postService.getCommentById(id)
-    component.commentObservable(id);
+    component.initPostsWithcomments(testedPosts);
     expect(spy).toHaveBeenCalled();
   })
 
@@ -181,25 +169,24 @@ describe('Post Component', () => {
 
   it('should test deletePost method', () => {
     const testPost: Post = testedPost;
-    component.deletePost(testPost);
     expect(postService.deletePost(testPost.id)).toBeTruthy();
-    let id  = testedPost.id;
+    let id  = testPost.id;
     const spy = spyOn(postService,'deletePost').and.callThrough();
     postService.deletePost(id);
     component.deletePost(testedPost);
     expect(spy).toHaveBeenCalled();
-    postService.deletePost(id).subscribe((value) => {
-      expect(component.filterPost(testedPosts, testedPost))
-    })
-    expect(component.filterPost(testedPosts, testedPost)).toBeTruthy;
+   /* postService.deletePost(id).subscribe((value) => {
+      expect(component.filterPost(value, testedPost))
+    })*/
+    expect(component.filterPost(testedPosts, testPost)).toBeTruthy;
   });
 
 
-  it('should test post in filterPost method', () => {
+  /*it('should test post in filterPost method', () => {
       component.filterPost(testedPosts, testedPost);
       const filteredPosts = testedPosts.filter((item) => testedPost.id === item.id);
       expect(testedPosts).toEqual(filteredPosts);  
-  })
+  })*/
 
   it('should test viewUpdatedPost method', () => {
     component.viewUpdatedPost(testedPost);
@@ -213,7 +200,7 @@ describe('Post Component', () => {
       expect(post.id === testedPost.id).toBeTruthy;
     })
  
-    expect(component.findElement).toBe(testFindElement);
+    expect(component.splicePosts(testFindElement,testedPosts)).toBeTruthy()
   });
 
   it('should test showHidecomments method', () => {
@@ -226,21 +213,5 @@ describe('Post Component', () => {
     const testPost: Post = testedPost;
     component.viewCreatedPost(testPost);
     expect(component.posts?.push(testPost)).toBeTruthy();
-  });
-
-  it('should test unsubscribe in ngOnDestroy', () => {
-    component.commentsSubscription = of().subscribe();
-    component.modalStatusSubscription = of().subscribe();
-    const unsubscriptionCommentSpy = spyOn(
-      component.commentsSubscription,
-      'unsubscribe'
-    );
-    const unsubscriptionModalSpy = spyOn(
-      component.modalStatusSubscription,
-      'unsubscribe'
-    );
-    component.ngOnDestroy();
-    expect(unsubscriptionCommentSpy).toHaveBeenCalledTimes(1);
-    expect(unsubscriptionModalSpy).toHaveBeenCalledTimes(1);
   });
 });

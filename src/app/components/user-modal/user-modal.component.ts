@@ -25,8 +25,6 @@ export class UserModalComponent extends BaseComponent implements OnInit {
   @ViewChild(UserFormComponent) public userFormComponent: UserFormComponent;
   @Input('user') user: UserApiInterface;
   @Input() isUserDetailFormEdit: boolean;
-  //@Output() creating = new EventEmitter<UserApiInterface>();
- // @Output() updating = new EventEmitter<UserApiInterface>();
   @Output() updatingUserDetail = new EventEmitter<string>();
   public isFormForEdit: boolean;
 

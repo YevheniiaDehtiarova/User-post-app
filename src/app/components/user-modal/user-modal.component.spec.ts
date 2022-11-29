@@ -89,16 +89,6 @@ describe('User Modal Component', () => {
     expect(getStatusSpy).toHaveBeenCalled();
   });
 
-  it('should  test userForm unSubscription', () => {
-    component.userFormSubscription = of().subscribe();
-    const unsubscriptionSpy = spyOn(
-      component.userFormSubscription,
-      'unsubscribe'
-    );
-    component.ngOnDestroy();
-    expect(unsubscriptionSpy).toHaveBeenCalledTimes(1);
-  });
-
   it('should test closeModal method', () => {
     const spy = spyOn(userModalService, 'modalClose');
     userModalService.modalClose();
@@ -115,7 +105,7 @@ describe('User Modal Component', () => {
     expect(spyService).toHaveBeenCalled();
   });
 
-  it('should test subscribe in submit', () => {
+  /*it('should test subscribe in submit', () => {
     component.submit();
     userService.createUser(testedUser).subscribe((user) => {
       expect(user).toBe(testedUser);
@@ -166,7 +156,7 @@ describe('User Modal Component', () => {
     const spy = spyOn(component, 'closeModal');
     component.closeModal();
     expect(spy).toHaveBeenCalled();
-  });
+  });*/
 
   it('should test changeUpdatedProperty method', () => {
     const fakedValue =false;

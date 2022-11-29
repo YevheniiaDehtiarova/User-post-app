@@ -60,7 +60,7 @@ export class UserTableComponent extends BaseComponent implements OnInit {
 
     this.openModal();
     this.changeUserFormstate(true);
-     this.userFormStateService.setInitialFormState(this.user);
+    //this.userFormStateService.setInitialFormState(this.user);
   }
 
   public openModal(): void {

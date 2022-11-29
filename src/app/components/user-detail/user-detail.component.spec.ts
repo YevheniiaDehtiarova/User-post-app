@@ -151,30 +151,11 @@ describe('UserDetailComponent', () => {
   });
 
   it('should test updateUser method', () => {
-    component.updateUser(testedUser);
+    component.updateUser(testedUser.id);
     userService.getUser(testedUser.id).subscribe((value) => {
       expect(value).toBe(component.user);
     });
     expect(testedUser).toBeTruthy();
-  });
-
-  it('should  test unsubscribe in ngOnDestroy', () => {
-    component.userSubscription = of().subscribe();
-    component.getAllPostsSubcription = of().subscribe();
-    component.userModalStatusSubscription = of().subscribe();
-    component.userFormStatusSubscription = of().subscribe();
-    const unsubscriptionUserSpy = spyOn(
-      component.userSubscription,
-      'unsubscribe'
-    );
-    const unsubscriptionPostsSpy = spyOn(component.getAllPostsSubcription,'unsubscribe');
-    const unsubscriptionUserModalSpy = spyOn(component.userModalStatusSubscription,'unsubscribe');
-    const unsubscriptionUserFormSpy = spyOn(component.userFormStatusSubscription,'unsubscribe');
-    component.ngOnDestroy();
-    expect(unsubscriptionUserSpy).toHaveBeenCalledTimes(1);
-    expect(unsubscriptionPostsSpy).toHaveBeenCalledTimes(1);
-    expect(unsubscriptionUserModalSpy).toHaveBeenCalledTimes(1);
-    expect(unsubscriptionUserFormSpy).toHaveBeenCalledTimes(1);
   });
 
   it('should test isUserModalDialogVisible in openUserModal method', () => {
