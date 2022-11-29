@@ -2,7 +2,7 @@ import { ChangeDetectorRef, Component, EventEmitter, Input, OnChanges, OnDestroy
 import { PostModalService } from 'src/app/services/post-modal.service';
 import { PostService } from 'src/app/services/post.service';
 import { PostFormComponent } from '../post-form/post-form.component';
-import { Subscription, take, takeUntil } from 'rxjs';
+import { Observable, Subscription, take, takeUntil } from 'rxjs';
 import { DEFAULT_POST } from 'src/app/models/default-post';
 import { Post } from 'src/app/models/post.class';
 import { BaseComponent } from '../base/base.component';
@@ -16,8 +16,7 @@ export class PostModalComponent extends BaseComponent implements OnInit{
   @Input('post') post: Post;
   @Input('userId') userId: string;
   @Input() posts: Array<Post>;
-  @Output() updatePosts = new EventEmitter<Post>();
-  @Output() createPosts = new EventEmitter<Post>();
+  @Output() changePosts = new EventEmitter<Post>();
   public postLength: number;
 
   @ViewChild(PostFormComponent) public postFormComponent: PostFormComponent;
@@ -48,39 +47,24 @@ export class PostModalComponent extends BaseComponent implements OnInit{
         title: this.postFormComponent?.postForm?.value.title,
         body: this.postFormComponent?.postForm?.value.body,
       }
-      this.checkPostOnDefault(post);
+
+      this.defineRequest(post).pipe(takeUntil(this.destroy$))
+      .subscribe((post) => {
+        this.changePosts.emit(post)
+      })
+       this.resetForm();
     }
   }
 
-
-  public checkPostOnDefault(post:Post): void {
-    if(this.post != DEFAULT_POST){
-      this.updatePost(post);
-    } else {
-      this.createPost(post);
-    }
-  }
-
-  public createPost(post: Post): void {
-    this.postService.createPost(post)
-    .pipe(takeUntil(this.destroy$))
-    .subscribe((post)=> {
-      this.createPosts.emit(post);
-  })
-  this.resetForm();
-}
-
-  public updatePost(post: Post): void {
-    this.postService.updatePost(this.post?.id, post)
-    .pipe(takeUntil(this.destroy$)).subscribe((post) => {
-      this.updatePosts.emit(post);
-    })
-    this.resetForm();
-
-  }
   public resetForm(): void {
     this.postFormComponent?.postForm?.reset();
     this.close();
+  }
+
+  public defineRequest(post:Post): Observable<Post> {
+    return this.post != DEFAULT_POST 
+    ? this.postService.updatePost(this.post?.id, post)
+    : this.postService.createPost(post)
   }
 }
 

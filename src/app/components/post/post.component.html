@@ -24,6 +24,5 @@
     </div>
 </div>
 
-<app-post-modal *ngIf="isPostModalDialogVisible" (updatePosts)="viewUpdatedPost($event)"
-    (createPosts)="viewCreatedPost($event)" [posts]="posts" [post]="post" [userId]="userId">
+<app-post-modal *ngIf="isPostModalDialogVisible" (changePosts)="viewUpdatedPost($event)" [posts]="posts" [post]="post" [userId]="userId">
 </app-post-modal>
