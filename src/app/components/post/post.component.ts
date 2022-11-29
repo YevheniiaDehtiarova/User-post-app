@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { Observable, takeUntil } from 'rxjs';
+import { forkJoin, Observable, takeUntil, tap } from 'rxjs';
 import { PostFormStateService } from 'src/app/services/post-form-state.service';
 import { PostModalService } from 'src/app/services/post-modal.service';
 import { Comment } from 'src/app/models/comment.interface';
@@ -41,38 +41,21 @@ export class PostComponent extends BaseComponent implements OnInit {
 
 
   public initPostsWithcomments(posts: Post[]): void {
-    posts?.map((post: Post) => {
-      this.createCommentSubscription(post);
-    });
+    forkJoin([ posts?.map((post: Post, index: number) => {
+      this.postService.getCommentById(post.id).pipe(tap((comment: Array<Comment>) => {
+        if (post.id == comment[0]?.postId) {
+          this.posts[index].comments = comment;
+          this.splicePosts(post, this.posts);
+          this.definePostsWithComments(this.posts)
+        }
+      }))
+    })]).pipe(takeUntil(this.destroy$)).subscribe()
+  
   }
 
   public calculateUserId(): string {
     this.userId = this.activateRoute.snapshot.paramMap.get('id') as string;
     return this.userId;
-  }
-
-  public createCommentSubscription(post: Post): void {
-    this.comments$ = this.commentObservable(post.id);
-     this.comments$.pipe(takeUntil(this.destroy$)).subscribe(
-      (comment: Array<Comment>) => {
-        this.modifyPosts(this.posts, comment);
-      }
-    );
-  
-  }
-
-  public commentObservable(id: string): Observable<Array<Comment>>{
-    return this.postService.getCommentById(id)
-  }
-
-  public modifyPosts(posts: Post [],comment: Array<Comment>): void {
-    posts.forEach((post) => {
-      if (post.id == comment[0]?.postId) {
-        post.comments = comment;
-        this.splicePosts(post, this.posts);
-        this.definePostsWithComments(this.posts)
-      }
-    });
   }
 
   public definePostsWithComments(posts: Post []): void {
