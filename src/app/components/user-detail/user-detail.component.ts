@@ -60,7 +60,10 @@ export class UserDetailComponent extends BaseComponent implements OnInit {
       .getAllPosts()
       .pipe(takeUntil(this.destroy$))
       .subscribe((posts) => {
-        this.posts = posts.filter((post) => post.userId == this.userId);
+        this.posts = posts;
+        this.posts.filter((post) => {
+          post.userId === this.userId
+        });
       });
   }
 

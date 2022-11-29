@@ -50,7 +50,7 @@ export class PostModalComponent extends BaseComponent implements OnInit{
 
       this.defineRequest(post).pipe(takeUntil(this.destroy$))
       .subscribe((post) => {
-        this.changePosts.emit(post)
+        this.changePosts.emit(post);
       })
        this.resetForm();
     }
@@ -62,7 +62,7 @@ export class PostModalComponent extends BaseComponent implements OnInit{
   }
 
   public defineRequest(post:Post): Observable<Post> {
-    return this.post != DEFAULT_POST 
+    return this.post !== DEFAULT_POST 
     ? this.postService.updatePost(this.post?.id, post)
     : this.postService.createPost(post)
   }
