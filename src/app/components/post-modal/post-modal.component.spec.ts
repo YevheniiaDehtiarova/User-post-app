@@ -9,8 +9,7 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { HttpClient } from '@angular/common/http';
 import { PostModalComponent } from './post-modal.component';
 import { Post } from 'src/app/models/post.class';
-import { of, take } from 'rxjs';
-import { DEFAULT_POST } from 'src/app/models/default-post';
+
 
 describe('PostModal Component', () => {
   let component: PostModalComponent;
@@ -51,20 +50,13 @@ describe('PostModal Component', () => {
     expect(component).toBeTruthy();
   });
   
-  /*t('should  test post in checkInitPost method', () => {
-    component.checkInitPost(testedPost);
-    expect(component.post).toEqual(testedPost);
-  });*/
+  it('should  test post in ngOnInit method', () => {
+    component.ngOnInit();
+    const spy = spyOn(postService, 'getAllPosts');
+    postService.getAllPosts()
+    expect(spy).toHaveBeenCalled();
+  });
 
- /*it('should  test post unsubscribe in ngOnDestroy', () => {
-    component.getAllPostSubscription = of().subscribe();
-    const unsubscriptionSpy = spyOn(
-      component.getAllPostSubscription,
-      'unsubscribe'
-    );
-    component.ngOnDestroy();
-    expect(unsubscriptionSpy).toHaveBeenCalledTimes(1);
-  });*/
 
   it('should test close method', () => {
     const spy = spyOn(postModalService, 'modalClose').and.callThrough();

@@ -26,7 +26,7 @@ export class PostComponent extends BaseComponent implements OnInit {
   constructor(
     private postModalService: PostModalService,
     private postFormStateService: PostFormStateService,
-    private postService: PostService,
+    public postService: PostService,
     private activateRoute: ActivatedRoute
   ) {
     super();
@@ -42,18 +42,22 @@ export class PostComponent extends BaseComponent implements OnInit {
 
   public initPostsWithcomments(posts: Post[]): void {
     if(posts.length > 0) {
-    forkJoin([posts.map((post: Post, index: number) => {
-      this.postService.getCommentById(post.id)
+    forkJoin([posts?.map((post: Post, index: number) => {
+      this.postService.getCommentById(post?.id)
       .pipe(tap((comment: Array<Comment>) => 
       {
-        if (post.id == comment[0]?.postId) {
-          this.posts[index].comments = comment;
-          this.splicePosts(post, this.posts);
-          this.definePostsWithComments(this.posts)
-        }
+          this.modifyPosts(post,index,comment);
       }))
     })]).pipe(takeUntil(this.destroy$)).subscribe()
    }
+  }
+
+  public modifyPosts(post: Post, index: number, comment: Array<Comment>): void {
+    if (post.id == comment[0]?.postId) {
+    this.posts[index].comments = comment;
+    this.splicePosts(post, this.posts);
+    this.definePostsWithComments(this.posts)
+    }
   }
 
   public calculateUserId(): string {
@@ -103,25 +107,29 @@ export class PostComponent extends BaseComponent implements OnInit {
   public deletePost(post: Post): void {
     this.postService.deletePost(post.id)
     .pipe(takeUntil(this.destroy$))
-    .subscribe(() => {
-      this.filterPost(this.posts, post)
+    .subscribe((value) => {
+      this.filterPost(this.posts, value)
     });
   }
 
   public filterPost(posts: Post[], post: Post): void {
-    if (posts.length > 0) {
-    this.posts = posts?.filter((item) => post.id !== item.id);
+    if (posts.length > 0 && post) {
+    this.posts = posts.filter((item) => post.id !== item.id);
     }
   }
 
   public viewUpdatedPost(event: Post): void {
-    const findElement = this.posts.find((post) => post.id === event.id);
+    const findElement = this.posts.find((post) => this.checkPost(post,event));
     if (findElement){
       findElement.comments =
-      this.postsWithComments?.find((post) => post.id === event.id)?.comments ||
+      this.postsWithComments?.find((post) => this.checkPost(post,event))?.comments ||
       []; 
       this.splicePosts(findElement, this.posts);
     }
+  }
+
+  public checkPost(post:Post, event: Post): boolean {
+    return post.id === event.id;
   }
 
   public showHideComments(): void {

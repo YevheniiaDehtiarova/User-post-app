@@ -10,6 +10,7 @@ import { HttpClient } from '@angular/common/http';
 import { DEFAULT_POST } from 'src/app/models/default-post';
 import { Post } from 'src/app/models/post.class';
 import { ActivatedRoute } from '@angular/router';
+import { tap } from 'rxjs/internal/operators/tap';
 
 describe('Post Component', () => {
   let component: PostComponent;
@@ -75,11 +76,11 @@ describe('Post Component', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should ckeck if in initPostsWithcomments', () => {
+  it('should test if in initPostsWithcomments', () => {
     component.initPostsWithcomments(testedPosts);
     let testedComments = testedPost.comments as Comment[];
     expect(testedPost.id === testedComments[0].postId).toBeFalse();
-  })
+  });
 
   it('should test subscription in getModalStatus', () => {
     const fakeValue = false;
@@ -97,35 +98,54 @@ describe('Post Component', () => {
 
   it('should test method definePostsWithComments', () => {
     component.definePostsWithComments(testedPosts);
-    expect(component.postsWithComments).toEqual(testedPosts)
-  })
+    expect(component.postsWithComments).toEqual(testedPosts);
+  });
 
   it('should test input posts when PostComponent init', () => {
     const testPosts: Post[] = [];
     testPosts.push(testedPost);
     component.posts = testPosts;
-
     fixture.detectChanges();
     expect(component.posts).toEqual(testPosts);
   });
 
   it('should test method initPostsWithcomments', () => {
     let testedComments = testedPost.comments as Comment[];
-    const testCommentFromPost  = testedPost.comments as Comment[];
+    const testCommentFromPost = testedPost.comments as Comment[];
     component.initPostsWithcomments(testedPosts);
-    expect(testedPost.id === testedComments[0].postId).toBeFalse();
+    expect(testedPost.id === testedComments[0].postId).toBeTruthy;
     expect(testedComments).toBe(testCommentFromPost);
     expect(component.splicePosts(testedPost, component.posts)).toBeTruthy;
     expect(component.definePostsWithComments(component.posts)).toBeTruthy;
-  })
+
+    spyOn(component, 'splicePosts');
+    component.splicePosts(testedPost, component.posts);
+    expect(component.splicePosts).toHaveBeenCalled();
+  });
+
+  it('should check modifyPosts', () => {
+    let index = 1;
+    let testedComment: Comment[] = [];
+    component.modifyPosts(testedPost, index, testedComment);
+    expect(component.modifyPosts(testedPost, index, testedComment)).toBeTruthy;
+
+    spyOn(component, 'splicePosts');
+    component.splicePosts(testedPost, component.posts);
+    expect(component.splicePosts).toHaveBeenCalled();
+    expect(component.splicePosts(testedPost, component.posts)).toBeTruthy;
+
+    spyOn(component, 'definePostsWithComments');
+    component.definePostsWithComments(component.posts);
+    expect(component.definePostsWithComments).toHaveBeenCalled();
+  });
 
   it('should test work of service in initPostsWithcomments', () => {
     let id = testedPost.id;
-    const spy = spyOn(postService,'getCommentById').and.callThrough();
-    postService.getCommentById(id)
+    const spy = spyOn(postService, 'getCommentById').and.callThrough();
+    postService.getCommentById(id);
     component.initPostsWithcomments(testedPosts);
     expect(spy).toHaveBeenCalled();
-  })
+  });
 
   it('should test post in method addPost', () => {
     const testPost = DEFAULT_POST;
@@ -139,19 +159,22 @@ describe('Post Component', () => {
   });
 
   it('should test modalopen method from service in changePostModalDialogVisible', () => {
-    const spy = spyOn(postModalService,'modalOpen').and.callThrough();
+    const spy = spyOn(postModalService, 'modalOpen').and.callThrough();
     postModalService.modalOpen();
     component.postModalOpen();
     expect(spy).toHaveBeenCalled();
-  })
+  });
 
   it('should test value from changeFormStatus', () => {
     const fakeValue = false;
-    const spy = spyOn(postFormStateService,'changeFormStatus').and.callThrough();
+    const spy = spyOn(
+      postFormStateService,
+      'changeFormStatus'
+    ).and.callThrough();
     postFormStateService.changeFormStatus(fakeValue);
     component.changeFormStatus(fakeValue);
     expect(spy).toHaveBeenCalled();
-  })
+  });
 
   it('should test status in addPost method', () => {
     component.addPost();
@@ -170,37 +193,38 @@ describe('Post Component', () => {
   it('should test deletePost method', () => {
     const testPost: Post = testedPost;
     expect(postService.deletePost(testPost.id)).toBeTruthy();
-    let id  = testPost.id;
-    const spy = spyOn(postService,'deletePost').and.callThrough();
+    let id = testPost.id;
+    const spy = spyOn(postService, 'deletePost').and.callThrough();
     postService.deletePost(id);
     component.deletePost(testedPost);
     expect(spy).toHaveBeenCalled();
-   /* postService.deletePost(id).subscribe((value) => {
-      expect(component.filterPost(value, testedPost))
-    })*/
+    postService.deletePost(id).subscribe((value) => {
+      expect(value).toEqual(testPost);
+      expect(component.filterPost(testedPosts, value)).toBeTruthy;
+
+      const callSpy = spyOn(component, 'filterPost');
+      component.filterPost(testedPosts, value);
+      expect(callSpy).toHaveBeenCalled();
+    });
     expect(component.filterPost(testedPosts, testPost)).toBeTruthy;
   });
 
-
-  /*it('should test post in filterPost method', () => {
-      component.filterPost(testedPosts, testedPost);
-      const filteredPosts = testedPosts.filter((item) => testedPost.id === item.id);
-      expect(testedPosts).toEqual(filteredPosts);  
-  })*/
-
   it('should test viewUpdatedPost method', () => {
     component.viewUpdatedPost(testedPost);
-    const testFindElement = component.posts?.find(
-      (post) => post?.id !== testedPost.id
-    ) as Post;
-    testedPosts.find(post => {
-      expect(post.id ===testedPost.id).toBeTruthy;
-    })
-    component.postsWithComments?.find((post)=> {
+    const testFindElement = component.posts?.find((post) => {
+      expect(post?.id).toEqual(testedPost.id);
+    }) as Post;
+    expect(testFindElement).toBeTruthy;
+    testedPosts.find((post) => {
       expect(post.id === testedPost.id).toBeTruthy;
-    })
- 
-    expect(component.splicePosts(testFindElement,testedPosts)).toBeTruthy()
+    });
+    component.postsWithComments?.find((post) => {
+      expect(post.id === testedPost.id).toBeTruthy;
+    });
+
+    spyOn(component, 'splicePosts');
+    component.splicePosts(testFindElement, testedPosts);
+    expect(component.splicePosts).toHaveBeenCalled();
   });
 
   it('should test showHidecomments method', () => {
@@ -213,5 +237,22 @@ describe('Post Component', () => {
     const testPost: Post = testedPost;
     component.viewCreatedPost(testPost);
     expect(component.posts?.push(testPost)).toBeTruthy();
+  });
+
+  it('should test checkPost', () => {
+    let testEvent = testedPost;
+    component.checkPost(testedPost, testEvent);
+    expect(testEvent.id).toEqual(testedPost.id);
+  });
+
+  it('should test checkpost in viewUpdatedPost', () => {
+    let testEvent = testedPost;
+    component.viewUpdatedPost(testEvent);
+    const callSpy = spyOn(component, 'checkPost');
+    component.checkPost(testedPost, testEvent);
+    expect(callSpy).toHaveBeenCalled();
+    component.postsWithComments?.find((post) => {
+      expect(component.checkPost(post, testEvent)).toBeTruthy;
+    });
   });
 });
