@@ -70,7 +70,7 @@ export class UserModalComponent extends BaseComponent implements OnInit {
   public defineRequest(): Observable<UserApiInterface> {
     return (!this.isFormForEdit && !this.isUserDetailFormEdit) 
     ? this.userService.createUser(this.userMapper.mapToCreateUpdateDto(this.userFormComponent?.userForm?.value))
-    : this.userService.updateUser(this.userFormComponent?.userForm?.value?.id, this.userFormComponent?.userForm?.value)         
+    : this.userService.updateUser(this.userFormComponent?.userForm?.value?.id,this.userMapper.mapToCreateUpdateDto(this.userFormComponent?.userForm?.value))         
   }
 
   public changeUser(id:string) {

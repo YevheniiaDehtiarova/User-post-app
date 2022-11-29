@@ -12,7 +12,6 @@ export class UserFormComponent implements OnInit {
   public userForm: FormGroup;
 
   ngOnInit(): void {
-    console.log('init form');
     this.userForm = new FormGroup({
       id: new FormControl(this.user?.id ?? ''),
       firstName: new FormControl(this.user?.firstName ?? '', [Validators.required,]),
@@ -28,6 +27,5 @@ export class UserFormComponent implements OnInit {
       companyName: new FormControl( this.user?.company.name ?? '', Validators.required),
       companyScope: new FormControl(this.user?.company.scope ?? '', Validators.required),
     });
-    console.log(this.userForm, 'user form from form');
   }
 }

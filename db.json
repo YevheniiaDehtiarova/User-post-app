@@ -2143,25 +2143,6 @@
       }
     },
     {
-      "id": 9,
-      "firstName": "YEVHENIIA",
-      "lastName": "DEHTIAROVA",
-      "username": "jeni4ka",
-      "email": "jeni4ka2509@gmail.com444",
-      "address": {
-        "street": "9 Bolotnikova st.",
-        "building": "8",
-        "city": "Luhansk",
-        "zipcode": "61204-####"
-      },
-      "phone": "+380661618617",
-      "website": "7",
-      "company": {
-        "name": "7",
-        "scope": "7"
-      }
-    },
-    {
       "id": 11,
       "firstName": "Евгения3108",
       "lastName": "Дегтярева",
@@ -2189,7 +2170,7 @@
       "address": {
         "street": "9 Bolotnikova st.",
         "building": "8",
-        "city": "Luhansk",
+        "city": "Kharkiv",
         "zipcode": "61204-####"
       },
       "phone": "+380661618617",
@@ -2203,7 +2184,7 @@
       "id": 13,
       "firstName": "YEVHENIIA",
       "lastName": "DEHTIAROVA",
-      "username": "4",
+      "username": "5",
       "email": "jeni4ka2509@gmail.com",
       "address": {
         "street": "9 Bolotnikova st.",
