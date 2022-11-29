@@ -47,6 +47,6 @@ export class PostService {
           return comment.postId == id;
         });
       })
-    );
+    )
   }
 }

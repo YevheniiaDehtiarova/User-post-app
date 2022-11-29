@@ -42,7 +42,9 @@ export class PostComponent extends BaseComponent implements OnInit {
 
   public initPostsWithcomments(posts: Post[]): void {
     forkJoin([ posts?.map((post: Post, index: number) => {
-      this.postService.getCommentById(post.id).pipe(tap((comment: Array<Comment>) => {
+      this.postService.getCommentById(post.id)
+      .pipe(tap((comment: Array<Comment>) => 
+      {
         if (post.id == comment[0]?.postId) {
           this.posts[index].comments = comment;
           this.splicePosts(post, this.posts);
@@ -50,7 +52,6 @@ export class PostComponent extends BaseComponent implements OnInit {
         }
       }))
     })]).pipe(takeUntil(this.destroy$)).subscribe()
-  
   }
 
   public calculateUserId(): string {
