@@ -137,7 +137,16 @@ describe('Post Component', () => {
     spyOn(component, 'definePostsWithComments');
     component.definePostsWithComments(component.posts);
     expect(component.definePostsWithComments).toHaveBeenCalled();
+    expect(component.definePostsWithComments).toHaveBeenCalledWith(component.posts)
   });
+
+  it('should check conditions in modifyPosts', () => {
+    let index = 1;
+    let testedComment: Comment[] = [];
+    component.modifyPosts(testedPost, index, testedComment);
+    let condition = testedPost.id === testedComment[0]?.postId;
+    expect(condition).toBeFalse();
+  })
 
   it('should test work of service in initPostsWithcomments', () => {
     let id = testedPost.id;
@@ -193,11 +202,13 @@ describe('Post Component', () => {
   it('should test deletePost method', () => {
     const testPost: Post = testedPost;
     expect(postService.deletePost(testPost.id)).toBeTruthy();
+
     let id = testPost.id;
     const spy = spyOn(postService, 'deletePost').and.callThrough();
     postService.deletePost(id);
     component.deletePost(testedPost);
     expect(spy).toHaveBeenCalled();
+
     postService.deletePost(id).subscribe((value) => {
       expect(value).toEqual(testPost);
       expect(component.filterPost(testedPosts, value)).toBeTruthy;
@@ -205,6 +216,7 @@ describe('Post Component', () => {
       const callSpy = spyOn(component, 'filterPost');
       component.filterPost(testedPosts, value);
       expect(callSpy).toHaveBeenCalled();
+      expect(callSpy).toHaveBeenCalledWith(component.posts, value);
     });
     expect(component.filterPost(testedPosts, testPost)).toBeTruthy;
   });
@@ -225,6 +237,7 @@ describe('Post Component', () => {
     spyOn(component, 'splicePosts');
     component.splicePosts(testFindElement, testedPosts);
     expect(component.splicePosts).toHaveBeenCalled();
+    expect(component.splicePosts).toHaveBeenCalledWith(testFindElement, testedPosts)
   });
 
   it('should test showHidecomments method', () => {
@@ -251,8 +264,21 @@ describe('Post Component', () => {
     const callSpy = spyOn(component, 'checkPost');
     component.checkPost(testedPost, testEvent);
     expect(callSpy).toHaveBeenCalled();
+    expect(callSpy).toHaveBeenCalledWith(testedPost, testEvent);
     component.postsWithComments?.find((post) => {
       expect(component.checkPost(post, testEvent)).toBeTruthy;
     });
   });
+
+
+  it('should test checkPost again', () => {
+    let testEvent = testedPost;
+    component.viewUpdatedPost(testEvent);
+
+    return component.posts.find((post) => {
+      const callSpy = spyOn(component, 'checkPost');
+      component.checkPost(post, testEvent);
+      expect(callSpy).toHaveBeenCalledWith(post, testEvent);
+    })
+  })
 });

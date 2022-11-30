@@ -70,6 +70,16 @@ describe('PostModal Component', () => {
    })
   }));
 
+  
+  it('should test subscribe post  in init', fakeAsync(() => {
+    component.ngOnInit();
+    let response: Post[] = [];
+    fixture.detectChanges();
+    return fixture.whenStable().then(() => {
+     expect(response.length).toEqual(component.postLength)
+    })
+   }));
+
   it('should test null value in init', () => {
     component.ngOnInit();
     fixture.detectChanges();
@@ -119,6 +129,12 @@ describe('PostModal Component', () => {
     spyOn(component.changePosts, 'emit');
     component.changePosts.emit(testedPost);
     expect(component.changePosts.emit).toHaveBeenCalled();
+  })
+
+  it('should test emit 2 attempt', ()=> {
+    spyOn(component.changePosts, 'emit');
+    component.changePosts.emit(testedPost);
+    expect(component.changePosts.emit).toHaveBeenCalledWith(testedPost);
   })
 
   it('should test if post does not exist in defineRequest', () => {
