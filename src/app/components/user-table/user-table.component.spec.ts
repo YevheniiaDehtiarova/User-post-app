@@ -144,8 +144,11 @@ describe('User Table Component', () => {
     expect(component.user).toEqual(findedUser);
   });
 
-  it('should check equal in EditUser method', () => {
+  it('should test equal in editUser', () => {
     component.editUser(testedUserTable);
+    component.usersFromApi.find((user) => {
+      expect(Number(user.id)). toEqual(testedUserTable.id)
+    })
     const testExpr = Number(testedUser.id) === testedUserTable.id
     expect(testExpr).toBeFalsy();
   })
