@@ -21,22 +21,22 @@ export class UserMapper {
  
   public mapToCreateUpdateDto(user: UserFormInterface): UserApiInterface {
     return {
-      id: user.id as string,
-      firstName: user.firstName,
-      lastName: user.lastName,
-      username: user.userName,
-      email: user.email,
+      id: user?.id as string,
+      firstName: user?.firstName,
+      lastName: user?.lastName,
+      username: user?.userName,
+      email: user?.email,
       address: {
-        street: user.street,
-        building: user.building,
-        city: user.city,
-        zipcode: user.zipcode,
+        street: user?.street,
+        building: user?.building,
+        city: user?.city,
+        zipcode: user?.zipcode,
       },
-      phone: user.phone,
-      website: user.website,
+      phone: user?.phone,
+      website: user?.website,
       company: {
-        name: user.companyName,
-        scope: user.companyScope,
+        name: user?.companyName,
+        scope: user?.companyScope,
       },
     };
   }

@@ -1,6 +1,7 @@
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
 import { UserApiInterface } from '../models/user-api.interface';
+import { UserFormInterface } from '../models/user-form.interface';
 import { UserService } from './user.service';
 
 
@@ -8,6 +9,7 @@ describe('UserService', () => {
     let service: UserService;
     let httpController: HttpTestingController;
     let testedUser: UserApiInterface;
+    let testedFormUser: UserFormInterface;
     let url = 'http://localhost:3000';
 
     beforeEach(() => {
@@ -35,6 +37,21 @@ describe('UserService', () => {
                 scope: '',
             },
         };
+        testedFormUser = {
+            id: '',
+            firstName: '',
+            lastName: '',
+            userName: '',
+            email: '',
+            street: '',
+            building: '',
+            city: '',
+            zipcode: '',
+            phone: '',
+            website: '',
+            companyName: '',
+            companyScope: '',
+        };
     });
 
     it('should be created', () => {
@@ -61,7 +78,7 @@ describe('UserService', () => {
     })
 
     it('should test createUser method', () => {
-        service.createUser(testedUser).subscribe((user) => {
+        service.createUser(testedFormUser).subscribe((user) => {
             expect(user).toEqual(testedUser);
         });
         const req = httpController.expectOne({ method: 'POST', url: `${url}/users` })

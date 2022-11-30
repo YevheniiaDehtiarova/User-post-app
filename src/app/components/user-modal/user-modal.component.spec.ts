@@ -1,7 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { of } from 'rxjs';
 import { UserMapper } from 'src/app/mappers/user.mapper';
 import { UserApiInterface } from 'src/app/models/user-api.interface';
 import { UserFormInterface } from 'src/app/models/user-form.interface';
@@ -61,6 +60,21 @@ describe('User Modal Component', () => {
         scope: '',
       },
     };
+    testedFormUser = {
+      id: '',
+      firstName: '',
+      lastName: '',
+      userName: '',
+      email: '',
+      street: '',
+      building: '',
+      city: '',
+      zipcode: '',
+      phone: '',
+      website: '',
+      companyName: '',
+      companyScope: '',
+  };
   });
 
   it('should create', () => {
@@ -100,63 +114,69 @@ describe('User Modal Component', () => {
     const mockedUserFormValue = component.userFormComponent?.userForm;
     mockedUserFormValue?.valid;
     const spyService = spyOn(userService, 'createUser');
-    userService.createUser(testedUser);
+    userService.createUser(testedFormUser);
     component.submit();
     expect(spyService).toHaveBeenCalled();
   });
 
-  /*it('should test subscribe in submit', () => {
-    component.submit();
-    userService.createUser(testedUser).subscribe((user) => {
+  it('should test createUser in defineRequest', () => {
+    let condition = !component.isFormForEdit && !component.isUserDetailFormEdit;
+    component.defineRequest();
+    userService.createUser(testedFormUser).subscribe((user) => {
       expect(user).toBe(testedUser);
-      expect(component.createOutputUser(testedUser)).toBeTruthy;
+      expect(component.changeUser(testedUser.id)).toBeTruthy;
     });
-    const spy = spyOn(component, 'createOutputUser');
-    component.createOutputUser(testedUser);
+    const spy = spyOn(userService, 'createUser');
+    userService.createUser(testedFormUser);
     expect(spy).toHaveBeenCalled();
+    expect(condition).toBeTrue();
   });
 
-  it('should test creating in createOutputUser method', () => {
-    component.createOutputUser(testedUser);
-    component.creating.subscribe((value: UserApiInterface) => {
-      expect(value.email).toBe('test@example.com');
-      expect(value.firstName).toBe('user1');
-      value = testedUser;
+  it('should test subscribe in submit', () => {
+    component.submit();
+    component.defineRequest().subscribe((user) => {
+      expect(user).toBe(testedUser);
+      expect(component.changeUser(testedUser.id)).toBeTruthy;
+      expect(component.changeUpdatedProperty).toBeTruthy;
     });
-    expect(testedUser).toBe(testedUser);
-
-    const spy = spyOn(component, 'closeModal');
-    component.closeModal();
+    const spy = spyOn(component, 'changeUser');
+    component.changeUser(testedUser.id);
     expect(spy).toHaveBeenCalled();
   });
 
   it('should test updateSubmit method', () => {
+    let condition = !component.isFormForEdit && !component.isUserDetailFormEdit;
     const spyService = spyOn(userService, 'updateUser');
     userService.updateUser(testedUser.id, testedUser);
-    component.updateSubmit();
+    component.defineRequest();
     expect(spyService).toHaveBeenCalled();
+    expect(condition).toBeTrue();
   });
 
-  it('should test call function updateSubmit', () => {
+  it('should test call function in submit', () => {
     const spyFunc = spyOn(component, 'changeUpdatedProperty');
     component.changeUpdatedProperty(false);
-    component.updateSubmit();
+    component.submit();
     expect(spyFunc).toHaveBeenCalled();
   });
 
-  it('should test createOutputUser method', () => {
-    component.updateOutputUser(testedUser);
-    component.updating.subscribe((value: UserApiInterface) => {
+  it('should test call function defineRequest in submit', () => {
+    const spy = spyOn(component, 'defineRequest');
+    component.submit();
+    component.defineRequest();
+    expect(spy).toHaveBeenCalled();
+  })
+
+  it('should test changeUser method', () => {
+    component.changeUser(testedUser.id);
+    component.updatingUserDetail.subscribe((value: UserApiInterface) => {
       expect(value).toBe(testedUser);
     });
     expect(testedUser).toBe(testedUser);
-    component.updatingDetail.subscribe((value: UserApiInterface) => {
-      expect(value).toBe(testedUser);
-    });
     const spy = spyOn(component, 'closeModal');
     component.closeModal();
     expect(spy).toHaveBeenCalled();
-  });*/
+  });
 
   it('should test changeUpdatedProperty method', () => {
     const fakedValue =false;

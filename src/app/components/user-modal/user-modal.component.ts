@@ -30,8 +30,8 @@ export class UserModalComponent extends BaseComponent implements OnInit {
 
   constructor(
     private userModalService: UserModalService,
-    private userService: UserService,
-    private userMapper: UserMapper,
+    public userService: UserService,
+    public userMapper: UserMapper,
     private userFormStateService: UserFormStateService
   ) {
     super();
@@ -66,8 +66,8 @@ export class UserModalComponent extends BaseComponent implements OnInit {
   }
 
   public defineRequest(): Observable<UserApiInterface> {
-    return (!this.isFormForEdit && !this.isUserDetailFormEdit) 
-    ? this.userService.createUser(this.userMapper.mapToCreateUpdateDto(this.userFormComponent?.userForm?.value))
+    return (!this.isFormForEdit && !this.isUserDetailFormEdit)
+    ? this.userService.createUser(this.userFormComponent?.userForm?.value)
     : this.userService.updateUser(this.userFormComponent?.userForm?.value?.id,this.userMapper.mapToCreateUpdateDto(this.userFormComponent?.userForm?.value))         
   }
 
