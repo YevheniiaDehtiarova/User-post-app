@@ -14,4 +14,8 @@ describe('Phone Pipe', () => {
     it('should test if phone empty', () => {
       expect(pipe.transform('')).toBe('null')
     })
+
+    it('should test return nothing', () => {
+      expect(pipe.transform('null')).toBe('')
+    })
   });

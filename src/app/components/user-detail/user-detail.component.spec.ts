@@ -1,4 +1,9 @@
-import {ComponentFixture,fakeAsync,TestBed} from '@angular/core/testing';
+import {
+  ComponentFixture,
+  fakeAsync,
+  inject,
+  TestBed,
+} from '@angular/core/testing';
 import { PostService } from 'src/app/services/post.service';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { RouterTestingModule } from '@angular/router/testing';
@@ -10,8 +15,9 @@ import { UserFormStateService } from 'src/app/services/user-form-state.service';
 import { UserMapper } from 'src/app/mappers/user.mapper';
 import { ActivatedRoute } from '@angular/router';
 import { UserApiInterface } from 'src/app/models/user-api.interface';
-import { of } from 'rxjs';
 import { Post } from 'src/app/models/post.class';
+import { InjectionToken } from '@angular/core';
+import { Location } from '@angular/common';
 
 describe('UserDetailComponent', () => {
   let component: UserDetailComponent;
@@ -23,6 +29,7 @@ describe('UserDetailComponent', () => {
   let userModalService: UserModalService;
   let route: ActivatedRoute;
   let testedUser: UserApiInterface;
+  const LOCATION_TOKEN = new InjectionToken<Location>('Window location object');
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -34,6 +41,7 @@ describe('UserDetailComponent', () => {
         UserModalService,
         UserFormStateService,
         { provide: UserMapper, useValue: {} },
+        { provide: LOCATION_TOKEN, useValue: window.history },
         {
           provide: ActivatedRoute,
           useValue: {
@@ -101,7 +109,7 @@ describe('UserDetailComponent', () => {
     let response: UserApiInterface;
     component.initUser();
     fixture.detectChanges();
-    fixture.whenStable().then(() => {
+    return fixture.whenStable().then(() => {
       expect(component.user).toEqual(response);
     });
   }));
@@ -111,6 +119,12 @@ describe('UserDetailComponent', () => {
     postService.getAllPosts();
     component.initAllPosts();
     expect(spy).toHaveBeenCalled();
+  });
+
+  it('should test subscribe in initAllPosts', () => {
+    postService.getAllPosts().subscribe((posts) => {
+      expect(component.posts).toEqual(posts);
+    });
   });
 
   it('should test posts in initAllPosts', fakeAsync(() => {
@@ -158,6 +172,14 @@ describe('UserDetailComponent', () => {
     expect(testedUser).toBeTruthy();
   });
 
+  it('should test user in init method', () => {
+    component.ngOnInit();
+    userService.getUser(testedUser.id).subscribe((value) => {
+      expect(value).toBe(component.user);
+    });
+    expect(testedUser).toBeTruthy();
+  });
+
   it('should test isUserModalDialogVisible in openUserModal method', () => {
     const value = true;
     component.openUserModal();
@@ -172,4 +194,11 @@ describe('UserDetailComponent', () => {
     component.openUserModal();
     expect(spy).toHaveBeenCalled();
   });
+
+  it('should test goBack method', inject([LOCATION_TOKEN], (_loc: Location) => {
+    spyOn(_loc, 'back');
+    component.goBack();
+    _loc.back();
+    expect(_loc.back).toHaveBeenCalled();
+  }));
 });
