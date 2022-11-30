@@ -1,6 +1,8 @@
 import {
   ComponentFixture,
+  fakeAsync,
   TestBed,
+  tick,
 } from '@angular/core/testing';
 import { PostModalService } from 'src/app/services/post-modal.service';
 import { PostService } from 'src/app/services/post.service';
@@ -9,6 +11,8 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { HttpClient } from '@angular/common/http';
 import { PostModalComponent } from './post-modal.component';
 import { Post } from 'src/app/models/post.class';
+import { async, of } from 'rxjs';
+import { DEFAULT_POST } from 'src/app/models/default-post';
 
 
 describe('PostModal Component', () => {
@@ -24,7 +28,7 @@ describe('PostModal Component', () => {
     await TestBed.configureTestingModule({
       imports: [HttpClientTestingModule, RouterTestingModule],
       declarations: [PostModalComponent],
-      providers: [PostModalService, PostService],
+      providers: [PostModalService, PostService]
     }).compileComponents();
 
     fixture = TestBed.createComponent(PostModalComponent);
@@ -57,6 +61,24 @@ describe('PostModal Component', () => {
     expect(spy).toHaveBeenCalled();
   });
 
+  it('should test length in init', fakeAsync(() => {
+   component.ngOnInit();
+   let response: Post[] = [];
+   fixture.detectChanges();
+   return fixture.whenStable().then(() => {
+    expect(component.postLength).toEqual(response.length)
+   })
+  }));
+
+  it('should test null value in init', () => {
+    component.ngOnInit();
+    fixture.detectChanges();
+    return fixture.whenStable().then(() => {
+      const elsePart: Post | null = null;
+      expect(elsePart).toBeNull();
+    })
+  })
+
 
   it('should test close method', () => {
     const spy = spyOn(postModalService, 'modalClose').and.callThrough();
@@ -80,49 +102,60 @@ describe('PostModal Component', () => {
     expect(component.post).toEqual(testedPost);
   });
 
-  /*it('should test call function in submit', () => {
-    const callSpy = spyOn(component, 'checkPostOnDefault');
+  it('should test defineRequest  function in submit', () => {
+    const callSpy = spyOn(component, 'defineRequest');
     component.submit();
-    component.checkPostOnDefault(testedPost);
+    component.defineRequest(testedPost);
     expect(callSpy).toHaveBeenCalled();
-  })*/
-
-  /*it('should test post exist in checkPostOnDefault', () => {
-    const Spy = spyOn(component, 'updatePost');
-    component.checkPostOnDefault(testedPost);
-    expect(component.checkPostOnDefault(testedPost)).toBeTruthy;
-    expect(Spy).toHaveBeenCalled();
-  });
-
-  it('should test if post does not exist in checkPostOnDefault', () => {
-    let defaulPost = DEFAULT_POST;
-    const createSpy = spyOn(component, 'createPost');
-    component.createPost(defaulPost);
-    component.checkPostOnDefault(defaulPost);
-    expect(component.checkPostOnDefault(defaulPost)).toBeTruthy;
-    expect(createSpy).toHaveBeenCalled();
-  });
-
-  it('check test resetFrom in createPost and updatePost methods', () => {
-    component.createPost(testedPost);
-    component.updatePost(testedPost);
-    const createResetSpy = spyOn(component, 'resetForm');
-    component.resetForm();
-    expect(createResetSpy).toHaveBeenCalled();
   })
 
-  it('should test updatePost method', () => {
-    component.updatePost(testedPost);
-    expect(component.updatePost(testedPost)).toBeTruthy;
-    component.updatePosts.subscribe((post) => {
-      expect(post).toBe(testedPost);
-    });
-    const spy = spyOn(postService, 'updatePost');
-    postService.updatePost(testedPost.id, testedPost);
-    expect(spy).toHaveBeenCalled();
+  it('should test emit', () => {
+    let postUsed: Post;
+    component.changePosts.subscribe((post: Post) => {
+      postUsed = post;
+      expect(postUsed).toEqual(post);
+    })
 
+    spyOn(component.changePosts, 'emit');
+    component.changePosts.emit(testedPost);
+    expect(component.changePosts.emit).toHaveBeenCalled();
+  })
+
+  it('should test if post does not exist in defineRequest', () => {
+    let defaulPost = DEFAULT_POST;
+    component.defineRequest(defaulPost);
+    const spy = spyOn(postService, 'createPost');
+    postService.createPost(testedPost);
+    expect(spy).toHaveBeenCalled();
   });
-  */
+
+  it('should test resetFrom in submit method', () => {
+    component.submit();
+    const Spy = spyOn(component, 'resetForm');
+    component.resetForm();
+    expect(Spy).toHaveBeenCalled();
+  })
+
+  it('should test defineRequest in submit method', () => {
+    component.submit();
+    const Spy = spyOn(component, 'defineRequest');
+    component.defineRequest(testedPost)
+    expect(Spy).toHaveBeenCalled();
+  })
+
+  it('should test create method of Service in defineRequest', () => {
+    component.defineRequest(testedPost);
+    const spyCreate = spyOn(postService, 'createPost');
+    postService.createPost(testedPost);
+    expect(spyCreate).toHaveBeenCalled();
+  })
+
+  it('should test update method of service defineRequest function', () => {
+    component.defineRequest(testedPost);
+    const spyUpdate = spyOn(postService, 'updatePost');
+    postService.updatePost(testedPost.id, testedPost);
+    expect(spyUpdate).toHaveBeenCalled();
+  })
 
   it('should test resetForm method', () => {
     component.resetForm();
