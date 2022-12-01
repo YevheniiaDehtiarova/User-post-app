@@ -46,7 +46,7 @@ export class PostComponent extends BaseComponent implements OnInit {
       this.postService.getCommentById(post?.id)
       .pipe(tap((comment: Array<Comment>) => 
       {
-          this.modifyPosts(post,index,comment);
+          this.modifyPosts(post,index,comment); // не покрыто тестами//
       }))
     })]).pipe(takeUntil(this.destroy$)).subscribe()
    }
@@ -54,9 +54,9 @@ export class PostComponent extends BaseComponent implements OnInit {
 
   public modifyPosts(post: Post, index: number, comment: Array<Comment>): void {
     if (post.id == comment[0]?.postId) {
-    this.posts[index].comments = comment;
-    this.splicePosts(post, this.posts);
-    this.definePostsWithComments(this.posts)
+    this.posts[index].comments = comment;// не покрыто тестами//
+    this.splicePosts(post, this.posts); // не покрыто тестами//
+    this.definePostsWithComments(this.posts) // не покрыто тестами//
     }
   }
 
@@ -108,23 +108,23 @@ export class PostComponent extends BaseComponent implements OnInit {
     this.postService.deletePost(post.id)
     .pipe(takeUntil(this.destroy$))
     .subscribe((value) => {
-      this.filterPost(this.posts, value)
+      this.filterPost(this.posts, value); // не покрыто тестами//
     });
   }
 
   public filterPost(posts: Post[], post: Post): void {
     if (posts.length > 0 && post) {
-    this.posts = posts.filter((item) => post.id !== item.id);
+    this.posts = posts.filter((item) => post?.id !== item.id);
     }
   }
 
   public viewUpdatedPost(event: Post): void {
-    const findElement = this.posts.find((post) => this.checkPost(post,event));
+    const findElement = this.posts.find((post) => this.checkPost(post,event));// тоже не покрывается вызов
     if (findElement){
       findElement.comments =
       this.postsWithComments?.find((post) => this.checkPost(post,event))?.comments ||
       []; 
-      this.splicePosts(findElement, this.posts);
+      this.splicePosts(findElement, this.posts); //не покрыто тестами//
     }
   }
 

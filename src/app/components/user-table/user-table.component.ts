@@ -48,8 +48,8 @@ export class UserTableComponent extends BaseComponent implements OnInit {
 
   public getAllUsers(): void {
   this.userService.getAllUsers().pipe(takeUntil(this.destroy$)).subscribe((users: Array<UserApiInterface>) => {
-      this.users = this.userMapper.mapToViewModel(users);
-      this.usersFromApi = users;
+      this.users = this.userMapper.mapToViewModel(users); //не покрывается
+      this.usersFromApi = users; // не покрывается
     });
   }
 

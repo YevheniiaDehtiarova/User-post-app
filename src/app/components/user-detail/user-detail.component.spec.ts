@@ -105,6 +105,7 @@ describe('UserDetailComponent', () => {
     expect(spy).toHaveBeenCalled();
   });
 
+  /*не покрывает тестами*/
   it('should test user in initUser', fakeAsync(() => {
     let response: UserApiInterface;
     component.initUser();
@@ -127,6 +128,8 @@ describe('UserDetailComponent', () => {
     });
   });
 
+
+  /*вот тест на покрытие постов не работает корректно*/
   it('should test posts in initAllPosts', fakeAsync(() => {
     let response: Post[];
     fixture.detectChanges();
@@ -164,6 +167,7 @@ describe('UserDetailComponent', () => {
     expect(spy).toHaveBeenCalled();
   });
 
+  /*не рабочие тесты*/
   it('should test updateUser method', () => {
     component.updateUser(testedUser.id);
     userService.getUser(testedUser.id).subscribe((value) => {

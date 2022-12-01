@@ -56,6 +56,7 @@ export class UserModalComponent extends BaseComponent implements OnInit {
 
   public submit(): void {
     if (this.userFormComponent?.userForm?.valid) {
+      //не покрывается вызов defineRequest
       this.defineRequest().pipe(takeUntil(this.destroy$)).subscribe((user) => {
         this.changeUser(user.id);
         this.changeUpdatedProperty(false);

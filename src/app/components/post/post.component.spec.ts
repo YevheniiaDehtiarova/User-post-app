@@ -1,4 +1,4 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, fakeAsync, flush, TestBed } from '@angular/core/testing';
 import { PostFormStateService } from 'src/app/services/post-form-state.service';
 import { PostModalService } from 'src/app/services/post-modal.service';
 import { PostService } from 'src/app/services/post.service';
@@ -117,7 +117,8 @@ describe('Post Component', () => {
     expect(testedComments).toBe(testCommentFromPost);
   });
 
-  it('should test call method modifyPosts inside initPosts', () => {
+  /*здесь пробую покрывать*/
+  /*it('should test call method modifyPosts inside initPosts', () => {
     component.initPostsWithcomments(testedPosts);
     let index = 1;
     let testedComment: Comment[] = [];
@@ -127,7 +128,21 @@ describe('Post Component', () => {
     component.modifyPosts(post, index, testedComment);
     expect(spy).toHaveBeenCalled();
     expect(spy).toHaveBeenCalledWith(post, index, testedComment);
-  })
+  })*/
+
+  it('should test method modifyPosts inside initPosts', fakeAsync(() => {
+
+    let index = 1;
+    let testedComment: Comment[] = [];
+    let post = testedPost;
+    
+    spyOn(component['postService'], 'getCommentById').and.callThrough();
+    const saveSpy = spyOn(component, 'modifyPosts');
+    component.modifyPosts(post, index, testedComment);
+    component.initPostsWithcomments(testedPosts);
+    flush();
+    expect(saveSpy).toHaveBeenCalled();
+  }))
 
   it('should check modifyPosts and call methods inside', () => {
     let index = 1;
@@ -145,7 +160,7 @@ describe('Post Component', () => {
     expect(component.definePostsWithComments).toHaveBeenCalled();
     expect(component.definePostsWithComments).toHaveBeenCalledWith(testedPosts);
     expect(component.postsWithComments).toEqual(testedPosts);
-  });
+  });  // и здесь тоже пробую
 
   it('should check conditions in modifyPosts', () => {
     let index = 1;
@@ -219,14 +234,18 @@ describe('Post Component', () => {
     postService.deletePost(id).subscribe((value) => {
       expect(value).toEqual(testPost);
       expect(component.filterPost(testedPosts, value)).toBeTruthy;
-
-      const callSpy = spyOn(component, 'filterPost');
-      component.filterPost(testedPosts, value);
-      expect(callSpy).toHaveBeenCalled();
-      expect(callSpy).toHaveBeenCalledWith(component.posts, value);
     });
     expect(component.filterPost(testedPosts, testPost)).toBeTruthy;
   });
+
+  /*здесь пишу тесты на покрытие filter метода внутри delete*/
+  it('should test filter post method in deletePost', () => {
+    component.deletePost(testedPost);
+    const callSpy = spyOn(component, 'filterPost');
+    component.filterPost(testedPosts, testedPost);
+    expect(callSpy).toHaveBeenCalled();
+    expect(callSpy).toHaveBeenCalledWith(testedPosts, testedPost);
+  }) // не покрывается
 
   it('should test viewUpdatedPost method', () => {
     component.viewUpdatedPost(testedPost);
@@ -241,7 +260,8 @@ describe('Post Component', () => {
       expect(post.id === testedPost.id).toBeTruthy;
     });
 
-    spyOn(component, 'splicePosts');
+    /*пишу тесты на вызов splicepost внутри viewUpdatedPost*/
+    spyOn(component, 'splicePosts').and.callThrough();
     component.splicePosts(testFindElement, testedPosts);
     expect(component.splicePosts).toHaveBeenCalled();
     expect(component.splicePosts).toHaveBeenCalledWith(testFindElement, testedPosts)
@@ -265,10 +285,11 @@ describe('Post Component', () => {
     expect(testEvent.id).toEqual(testedPost.id);
   });
 
+  /*тоже не поркрывается тестами*/
   it('should test checkpost in viewUpdatedPost', () => {
     let testEvent = testedPost;
     component.viewUpdatedPost(testEvent);
-    const callSpy = spyOn(component, 'checkPost');
+    const callSpy = spyOn(component, 'checkPost').and.callThrough();
     component.checkPost(testedPost, testEvent);
     expect(callSpy).toHaveBeenCalled();
     expect(callSpy).toHaveBeenCalledWith(testedPost, testEvent);

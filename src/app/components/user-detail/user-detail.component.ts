@@ -47,7 +47,7 @@ export class UserDetailComponent extends BaseComponent implements OnInit {
       .getUser(this.userId)
       .pipe(takeUntil(this.destroy$))
       .subscribe((user) => {
-        this.user = user;
+        this.user = user; // не покрывается
       });
   }
 
@@ -60,7 +60,7 @@ export class UserDetailComponent extends BaseComponent implements OnInit {
       .getAllPosts()
       .pipe(takeUntil(this.destroy$))
       .subscribe((posts) => {
-        this.posts = posts;
+        this.posts = posts;// не покрывается
         this.posts.filter((post) => {
           post.userId === this.userId
         });
@@ -90,7 +90,7 @@ export class UserDetailComponent extends BaseComponent implements OnInit {
       .getUser(id)
       .pipe(takeUntil(this.destroy$))
       .subscribe((user) => {
-        this.user = user;
+        this.user = user; // аналогично присвоение не покрывается
       });
   }
 

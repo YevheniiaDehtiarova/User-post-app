@@ -13,6 +13,7 @@ import { HttpClient } from '@angular/common/http';
 import { PostModalComponent } from './post-modal.component';
 import { Post } from 'src/app/models/post.class';
 import { DEFAULT_POST } from 'src/app/models/default-post';
+import { first, of } from 'rxjs';
 
 
 describe('PostModal Component', () => {
@@ -62,6 +63,7 @@ describe('PostModal Component', () => {
     expect(spy).toHaveBeenCalled();
   });
 
+  /*здесь хочу покрыть тестами длину постов*/
   it('should test length in init', fakeAsync(() => {
    component.ngOnInit();
    let response: Post[] = [];
@@ -69,9 +71,8 @@ describe('PostModal Component', () => {
    return fixture.whenStable().then(() => {
     expect(component.postLength).toEqual(response.length)
    })
-  }));
+  })); // попытка № 1
 
-  
   it('should test subscribe post  in init', fakeAsync(() => {
     component.ngOnInit();
     let response: Post[] = [];
@@ -79,7 +80,16 @@ describe('PostModal Component', () => {
     return fixture.whenStable().then(() => {
      expect(response.length).toEqual(component.postLength)
     })
-   }));
+   }));// попытка № 2 
+
+   it('should test postLength in subcribe in Init', fakeAsync(() => {
+    let response: Post[] = []
+  
+     spyOn(postService, 'getAllPosts').and.returnValue(of(response));
+     component.ngOnInit();
+     tick();
+     expect(component.postLength).toEqual(response.length);
+   })) //попытка № 3
 
   it('should test null value in init', () => {
     component.ngOnInit();
@@ -90,6 +100,10 @@ describe('PostModal Component', () => {
     })
   })
 
+  it('should test null branch in ngOnInit', () => {
+    component.ngOnInit();
+    expect(!component.post).toBeTruthy();
+  }) // попытка оттестить нулл ветку
 
   it('should test close method', () => {
     const spy = spyOn(postModalService, 'modalClose').and.callThrough();
@@ -97,6 +111,16 @@ describe('PostModal Component', () => {
     component.close();
     expect(spy).toHaveBeenCalled();
   });
+
+
+  it('should test call determineSubmit in submit', () => {
+    component.submit();
+    let spy= spyOn(component,'detailSubmit').and.callThrough();
+    component.detailSubmit(testedPost);
+    expect(spy).toHaveBeenCalled();
+    expect(spy).toHaveBeenCalledWith(testedPost)
+  })
+
 
   it('should test input userId in submit', () => {
     let id = '2';
@@ -113,9 +137,10 @@ describe('PostModal Component', () => {
     expect(component.post).toEqual(testedPost);
   });
 
-  it('should test defineRequest  function in submit', () => {
+  /*тут тест вызова defineRequest внутри detailSubmit но горит красным */
+  it('should test defineRequest  function in detailSubmit', () => {
     const callSpy = spyOn(component, 'defineRequest');
-    component.submit();
+    component.detailSubmit(testedPost);
     component.defineRequest(testedPost);
     expect(callSpy).toHaveBeenCalled();
   })
@@ -136,6 +161,12 @@ describe('PostModal Component', () => {
     spyOn(component.changePosts, 'emit');
     component.changePosts.emit(testedPost);
     expect(component.changePosts.emit).toHaveBeenCalledWith(testedPost);
+  })
+
+  it('should test  emit in third attempt', () => {
+    component.changePosts.pipe(first()).subscribe((post:Post) =>{
+      expect(post).toBe(testedPost);
+    })
   })
 
   it('should test if post does not exist in defineRequest', () => {

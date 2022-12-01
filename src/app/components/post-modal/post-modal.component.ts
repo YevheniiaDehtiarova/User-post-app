@@ -29,9 +29,9 @@ export class PostModalComponent extends BaseComponent implements OnInit{
 
 
   ngOnInit(): void {
-   !this.post ?this.postService.getAllPosts()
+   !this.post ? this.postService.getAllPosts()
         .pipe(takeUntil(this.destroy$))
-        .subscribe((posts: Post[]) => (this.postLength = posts.length)) : null;
+        .subscribe((posts: Post[]) => (this.postLength = posts.length)) : null; // присвоение переменной не покрывается
   }
 
   public close(): void {
@@ -47,18 +47,21 @@ export class PostModalComponent extends BaseComponent implements OnInit{
         title: this.postFormComponent?.postForm?.value.title,
         body: this.postFormComponent?.postForm?.value.body,
       }
-
-      this.defineRequest(post).pipe(takeUntil(this.destroy$))
-      .subscribe((post) => {
-        this.changePosts.emit(post);
-      })
-       this.resetForm();
+       this.detailSubmit(post); //не покрывается 
     }
   }
 
   public resetForm(): void {
     this.postFormComponent?.postForm?.reset();
     this.close();
+  }
+
+  public detailSubmit(post: Post): void {
+    this.defineRequest(post)?.pipe(takeUntil(this.destroy$)) 
+      .subscribe((post) => {
+        this.changePosts.emit(post);// вот этот вызов не могу покрыть тестами
+      })
+      this.resetForm();
   }
 
   public defineRequest(post:Post): Observable<Post> {

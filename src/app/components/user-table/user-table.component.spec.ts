@@ -92,6 +92,7 @@ describe('User Table Component', () => {
     expect(spy).toHaveBeenCalled();
   });
 
+  /*не работает корректно*/
   it('should test subscribe in getAllUsers method', fakeAsync(() => {
     const response: UserApiInterface[] = [];
     spyOn(userService, 'getAllUsers').and.returnValue(of(response));
