@@ -44,10 +44,8 @@ export class PostComponent extends BaseComponent implements OnInit {
     if(posts.length > 0) {
     forkJoin([posts?.map((post: Post, index: number) => {
       this.postService.getCommentById(post?.id)
-      .pipe(tap((comment: Array<Comment>) => 
-      {
-          this.modifyPosts(post,index,comment); // не покрыто тестами//
-      }))
+      .pipe(tap((comment: Array<Comment>) => this.modifyPosts(post,index,comment) // не покрыто тестами//
+      ))
     })]).pipe(takeUntil(this.destroy$)).subscribe()
    }
   }
@@ -114,7 +112,7 @@ export class PostComponent extends BaseComponent implements OnInit {
 
   public filterPost(posts: Post[], post: Post): void {
     if (posts.length > 0 && post) {
-    this.posts = posts.filter((item) => post?.id !== item.id);
+    this.posts = posts?.filter((item) => post?.id !== item.id);
     }
   }
 

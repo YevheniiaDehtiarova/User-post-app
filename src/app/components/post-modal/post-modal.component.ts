@@ -31,7 +31,11 @@ export class PostModalComponent extends BaseComponent implements OnInit{
   ngOnInit(): void {
    !this.post ? this.postService.getAllPosts()
         .pipe(takeUntil(this.destroy$))
-        .subscribe((posts: Post[]) => (this.postLength = posts.length)) : null; // присвоение переменной не покрывается
+        .subscribe((posts: Post[]) => this.determinePostLength(posts)) : null; // вызов функции не покрывается
+  }
+
+  public determinePostLength(posts: Array<Post>): void {
+    this.postLength = posts.length
   }
 
   public close(): void {

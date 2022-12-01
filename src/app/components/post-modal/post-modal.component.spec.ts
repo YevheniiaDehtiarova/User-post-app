@@ -61,35 +61,25 @@ describe('PostModal Component', () => {
     const spy = spyOn(postService, 'getAllPosts');
     postService.getAllPosts()
     expect(spy).toHaveBeenCalled();
+
+    const spyFunc = spyOn(component, 'determinePostLength');
+    component.determinePostLength(testedPosts);
+    expect(spyFunc).toHaveBeenCalledWith(testedPosts);
   });
 
-  /*здесь хочу покрыть тестами длину постов*/
-  it('should test length in init', fakeAsync(() => {
+  it('should test determinePostLength', () => {
+    component.determinePostLength(testedPosts);
+    expect(component.postLength).toEqual(testedPosts.length);
+  })
+
+  /*it('should test length in init', fakeAsync(() => {
    component.ngOnInit();
    let response: Post[] = [];
    fixture.detectChanges();
    return fixture.whenStable().then(() => {
     expect(component.postLength).toEqual(response.length)
    })
-  })); // попытка № 1
-
-  it('should test subscribe post  in init', fakeAsync(() => {
-    component.ngOnInit();
-    let response: Post[] = [];
-    fixture.detectChanges();
-    return fixture.whenStable().then(() => {
-     expect(response.length).toEqual(component.postLength)
-    })
-   }));// попытка № 2 
-
-   it('should test postLength in subcribe in Init', fakeAsync(() => {
-    let response: Post[] = []
-  
-     spyOn(postService, 'getAllPosts').and.returnValue(of(response));
-     component.ngOnInit();
-     tick();
-     expect(component.postLength).toEqual(response.length);
-   })) //попытка № 3
+  })); // попытка покрытия длины постов в ините*/
 
   it('should test null value in init', () => {
     component.ngOnInit();
