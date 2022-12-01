@@ -100,7 +100,7 @@ describe('User Table Component', () => {
     tick();
     expect(component.usersFromApi).toEqual(response);
     expect(component.users).toEqual(userMapper.mapToViewModel(response));
-  }));
+  })); // attempt 1
 
   it('should test map in getAllUsers method', () => {
     let mockedData: any = [];
@@ -111,7 +111,7 @@ describe('User Table Component', () => {
     expect(spy).toHaveBeenCalled();
     expect(component.usersFromApi).toEqual(mockedData);
     expect(component.users).toEqual(userMapper.mapToViewModel(mockedData));
-  });
+  });  //attempt 2
 
   it('should test getModalStatus method', () => {
     component.getModalStatus();
@@ -137,7 +137,7 @@ describe('User Table Component', () => {
 
   it('should test editUser method', () => {
     component.editUser(testedUserTable);
-    expect(component.editUser(testedUserTable)).toBeTruthy;
+    expect(component.editUser(testedUserTable)).toBeFalsy();
     testedUsers.push(testedUser);
     const findedUser = testedUsers.find(
       (user) => Number(user.id) === testedUserTable.id
@@ -152,7 +152,9 @@ describe('User Table Component', () => {
     })
     const testExpr = Number(testedUser.id) === testedUserTable.id
     expect(testExpr).toBeFalsy();
-  })
+  }) // не покрывает корректно сравнение в подписке
+
+  
 
   it('should test call openModal in editUser method', () => {
     const funcModalSpy = spyOn(component, 'openModal');
@@ -172,7 +174,7 @@ describe('User Table Component', () => {
   it('should test changeUserFormstate method', () => {
     const inputValue = true;
     component.changeUserFormstate(inputValue);
-    expect(component.changeUserFormstate(inputValue)).toBeTruthy;
+    expect(component.changeUserFormstate(inputValue)).toBeFalsy();
     const spy = spyOn(userFormStateService, 'changeFormStatus');
     userFormStateService.changeFormStatus(inputValue);
     expect(spy).toHaveBeenCalled();
@@ -202,7 +204,7 @@ describe('User Table Component', () => {
 
   it('should test createUser and updateUser methods', () => {
     component.changeUser();
-    expect(component.changeUser()).toBeTruthy; 
+    expect(component.changeUser()).toBeFalsy();
     const funcSpy = spyOn(component, 'getAllUsers');
     component.getAllUsers();
     expect(funcSpy).toHaveBeenCalled();

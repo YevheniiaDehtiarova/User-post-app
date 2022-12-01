@@ -18,7 +18,7 @@ import { BaseComponent } from '../base/base.component';
 export class UserDetailComponent extends BaseComponent implements OnInit {
   public userId: string;
   public user: UserApiInterface;
-  public posts: Array<Post>;
+  public posts: Array<Post> = [];
   public isFormForEdit: boolean;
   public isUserDetailFormEdit: boolean;
   public isUserModalDialogVisible: boolean;

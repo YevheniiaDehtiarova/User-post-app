@@ -122,10 +122,11 @@ describe('Post Component', () => {
     expect(spyFunc).toHaveBeenCalled();
     expect(spyFunc).toHaveBeenCalledWith(post, index, testedComment);
 
-    return postService.getCommentById(id).subscribe((comment) => {
+    postService.getCommentById(id).subscribe((comment) => {
       component.modifyPosts(post, index, comment);
       expect(component.modifyPosts(post, index, comment)).toBeFalsy();
     });
+    expect(component.modifyPosts(post, index, testedComment)).toBeFalsy();
   }); // попытка но покрытие modifyPosts не сработало
 
   it('should check modifyPosts and call methods inside', () => {
@@ -205,9 +206,9 @@ describe('Post Component', () => {
 
     postService.deletePost(id).subscribe((value) => {
       expect(value).toEqual(testPost);
-      expect(component.filterPost(testedPosts, value)).toBeTruthy;
+      expect(component.filterPost(testedPosts, value)).toBeTruthy();
     });
-    expect(component.filterPost(testedPosts, testPost)).toBeTruthy;
+    expect(component.filterPost(testedPosts, testPost)).toBeFalsy();
   });
 
   /*здесь пишу тесты на покрытие filter метода внутри delete*/
@@ -217,19 +218,19 @@ describe('Post Component', () => {
     component.filterPost(testedPosts, testedPost);
     expect(callSpy).toHaveBeenCalled();
     expect(callSpy).toHaveBeenCalledWith(testedPosts, testedPost);
-  }); // не покрывается
+  }); //не покрывается
 
   it('should test viewUpdatedPost method', () => {
     component.viewUpdatedPost(testedPost);
     const testFindElement = component.posts?.find((post) => {
       expect(post?.id).toEqual(testedPost.id);
     }) as Post;
-    expect(testFindElement).toBeTruthy;
+    expect(testFindElement).toBeFalsy();
     testedPosts.find((post) => {
-      expect(post.id === testedPost.id).toBeTruthy;
+      expect(post.id === testedPost.id).toBeTruthy();
     });
     component.postsWithComments?.find((post) => {
-      expect(post.id === testedPost.id).toBeTruthy;
+      expect(post.id === testedPost.id).toBeTruthy();
     });
 
     /*пишу тесты на вызов splicepost внутри viewUpdatedPost*/
@@ -269,18 +270,8 @@ describe('Post Component', () => {
     expect(callSpy).toHaveBeenCalled();
     expect(callSpy).toHaveBeenCalledWith(testedPost, testEvent);
     component.postsWithComments?.find((post) => {
-      expect(component.checkPost(post, testEvent)).toBeTruthy;
+      expect(component.checkPost(post, testEvent)).toBeTruthy();
     });
   });
 
-  it('should test checkPost again', () => {
-    let testEvent = testedPost;
-    component.viewUpdatedPost(testEvent);
-
-    return component.posts.find((post) => {
-      const callSpy = spyOn(component, 'checkPost');
-      component.checkPost(post, testEvent);
-      expect(callSpy).toHaveBeenCalledWith(post, testEvent);
-    });
-  });
 });

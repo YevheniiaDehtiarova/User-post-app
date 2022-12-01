@@ -121,7 +121,7 @@ describe('User Modal Component', () => {
     component.defineRequest();
     userService.createUser(testedFormUser).subscribe((user) => {
       expect(user).toBe(testedUser);
-      expect(component.changeUser(testedUser.id)).toBeTruthy;
+      expect(component.changeUser(testedUser.id)).toBeTruthy();
     });
     const spy = spyOn(userService, 'createUser');
     userService.createUser(testedFormUser);
@@ -134,8 +134,8 @@ describe('User Modal Component', () => {
     component.submit();
     component.defineRequest().subscribe((user) => {
       expect(user).toBe(testedUser);
-      expect(component.changeUser(testedUser.id)).toBeTruthy;
-      expect(component.changeUpdatedProperty).toBeTruthy;
+      expect(component.changeUser(testedUser.id)).toBeTruthy();
+      expect(component.changeUpdatedProperty).toBeTruthy();
     });
     const spy = spyOn(component, 'changeUser');
     component.changeUser(testedUser.id);

@@ -112,7 +112,7 @@ export class PostComponent extends BaseComponent implements OnInit {
 
   public filterPost(posts: Post[], post: Post): void {
     if (posts.length > 0 && post) {
-    this.posts = posts?.filter((item) => post?.id !== item.id);
+    this.posts = posts.filter((item) => post?.id !== item.id);
     }
   }
 

@@ -3,6 +3,7 @@ import {
   fakeAsync,
   inject,
   TestBed,
+  tick,
 } from '@angular/core/testing';
 import { PostService } from 'src/app/services/post.service';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
@@ -18,6 +19,7 @@ import { UserApiInterface } from 'src/app/models/user-api.interface';
 import { Post } from 'src/app/models/post.class';
 import { InjectionToken } from '@angular/core';
 import { Location } from '@angular/common';
+import { of } from 'rxjs';
 
 describe('UserDetailComponent', () => {
   let component: UserDetailComponent;
@@ -109,6 +111,7 @@ describe('UserDetailComponent', () => {
   it('should test user in initUser', fakeAsync(() => {
     let response: UserApiInterface;
     component.initUser();
+
     fixture.detectChanges();
     return fixture.whenStable().then(() => {
       expect(component.user).toEqual(response);
@@ -122,29 +125,29 @@ describe('UserDetailComponent', () => {
     expect(spy).toHaveBeenCalled();
   });
 
-  it('should test subscribe in initAllPosts', () => {
-    postService.getAllPosts().subscribe((posts) => {
-      expect(component.posts).toEqual(posts);
-    });
-  });
-
-
   /*вот тест на покрытие постов не работает корректно*/
-  it('should test posts in initAllPosts', fakeAsync(() => {
-    let response: Post[];
+  it('should test posts in initAllPosts 01', fakeAsync(() => {
+    const response: Post[] =[];
     fixture.detectChanges();
     component.initAllPosts();
     fixture.whenStable().then(() => {
       expect(component.posts).toEqual(response);
     });
-  }));
+  }));// попытка 1
+  it('should test posts in initAllPosts 02', fakeAsync(() => {
+    const response: Post[] = [];
+    spyOn(postService, 'getAllPosts').and.returnValue(of(response));
+    component.initAllPosts();
+    tick();
+    expect(component.posts).toEqual(response);
+  })) // попытка 2
 
   it('should test subscription in getUserModalStatus', () => {
     component.getUserModalStatus();
     userModalService.getModalStatus().subscribe((value) => {
       expect(value).toBe(component.isUserModalDialogVisible);
     });
-  });
+  }); 
 
   it('should test work service in getUserModalStatus', () => {
     const spy = spyOn(userModalService, 'getModalStatus').and.callThrough();

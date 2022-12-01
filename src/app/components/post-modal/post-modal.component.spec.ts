@@ -55,7 +55,7 @@ describe('PostModal Component', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
-  
+
   it('should  test post in ngOnInit method', () => {
     component.ngOnInit();
     const spy = spyOn(postService, 'getAllPosts');
@@ -105,7 +105,7 @@ describe('PostModal Component', () => {
 
   it('should test call determineSubmit in submit', () => {
     component.submit();
-    let spy= spyOn(component,'detailSubmit').and.callThrough();
+    let spy = spyOn(component, 'detailSubmit').and.callThrough();
     component.detailSubmit(testedPost);
     expect(spy).toHaveBeenCalled();
     expect(spy).toHaveBeenCalledWith(testedPost)
@@ -147,16 +147,10 @@ describe('PostModal Component', () => {
     expect(component.changePosts.emit).toHaveBeenCalled();
   })
 
-  it('should test emit 2 attempt', ()=> {
+  it('should test emit 2 attempt', () => {
     spyOn(component.changePosts, 'emit');
     component.changePosts.emit(testedPost);
     expect(component.changePosts.emit).toHaveBeenCalledWith(testedPost);
-  })
-
-  it('should test  emit in third attempt', () => {
-    component.changePosts.pipe(first()).subscribe((post:Post) =>{
-      expect(post).toBe(testedPost);
-    })
   })
 
   it('should test if post does not exist in defineRequest', () => {
@@ -197,10 +191,8 @@ describe('PostModal Component', () => {
 
   it('should test resetForm method', () => {
     component.resetForm();
-    expect(component.resetForm()).toBeTruthy;
-    const funcSpy = spyOn(component, 'close');
+    const funcSpy = spyOn(component, 'close').and.callThrough();
     component.close();
     expect(funcSpy).toHaveBeenCalled();
- 
   })
 });
