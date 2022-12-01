@@ -161,7 +161,7 @@ describe('User Modal Component', () => {
   });
 
   it('should test call function defineRequest in submit', () => {
-    const spy = spyOn(component, 'defineRequest');
+    const spy = spyOn(component, 'defineRequest').and.callThrough();
     component.submit();
     component.defineRequest();
     expect(spy).toHaveBeenCalled();

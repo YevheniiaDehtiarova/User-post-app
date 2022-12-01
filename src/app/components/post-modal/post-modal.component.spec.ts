@@ -1,5 +1,6 @@
 import {
   ComponentFixture,
+  ComponentFixtureAutoDetect,
   fakeAsync,
   TestBed,
   tick,
@@ -11,7 +12,6 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { HttpClient } from '@angular/common/http';
 import { PostModalComponent } from './post-modal.component';
 import { Post } from 'src/app/models/post.class';
-import { async, of } from 'rxjs';
 import { DEFAULT_POST } from 'src/app/models/default-post';
 
 
@@ -28,7 +28,8 @@ describe('PostModal Component', () => {
     await TestBed.configureTestingModule({
       imports: [HttpClientTestingModule, RouterTestingModule],
       declarations: [PostModalComponent],
-      providers: [PostModalService, PostService]
+      providers: [PostModalService, PostService,
+        { provide: ComponentFixtureAutoDetect, useValue: true }]
     }).compileComponents();
 
     fixture = TestBed.createComponent(PostModalComponent);

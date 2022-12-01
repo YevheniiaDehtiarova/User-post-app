@@ -10,7 +10,7 @@ import { HttpClient } from '@angular/common/http';
 import { DEFAULT_POST } from 'src/app/models/default-post';
 import { Post } from 'src/app/models/post.class';
 import { ActivatedRoute } from '@angular/router';
-import { tap } from 'rxjs/internal/operators/tap';
+
 
 describe('Post Component', () => {
   let component: PostComponent;
@@ -113,31 +113,38 @@ describe('Post Component', () => {
     let testedComments = testedPost.comments as Comment[];
     const testCommentFromPost = testedPost.comments as Comment[];
     component.initPostsWithcomments(testedPosts);
-    expect(testedPost.id === testedComments[0].postId).toBeTruthy;
+    expect(testedPost.id === testedComments[0].postId).toBeFalsy();
     expect(testedComments).toBe(testCommentFromPost);
-    expect(component.splicePosts(testedPost, component.posts)).toBeTruthy;
-    expect(component.definePostsWithComments(component.posts)).toBeTruthy;
-
-    spyOn(component, 'splicePosts');
-    component.splicePosts(testedPost, component.posts);
-    expect(component.splicePosts).toHaveBeenCalled();
   });
 
-  it('should check modifyPosts', () => {
+  it('should test call method modifyPosts inside initPosts', () => {
+    component.initPostsWithcomments(testedPosts);
     let index = 1;
     let testedComment: Comment[] = [];
-    component.modifyPosts(testedPost, index, testedComment);
-    expect(component.modifyPosts(testedPost, index, testedComment)).toBeTruthy;
+    let post = testedPost;
+    
+    let spy = spyOn(component, 'modifyPosts').and.callThrough();
+    component.modifyPosts(post, index, testedComment);
+    expect(spy).toHaveBeenCalled();
+    expect(spy).toHaveBeenCalledWith(post, index, testedComment);
+  })
 
-    spyOn(component, 'splicePosts');
-    component.splicePosts(testedPost, component.posts);
-    expect(component.splicePosts).toHaveBeenCalled();
-    expect(component.splicePosts(testedPost, component.posts)).toBeTruthy;
+  it('should check modifyPosts and call methods inside', () => {
+    let index = 1;
+    let testedComment: Comment[] = [];
+    let post = testedPost;
 
-    spyOn(component, 'definePostsWithComments');
-    component.definePostsWithComments(component.posts);
+    component.modifyPosts(post, index, testedComment);
+
+    const spy = spyOn(component, 'splicePosts').and.callThrough();
+    component.splicePosts(testedPost, testedPosts);
+    expect(spy).toHaveBeenCalled();
+
+    spyOn(component, 'definePostsWithComments').and.callThrough();
+    component.definePostsWithComments(testedPosts);
     expect(component.definePostsWithComments).toHaveBeenCalled();
-    expect(component.definePostsWithComments).toHaveBeenCalledWith(component.posts)
+    expect(component.definePostsWithComments).toHaveBeenCalledWith(testedPosts);
+    expect(component.postsWithComments).toEqual(testedPosts);
   });
 
   it('should check conditions in modifyPosts', () => {
@@ -196,7 +203,7 @@ describe('Post Component', () => {
     component.editPost(testPost);
     expect(component.post).toBe(testPost);
     expect(component.isPostModalDialogVisible).toBe(testStatus);
-    expect(postFormStateService.setInitialFormState(testPost)).toBeTruthy;
+    //expect(postFormStateService.setInitialFormState(testPost)).toBeTruthy();
   });
 
   it('should test deletePost method', () => {
