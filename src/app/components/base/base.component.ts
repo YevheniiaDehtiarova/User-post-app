@@ -3,12 +3,9 @@ import { Subject } from 'rxjs/internal/Subject';
 
 @Component({
   selector: 'app-base',
-  template: '<h1>Life is good </h1>',
+  template: '',
 })
-export class BaseComponent implements OnDestroy {
-
-  constructor() { }
-  
+export class BaseComponent implements OnDestroy { 
   public destroy$ = new Subject<void>();
   
   ngOnDestroy(): void {

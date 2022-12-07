@@ -2,7 +2,7 @@
 import {Comment} from '../models/comment.interface';
 
 export class Post {
-  userId: string;
+  userId: string | null;
   id: string;
   title: string;
   body: string;

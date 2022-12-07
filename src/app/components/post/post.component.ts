@@ -15,12 +15,12 @@ import { BaseComponent } from '../base/base.component';
   styleUrls: ['./post.component.css'],
 })
 export class PostComponent extends BaseComponent implements OnInit {
-  @Input() posts: Array<Post> = [];
+  @Input() posts: Array<Post>;
   public comments$: Observable<Array<Comment>>;
-  public isPostModalDialogVisible: boolean = false;
+  public isPostModalDialogVisible$: Observable<boolean>;
   public showComments: boolean = false;
   public post: Post;
-  public userId: string;
+  public userId: string | null;
   public postsWithComments: Array<Post>;
 
   constructor(
@@ -36,44 +36,19 @@ export class PostComponent extends BaseComponent implements OnInit {
   ngOnInit(): void {
     this.calculateUserId();
     this.getModalStatus();
-    this.initPostsWithcomments(this.posts);
   }
 
-
-  public initPostsWithcomments(posts: Post[]): void {
-    if(posts.length > 0) {
-    forkJoin([posts?.map((post: Post, index: number) => {
-      this.postService.getCommentById(post?.id)
-      .pipe(tap((comment: Array<Comment>) => this.modifyPosts(post,index,comment) // не покрыто тестами//
-      ))
-    })]).pipe(takeUntil(this.destroy$)).subscribe()
-   }
-  }
-
-  public modifyPosts(post: Post, index: number, comment: Array<Comment>): void {
-    if (post.id == comment[0]?.postId) {
-    this.posts[index].comments = comment;// не покрыто тестами//
-    this.splicePosts(post, this.posts); // не покрыто тестами//
-    this.definePostsWithComments(this.posts) // не покрыто тестами//
+  public calculateUserId(): string | null {
+    this.userId = this.activateRoute.snapshot.paramMap.get('id');
+    if(!this.userId) {
+      return null;
     }
-  }
-
-  public calculateUserId(): string {
-    this.userId = this.activateRoute.snapshot.paramMap.get('id') as string;
     return this.userId;
   }
 
-  public definePostsWithComments(posts: Post []): void {
-    this.postsWithComments = [...posts];
-  }
 
   public getModalStatus(): void {
-   this.postModalService
-      .getModalStatus()
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((isModalDialogVisible) => {
-        this.isPostModalDialogVisible = isModalDialogVisible;
-      });
+    this.isPostModalDialogVisible$ = this.postModalService.getModalStatus();
   }
 
   public addPost(): void {
@@ -94,11 +69,7 @@ export class PostComponent extends BaseComponent implements OnInit {
   }
 
   public changePostModalDialogVisible(): void {
-    this.isPostModalDialogVisible = true;
-    this.postModalOpen();
-  }
-
-  public postModalOpen(): void {
+    this.postModalService.isModalDialogVisible.next(true);
     this.postModalService.modalOpen();
   }
 
@@ -106,7 +77,7 @@ export class PostComponent extends BaseComponent implements OnInit {
     this.postService.deletePost(post.id)
     .pipe(takeUntil(this.destroy$))
     .subscribe((value) => {
-      this.filterPost(this.posts, value); // не покрыто тестами//
+      this.filterPost(this.posts, value); 
     });
   }
 
@@ -117,12 +88,12 @@ export class PostComponent extends BaseComponent implements OnInit {
   }
 
   public viewUpdatedPost(event: Post): void {
-    const findElement = this.posts.find((post) => this.checkPost(post,event));// тоже не покрывается вызов
+    const findElement = this.posts.find((post) => this.checkPost(post,event));
     if (findElement){
       findElement.comments =
       this.postsWithComments?.find((post) => this.checkPost(post,event))?.comments ||
       []; 
-      this.splicePosts(findElement, this.posts); //не покрыто тестами//
+      this.splicePosts(findElement, this.posts);
     }
   }
 

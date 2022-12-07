@@ -1,5 +1,5 @@
 export interface createdPost {
-    userId: string;
+    userId: string | null;
     title: string;
     body: string;
   }

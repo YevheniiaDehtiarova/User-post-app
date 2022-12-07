@@ -14,7 +14,7 @@ import { BaseComponent } from '../base/base.component';
 })
 export class PostModalComponent extends BaseComponent implements OnInit{
   @Input('post') post: Post;
-  @Input('userId') userId: string;
+  @Input('userId') userId: string | null;
   @Input() posts: Array<Post>;
   @Output() changePosts = new EventEmitter<Post>();
   public postLength: number = 0;

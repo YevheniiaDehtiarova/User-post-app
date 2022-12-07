@@ -17,7 +17,7 @@ export class UserService {
     return this.http.get<Array<UserApiInterface>>(apiUrl);
   }
 
-  public getUser(id: string): Observable<UserApiInterface> {
+  public getUser(id: string | null): Observable<UserApiInterface> {
     const apiUrl = userRoutes.getUserById.replace('${id}', `${id}`);
 
     return this.http.get<UserApiInterface>(apiUrl);
