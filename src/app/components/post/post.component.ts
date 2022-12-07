@@ -15,7 +15,7 @@ import { BaseComponent } from '../base/base.component';
   styleUrls: ['./post.component.css'],
 })
 export class PostComponent extends BaseComponent implements OnInit {
-  @Input() posts: Array<Post>;
+  @Input() posts: Array<Post> = [];
   public comments$: Observable<Array<Comment>>;
   public isPostModalDialogVisible$: Observable<boolean>;
   public showComments: boolean = false;
@@ -82,13 +82,13 @@ export class PostComponent extends BaseComponent implements OnInit {
   }
 
   public filterPost(posts: Post[], post: Post): void {
-    if (posts.length > 0 && post) {
+    if (posts?.length > 0 && post) {
     this.posts = posts.filter((item) => post?.id !== item.id);
     }
   }
 
   public viewUpdatedPost(event: Post): void {
-    const findElement = this.posts.find((post) => this.checkPost(post,event));
+    const findElement = this.posts?.find((post) => this.checkPost(post,event));
     if (findElement){
       findElement.comments =
       this.postsWithComments?.find((post) => this.checkPost(post,event))?.comments ||
@@ -106,11 +106,11 @@ export class PostComponent extends BaseComponent implements OnInit {
   }
 
   public viewCreatedPost(event: Post): void {
-    this.posts.push(event);
+    this.posts?.push(event);
   }
 
   public splicePosts(post: Post, posts: Post[]): Post[] {
-    const index = posts.indexOf(post);
+    const index = posts?.indexOf(post);
     return posts.splice(index, 1, post);
   }
 }

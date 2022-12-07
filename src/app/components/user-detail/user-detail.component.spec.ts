@@ -20,6 +20,7 @@ import { Post } from 'src/app/models/post.class';
 import { InjectionToken } from '@angular/core';
 import { Location } from '@angular/common';
 import { of } from 'rxjs';
+import { Comment } from '../../models/comment.interface';
 
 describe('UserDetailComponent', () => {
   let component: UserDetailComponent;
@@ -31,6 +32,9 @@ describe('UserDetailComponent', () => {
   let userModalService: UserModalService;
   let route: ActivatedRoute;
   let testedUser: UserApiInterface;
+  let testedPost: Post;
+  let testedPosts: Array<Post> = [];
+
   const LOCATION_TOKEN = new InjectionToken<Location>('Window location object');
 
   beforeEach(async () => {
@@ -86,6 +90,16 @@ describe('UserDetailComponent', () => {
         scope: 'zsgbxdh',
       },
     };
+    testedPost = {
+      body: '',
+      comments: [
+        { postId: '2', id: '3', name: 'aaa', email: 'bbb', body: 'cccc' },
+      ],
+      id: '22',
+      title: '',
+      userId: '3',
+    };
+    testedPosts.push(testedPost);
   });
 
   it('should create', () => {
@@ -107,7 +121,9 @@ describe('UserDetailComponent', () => {
     expect(spy).toHaveBeenCalled();
   });
 
-  /*не покрывает тестами*/
+
+  /*проблема 1 присовение значения в переменную 
+  в ts не покрыта строка this.user = user;*/
   it('should test user in initUser', fakeAsync(() => {
     let response: UserApiInterface;
     component.initUser();
@@ -125,7 +141,8 @@ describe('UserDetailComponent', () => {
     expect(spy).toHaveBeenCalled();
   });
 
-  /*вот тест на покрытие постов не работает корректно*/
+  /*не работает корректно подписка на посты и присвоение в this.posts
+  ts не покрыта строка this.posts = posts;*/
   it('should test posts in initAllPosts 01', fakeAsync(() => {
     const response: Post[] =[];
     fixture.detectChanges();
@@ -133,14 +150,59 @@ describe('UserDetailComponent', () => {
     fixture.whenStable().then(() => {
       expect(component.posts).toEqual(response);
     });
-  }));// попытка 1
+  })) /*это был вариант 1*/
+
   it('should test posts in initAllPosts 02', fakeAsync(() => {
     const response: Post[] = [];
     spyOn(postService, 'getAllPosts').and.returnValue(of(response));
     component.initAllPosts();
     tick();
     expect(component.posts).toEqual(response);
-  })) // попытка 2
+  })) /*а это вариант 2*/
+
+    it('should test method initAllPosts', () => {
+    let id = testedPost.id;
+    const spy = spyOn(postService, 'getCommentById').and.callThrough();
+    postService.getCommentById(id);
+    component.initAllPosts();
+    expect(spy).toHaveBeenCalled();
+
+    let index = 1;
+    let testedComment: Comment[] = [];
+    let post = testedPost;
+    let spyFunc = spyOn(component, 'modifyPosts').and.callThrough();
+    component.modifyPosts(post, index, testedComment);
+    expect(spyFunc).toHaveBeenCalled();
+    expect(spyFunc).toHaveBeenCalledWith(post, index, testedComment);
+
+    postService.getCommentById(id).subscribe((comment) => {
+      component.modifyPosts(post, index, comment);
+      expect(component.modifyPosts(post, index, comment)).toBeFalsy();
+    });
+    expect(component.modifyPosts(post, index, testedComment)).toBeFalsy();
+  }); 
+
+
+  /*не покрывается тестами присвоение в переменную и вызов функции,
+  не покрыты след строки кода
+  this.posts[index].comments = comment;
+  this.splicePosts(post, this.posts);*/
+
+  it('should check modifyPosts and call methods inside', () => {
+    let index = 1;
+    let testedComment: Comment[] = testedPost.comments as Comment[];
+    let post = testedPost;
+
+    component.modifyPosts(post, index, testedComment);
+
+    let condition = testedPost.id === testedComment[0]?.postId;
+    expect(condition).toBeFalse();
+
+    const spy = spyOn(component, 'splicePosts').and.callThrough();
+    component.splicePosts(testedPost, testedPosts);
+    expect(spy).toHaveBeenCalled();
+  }); 
+
 
   it('should test subscription in getUserModalStatus', () => {
     component.getUserModalStatus();
@@ -169,8 +231,8 @@ describe('UserDetailComponent', () => {
     component.getUserFormStatus();
     expect(spy).toHaveBeenCalled();
   });
-
-  /*не рабочие тесты*/
+/* аналогично не работает присвоение в юзер, не  покрыта строка
+this.user = user; */
   it('should test updateUser method', () => {
     component.updateUser(testedUser.id);
     userService.getUser(testedUser.id).subscribe((value) => {

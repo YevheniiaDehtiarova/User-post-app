@@ -80,20 +80,21 @@ export class UserDetailComponent extends BaseComponent implements OnInit {
           post.userId === this.userId;
         });
       });
-
-    forkJoin([
-      this.posts?.map((post: Post, index: number) => {
-        this.postService
-          .getCommentById(post?.id)
-          .pipe(
-            tap((comment: Array<Comment>) =>
-              this.modifyPosts(post, index, comment)
-            )
-          );
-      }),
-    ])
-      .pipe(takeUntil(this.destroy$))
-      .subscribe();
+    if (this.posts.length) {
+      forkJoin([
+        this.posts?.map((post: Post, index: number) => {
+          this.postService
+            .getCommentById(post?.id)
+            .pipe(
+              tap((comment: Array<Comment>) =>
+                this.modifyPosts(post, index, comment)
+              )
+            );
+        }),
+      ])
+        .pipe(takeUntil(this.destroy$))
+        .subscribe();
+    }
   }
 
   public modifyPosts(post: Post, index: number, comment: Array<Comment>): void {
@@ -104,7 +105,7 @@ export class UserDetailComponent extends BaseComponent implements OnInit {
   }
 
   public splicePosts(post: Post, posts: Post[]): Post[] {
-    const index = posts.indexOf(post);
+    const index = posts?.indexOf(post);
     return posts.splice(index, 1, post);
   }
 
@@ -131,7 +132,7 @@ export class UserDetailComponent extends BaseComponent implements OnInit {
       .getUser(id)
       .pipe(takeUntil(this.destroy$))
       .subscribe((user) => {
-        this.user = user; 
+        this.user = user;
       });
   }
 
