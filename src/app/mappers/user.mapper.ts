@@ -68,23 +68,4 @@ export class UserMapper {
       phone: userForm.phone,
     }
   }
-
-  public mapFormTableToformValue(user: UserTableInterface): UserFormInterface{ // подумать завтра
-    console.log(user);
-    return {
-      id: user.id ? user.id: 'null',
-      firstName: user.name,
-      lastName: user.name,
-      userName: user.name,
-      email: user.email,
-      street: user.address,
-      building: user.address,
-      city: user.address,
-      zipcode: user.address,
-      phone: user.phone,
-      website: user.phone,
-      companyName: user.name,
-      companyScope: user.name,
-    }
-  }
 }
