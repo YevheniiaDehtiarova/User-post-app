@@ -1,16 +1,18 @@
-import { ChangeDetectorRef, Component,EventEmitter,Input,OnChanges,OnDestroy,OnInit, Output, SimpleChanges } from '@angular/core';
+import { ChangeDetectorRef, Component,EventEmitter,Input,OnChanges,OnDestroy,OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { ButtonRounded } from '@progress/kendo-angular-buttons';
 import { CellClickEvent } from '@progress/kendo-angular-grid';
-import { Subscription, takeUntil } from 'rxjs';
+import { Observable, Subscription, takeUntil } from 'rxjs';
 import { UserMapper } from 'src/app/mappers/user.mapper';
 import { DEFAULT_USER } from 'src/app/models/default-user';
 import { UserApiInterface } from 'src/app/models/user-api.interface';
+import { UserFormInterface } from 'src/app/models/user-form.interface';
 import { UserTableInterface } from 'src/app/models/user-table.interface';
 import { UserFormStateService } from 'src/app/services/user-form-state.service';
 import { UserModalService } from 'src/app/services/user-modal.service';
 import { UserService } from 'src/app/services/user.service';
 import { BaseComponent } from '../base/base.component';
+import { UserFormComponent } from '../user-form/user-form.component';
 
 @Component({
   selector: 'app-user-table',
@@ -18,9 +20,12 @@ import { BaseComponent } from '../base/base.component';
   styleUrls: ['./user-table.component.css'],
 })
 export class UserTableComponent extends BaseComponent implements OnInit {
+  @ViewChild(UserFormComponent) public userFormComponent: UserFormComponent;
+  
   public users: Array<UserTableInterface> = [];
   public usersFromApi: Array<UserApiInterface> = [];
   public user: UserApiInterface;
+  public updatedUser: UserFormInterface;
   public rounded: ButtonRounded = 'medium';
   public isUserModalDialogVisible: boolean;
   public userMapper = new UserMapper();
@@ -85,12 +90,39 @@ export class UserTableComponent extends BaseComponent implements OnInit {
     this.user = cellData.dataItem;
   }
 
-  public changeUser(): void {
+  /*public changeUser(): void {
     this.cd.detectChanges();
     this.getAllUsers();
+  }*/
+  
+  public changedUser(user: UserFormInterface): void {
+    console.log(user, 'updated or created user');
+    this.updatedUser = user;
   }
-  public saveUsers(): void {
+  public viewUpdatedUser(users: UserTableInterface[]): void {
+    console.log(users, ' users after update');
+    this.users = users;
+  }
 
+  public submit(): void {
+    if (this.userFormComponent?.userForm?.valid) {
+      this.defineRequest().pipe(takeUntil(this.destroy$)).subscribe((user) => {
+        //this.changeUser(user.id);
+        /*this.changeUpdatedProperty(false);*/
+      })
+    } else {
+      this.userFormComponent?.userForm.markAllAsTouched(); 
+    }
   }
+
+  public defineRequest(): Observable<UserApiInterface> {
+    return (!this.updatedUser.id)
+    ? this.userService.createUser(this.updatedUser)
+    : this.userService.updateUser(this.updatedUser.id,this.userMapper.mapToCreateUpdateDto(this.updatedUser))         
+  }
+  /*public changeUpdatedProperty(value: boolean): void {
+    this.isFormForEdit = value;
+    this.isUserDetailFormEdit = value;
+  }*/
 
 }

@@ -42,7 +42,7 @@ export class UserMapper {
   }
 
   public mapToFormValue(user: UserApiInterface): UserFormInterface {
-    return {
+    return { 
       id: user.id,
       firstName: user.firstName,
       lastName: user.lastName,
@@ -59,13 +59,32 @@ export class UserMapper {
     };
   }
 
-  public mapFromToTableValue(userForm: UserFormInterface): UserTableInterface{
+  public mapFromFormToTableValue(userForm: UserFormInterface): UserTableInterface{
     return {
-      id: userForm.id,
+      id: userForm.id ? userForm.id : 'null',
       name: `${userForm.firstName} ${userForm.lastName}`,
       email: userForm.email,
       address:  `${userForm.zipcode} ${userForm.city} ${userForm.street} ${userForm.building}`,
       phone: userForm.phone,
+    }
+  }
+
+  public mapFormTableToformValue(user: UserTableInterface): UserFormInterface{ // подумать завтра
+    console.log(user);
+    return {
+      id: user.id ? user.id: 'null',
+      firstName: user.name,
+      lastName: user.name,
+      userName: user.name,
+      email: user.email,
+      street: user.address,
+      building: user.address,
+      city: user.address,
+      zipcode: user.address,
+      phone: user.phone,
+      website: user.phone,
+      companyName: user.name,
+      companyScope: user.name,
     }
   }
 }

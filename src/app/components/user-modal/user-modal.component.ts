@@ -10,6 +10,7 @@ import {
 import { Observable, Subscription, takeUntil } from 'rxjs';
 import { UserMapper } from 'src/app/mappers/user.mapper';
 import { UserApiInterface } from 'src/app/models/user-api.interface';
+import { UserFormInterface } from 'src/app/models/user-form.interface';
 import { UserTableInterface } from 'src/app/models/user-table.interface';
 import { UserFormStateService } from 'src/app/services/user-form-state.service';
 import { UserModalService } from 'src/app/services/user-modal.service';
@@ -29,6 +30,8 @@ export class UserModalComponent extends BaseComponent implements OnInit {
   @Input() isUserDetailFormEdit: boolean;
 
   @Output() updatingUserDetail = new EventEmitter<string>();
+  @Output() updatedUsersFromTable = new EventEmitter<UserTableInterface[]>();
+  @Output() changingUser = new EventEmitter<UserFormInterface>();
   public isFormForEdit: boolean;
 
   constructor(
@@ -46,9 +49,10 @@ export class UserModalComponent extends BaseComponent implements OnInit {
   }
 
   public getFormStatus(): void {
-  this.userFormStateService.getFormStatus()
-  .pipe(takeUntil(this.destroy$))
-  .subscribe((isFormForEdit: boolean) => {
+    this.userFormStateService
+      .getFormStatus()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((isFormForEdit: boolean) => {
         this.isFormForEdit = isFormForEdit;
       });
   }
@@ -57,23 +61,38 @@ export class UserModalComponent extends BaseComponent implements OnInit {
     this.userFormComponent?.userForm.reset();
     this.userModalService.modalClose();
   }
-  public applyUser($event: any): void {
-    console.log($event);
+
+  public applyUser(): void {
     console.log(this.userFormComponent?.userForm?.valid, ' valid of form');
     if (this.userFormComponent?.userForm?.valid) {
-      if((!this.isFormForEdit && !this.isUserDetailFormEdit)){
+      if (!this.isFormForEdit && !this.isUserDetailFormEdit) {
         //apply new user
-        console.log(this.userFormComponent?.userForm?.value, 'value form after adding');
-        this.userFormComponent.userForm.value.id = Math.round(Math.random());
-        this.usersFromTable.push(this.userMapper.mapFromToTableValue(this.userFormComponent?.userForm?.value));
-        console.log(this.usersFromTable, 'новые юзера для таблицы');
+        const mappedUser = this.userMapper.mapFromFormToTableValue(
+          this.userFormComponent?.userForm?.value
+        );
+        this.usersFromTable.push(mappedUser);
+        this.updatedUsersFromTable.emit(this.usersFromTable);
+        this.changingUser.emit(this.userFormComponent?.userForm?.value);
+        console.log(mappedUser,this.usersFromTable, 'что передаем наверх при создании' )
       } else {
-       //update exist user
+        //update exist user
+        const findedTableElement = this.usersFromTable.find(
+          (user: UserTableInterface) =>
+            user.id === this.userFormComponent.userForm.value.id
+        ) as UserTableInterface;
+        const editedTableElement = this.userMapper.mapFromFormToTableValue(
+          this.userFormComponent?.userForm?.value
+        );
+        const index = this.usersFromTable.indexOf(findedTableElement);
+        this.usersFromTable.splice(index, 1, editedTableElement);
+        this.updatedUsersFromTable.emit(this.usersFromTable);
+        this.changingUser.emit(this.userFormComponent?.userForm?.value);
+        console.log(editedTableElement, this.usersFromTable, ' что передаем наверх при редактировании')
       }
     }
   }
 
-  public submit(): void {
+  /*public submit(): void {
     if (this.userFormComponent?.userForm?.valid) {
       this.defineRequest().pipe(takeUntil(this.destroy$)).subscribe((user) => {
         this.changeUser(user.id);
@@ -88,15 +107,15 @@ export class UserModalComponent extends BaseComponent implements OnInit {
     return (!this.isFormForEdit && !this.isUserDetailFormEdit)
     ? this.userService.createUser(this.userFormComponent?.userForm?.value)
     : this.userService.updateUser(this.userFormComponent?.userForm?.value?.id,this.userMapper.mapToCreateUpdateDto(this.userFormComponent?.userForm?.value))         
-  }
+  }*/
 
-  public changeUser(id:string) {
+  public changeUser(id: string) {
     this.updatingUserDetail.emit(id);
     this.closeModal();
   }
 
-  public changeUpdatedProperty(value: boolean): void {
+  /*public changeUpdatedProperty(value: boolean): void {
     this.isFormForEdit = value;
     this.isUserDetailFormEdit = value;
-  }
+  }*/
 }

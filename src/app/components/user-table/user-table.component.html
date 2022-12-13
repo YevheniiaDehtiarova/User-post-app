@@ -1,7 +1,7 @@
 
 <div>
   <button kendoButton class="k-primary open-user-modal-btn" (click)="addUser()">Add user</button>
-  <button kendoButton class="k-primary open-user-modal-btn" (click)="saveUsers()">Save users</button>
+  <button kendoButton class="k-primary open-user-modal-btn" (click)="submit()">Save users</button>
 <kendo-grid
   [data]="users"
   (edit)="editUser($event.dataItem)"
@@ -26,7 +26,8 @@
 
 <app-user-modal
 *ngIf="isUserModalDialogVisible"
-(changing)="changeUser()"
+(changingUser)="changedUser($event)"
+(updatedUsersFromTable)="viewUpdatedUser($event)"
 [user]="user"
 [users]="users">
 </app-user-modal>
