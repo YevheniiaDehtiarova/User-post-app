@@ -55,7 +55,7 @@ export class UserTableComponent extends BaseComponent implements OnInit {
 
   public editUser(dataItem: UserTableInterface): void {
     this.user = this.usersFromApi?.find(
-      (user) => Number(user.id) === dataItem.id
+      (user) => user.id === dataItem.id
     ) as UserApiInterface;
 
     this.openModal();
@@ -88,6 +88,9 @@ export class UserTableComponent extends BaseComponent implements OnInit {
   public changeUser(): void {
     this.cd.detectChanges();
     this.getAllUsers();
+  }
+  public saveUsers(): void {
+
   }
 
 }

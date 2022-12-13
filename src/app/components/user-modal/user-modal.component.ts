@@ -10,6 +10,7 @@ import {
 import { Observable, Subscription, takeUntil } from 'rxjs';
 import { UserMapper } from 'src/app/mappers/user.mapper';
 import { UserApiInterface } from 'src/app/models/user-api.interface';
+import { UserTableInterface } from 'src/app/models/user-table.interface';
 import { UserFormStateService } from 'src/app/services/user-form-state.service';
 import { UserModalService } from 'src/app/services/user-modal.service';
 import { UserService } from 'src/app/services/user.service';
@@ -24,7 +25,9 @@ import { UserFormComponent } from '../user-form/user-form.component';
 export class UserModalComponent extends BaseComponent implements OnInit {
   @ViewChild(UserFormComponent) public userFormComponent: UserFormComponent;
   @Input('user') user: UserApiInterface;
+  @Input('users') usersFromTable: UserTableInterface[];
   @Input() isUserDetailFormEdit: boolean;
+
   @Output() updatingUserDetail = new EventEmitter<string>();
   public isFormForEdit: boolean;
 
@@ -38,6 +41,7 @@ export class UserModalComponent extends BaseComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    console.log(this.usersFromTable, ' usersFromTable from table');
     this.getFormStatus();
   }
 
@@ -53,10 +57,24 @@ export class UserModalComponent extends BaseComponent implements OnInit {
     this.userFormComponent?.userForm.reset();
     this.userModalService.modalClose();
   }
+  public applyUser($event: any): void {
+    console.log($event);
+    console.log(this.userFormComponent?.userForm?.valid, ' valid of form');
+    if (this.userFormComponent?.userForm?.valid) {
+      if((!this.isFormForEdit && !this.isUserDetailFormEdit)){
+        //apply new user
+        console.log(this.userFormComponent?.userForm?.value, 'value form after adding');
+        this.userFormComponent.userForm.value.id = Math.round(Math.random());
+        this.usersFromTable.push(this.userMapper.mapFromToTableValue(this.userFormComponent?.userForm?.value));
+        console.log(this.usersFromTable, 'новые юзера для таблицы');
+      } else {
+       //update exist user
+      }
+    }
+  }
 
   public submit(): void {
     if (this.userFormComponent?.userForm?.valid) {
-      //не покрывается вызов defineRequest
       this.defineRequest().pipe(takeUntil(this.destroy$)).subscribe((user) => {
         this.changeUser(user.id);
         this.changeUpdatedProperty(false);
