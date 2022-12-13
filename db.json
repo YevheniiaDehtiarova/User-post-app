@@ -213,6 +213,25 @@
         "name": "8",
         "scope": "8"
       }
+    },
+    {
+      "id": 14,
+      "firstName": "Dmytro",
+      "lastName": "Batichshev",
+      "username": "dimo4ka",
+      "email": "mrdee1987@gmail.com",
+      "address": {
+        "street": "Peremogy avenue",
+        "building": "78",
+        "city": "Kharkiv",
+        "zipcode": "61002"
+      },
+      "phone": "+380677116862",
+      "website": "---",
+      "company": {
+        "name": "nix",
+        "scope": "it"
+      }
     }
   ],
   "profile": {
