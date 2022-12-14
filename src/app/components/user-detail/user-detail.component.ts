@@ -6,20 +6,12 @@ import { UserFormStateService } from 'src/app/services/user-form-state.service';
 import { UserService } from 'src/app/services/user.service';
 import { Location } from '@angular/common';
 import { UserModalService } from 'src/app/services/user-modal.service';
-import {
-  combineLatest,
-  forkJoin,
-  map,
-  Observable,
-  Subject,
-  Subscription,
-  switchMap,
-  takeUntil,
-  tap,
-} from 'rxjs';
+import { forkJoin,takeUntil,tap} from 'rxjs';
 import { Post } from 'src/app/models/post.class';
 import { BaseComponent } from '../base/base.component';
 import { Comment } from 'src/app/models/comment.interface';
+import { UserFormInterface } from 'src/app/models/user-form.interface';
+import { UserMapper } from 'src/app/mappers/user.mapper';
 
 @Component({
   selector: 'app-user-detail',
@@ -42,6 +34,7 @@ export class UserDetailComponent extends BaseComponent implements OnInit {
     private userFormStateService: UserFormStateService,
     private location: Location,
     private cd: ChangeDetectorRef,
+    public userMapper: UserMapper,
   ) {
     super();
   }
@@ -128,16 +121,8 @@ export class UserDetailComponent extends BaseComponent implements OnInit {
       });
   }
 
-  public updateUser(id: string): void {
-    console.log(id, 'aйдишка из апдейт юзера из деталей');
-    this.userService
-      .getUser(id)
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((user) => {
-        console.log(user, 'юзер из апдейт юзера');
-        this.user = user;
-        this.cd.detectChanges();
-      });
+  public updateUser(user: UserFormInterface): void {
+    this.user = this.userMapper.mapToCreateUpdateDto(user);
   }
 
   public openUserModal(): void {
@@ -149,5 +134,8 @@ export class UserDetailComponent extends BaseComponent implements OnInit {
 
   public goBack(): void {
     this.location.back();
+  }
+  public submit(): void {
+    this.userService.updateUser(this.user.id,this.user).pipe(takeUntil(this.destroy$)).subscribe();
   }
 }
