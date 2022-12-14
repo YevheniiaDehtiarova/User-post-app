@@ -4,4 +4,5 @@ export interface UserTableInterface {
   email: string;
   address: string;
   phone: string;
+  isEdited?: boolean;
 }

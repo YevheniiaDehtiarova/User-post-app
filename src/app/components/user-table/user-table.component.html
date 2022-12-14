@@ -6,6 +6,7 @@
   [data]="users"
   (edit)="editUser($event.dataItem)"
   (cellClick)="cellClickHandler($event)"
+  [rowClass]="rowCallback"
   (dblclick)="doubleClick()">
 
   <kendo-grid-column field="name" title="Name"></kendo-grid-column>

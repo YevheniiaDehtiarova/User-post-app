@@ -66,6 +66,7 @@ export class UserMapper {
       email: userForm.email,
       address:  `${userForm.zipcode} ${userForm.city} ${userForm.street} ${userForm.building}`,
       phone: userForm.phone,
+      isEdited: userForm.id ? true : false,
     }
   }
 }

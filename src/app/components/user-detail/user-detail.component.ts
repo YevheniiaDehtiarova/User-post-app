@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { UserApiInterface } from 'src/app/models/user-api.interface';
 import { PostService } from 'src/app/services/post.service';
@@ -40,7 +40,8 @@ export class UserDetailComponent extends BaseComponent implements OnInit {
     private postService: PostService,
     private userModalService: UserModalService,
     private userFormStateService: UserFormStateService,
-    private location: Location
+    private location: Location,
+    private cd: ChangeDetectorRef,
   ) {
     super();
   }
@@ -128,11 +129,14 @@ export class UserDetailComponent extends BaseComponent implements OnInit {
   }
 
   public updateUser(id: string): void {
+    console.log(id, 'aйдишка из апдейт юзера из деталей');
     this.userService
       .getUser(id)
       .pipe(takeUntil(this.destroy$))
       .subscribe((user) => {
+        console.log(user, 'юзер из апдейт юзера');
         this.user = user;
+        this.cd.detectChanges();
       });
   }
 

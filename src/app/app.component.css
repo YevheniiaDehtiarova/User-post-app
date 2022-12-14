@@ -3,3 +3,7 @@ body{
     font-family: serif;
 }
 
+.k-grid tr.bold{
+    font-weight: 500;
+    font-style: bold;
+}

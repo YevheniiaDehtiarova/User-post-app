@@ -26,7 +26,7 @@ import { UserFormComponent } from '../user-form/user-form.component';
 export class UserModalComponent extends BaseComponent implements OnInit {
   @ViewChild(UserFormComponent) public userFormComponent: UserFormComponent;
   @Input('user') user: UserApiInterface;
-  @Input('users') usersFromTable: UserTableInterface[];
+  @Input('users') usersFromTable: UserTableInterface[] = [];
   @Input() isUserDetailFormEdit: boolean;
 
   @Output() updatingUserDetail = new EventEmitter<string>();
@@ -80,33 +80,30 @@ export class UserModalComponent extends BaseComponent implements OnInit {
         );
       } else {
         //update exist user
-        const findedTableElement = this.usersFromTable.find(
-          (user: UserTableInterface) =>
-            user.id === this.userFormComponent.userForm.value.id
-        ) as UserTableInterface;
         const editedTableElement = this.userMapper.mapFromFormToTableValue(
           this.userFormComponent?.userForm?.value
         );
-        const index = this.usersFromTable.indexOf(findedTableElement);
-        this.usersFromTable.splice(index, 1, editedTableElement);
-        this.updatedUsersFromTable.emit(this.usersFromTable);
-        this.changingUser.emit(this.userFormComponent?.userForm?.value);
-        console.log(
-          editedTableElement,
-          this.usersFromTable,
-          ' что передаем наверх при редактировании'
-        );
+        console.log(editedTableElement, ' элемент что редачим');
+        if (this.usersFromTable.length) {
+          console.log('редактируем из таблицы');
+          const findedTableElement = this.usersFromTable.find((user: UserTableInterface) =>user.id === this.userFormComponent.userForm.value.id) as UserTableInterface;
+          const index = this.usersFromTable.indexOf(findedTableElement);
+          this.usersFromTable.splice(index, 1, editedTableElement);
+          this.updatedUsersFromTable.emit(this.usersFromTable);
+          this.changingUser.emit(this.userFormComponent.userForm.value)
+        } else {
+          console.log('редактируем из деталей');
+          this.updatingUserDetail.emit(this.userFormComponent.userForm.value.id);
+          this.changingUser.emit(this.userFormComponent.userForm.value);
+        }
       }
       this.changeUpdatedProperty(false);
+      this.closeModal();
     } else {
       this.userFormComponent?.userForm.markAllAsTouched();
     }
   }
 
-  public changeUser(id: string) {
-    this.updatingUserDetail.emit(id);
-    this.closeModal();
-  }
 
   public changeUpdatedProperty(value: boolean): void {
     this.isFormForEdit = value;
