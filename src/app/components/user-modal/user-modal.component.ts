@@ -29,7 +29,7 @@ export class UserModalComponent extends BaseComponent implements OnInit {
   @Input('users') usersFromTable: UserTableInterface[] = [];
   @Input() isUserDetailFormEdit: boolean;
 
-  @Output() updatingUserDetail = new EventEmitter<string>();
+  @Output() updatingUserDetail = new EventEmitter<UserFormInterface>();
   @Output() updatedUsersFromTable = new EventEmitter<UserTableInterface[]>();
   @Output() changingUser = new EventEmitter<UserFormInterface>();
   public isFormForEdit: boolean;
@@ -84,7 +84,7 @@ export class UserModalComponent extends BaseComponent implements OnInit {
           this.changingUser.emit(this.userFormComponent.userForm.value)
         } else {
           console.log('редактируем из деталей');
-          this.updatingUserDetail.emit(this.userFormComponent.userForm.value.id);
+          this.updatingUserDetail.emit(this.userFormComponent.userForm.value);
           this.changingUser.emit(this.userFormComponent.userForm.value);
         }
       }
