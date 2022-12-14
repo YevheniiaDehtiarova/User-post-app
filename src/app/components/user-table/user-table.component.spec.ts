@@ -72,7 +72,7 @@ describe('User Table Component', () => {
         scope: '',
       },
     };
-    testedUserTable = { id: 1, name: '', email: '', address: '', phone: '' };
+    testedUserTable = { id: '1', name: '', email: '', address: '', phone: '' };
   });
   
   it('should create', () => {
@@ -140,20 +140,16 @@ describe('User Table Component', () => {
     expect(component.editUser(testedUserTable)).toBeFalsy();
     testedUsers.push(testedUser);
     const findedUser = testedUsers.find(
-      (user) => Number(user.id) === testedUserTable.id
+      (user) => user.id === testedUserTable.id
     ) as UserApiInterface;
     expect(component.user).toEqual(findedUser);
   });
 
   it('should test equal in editUser', () => {
     component.editUser(testedUserTable);
-    component.usersFromApi.find((user) => {
-      expect(Number(user.id)). toEqual(testedUserTable.id)
-    })
-    const testExpr = Number(testedUser.id) === testedUserTable.id
+    const testExpr = testedUser.id === testedUserTable.id
     expect(testExpr).toBeFalsy();
-  }) // не покрывает корректно сравнение в подписке
-
+  }) 
   
 
   it('should test call openModal in editUser method', () => {
@@ -210,3 +206,38 @@ describe('User Table Component', () => {
     expect(funcSpy).toHaveBeenCalled();
   })
 });
+
+
+  /*it('should test createUser in defineRequest', () => {
+    let condition = !component.isFormForEdit && !component.isUserDetailFormEdit;
+    component.defineRequest();
+    userService.createUser(testedFormUser).subscribe((user) => {
+      expect(user).toBe(testedUser);
+      expect(component.changeUser(testedUser.id)).toBeTruthy();
+    });
+    const spy = spyOn(userService, 'createUser');
+    userService.createUser(testedFormUser);
+    expect(spy).toHaveBeenCalled();
+    expect(condition).toBeTrue();
+  });
+
+  /*не покрывается верно тестами*/
+  /*it('should test subscribe in submit', () => {
+    component.submit();
+    component.defineRequest().subscribe((user) => {
+      expect(user).toBe(testedUser);
+      expect(component.changeUser(testedUser.id)).toBeTruthy();
+      expect(component.changeUpdatedProperty).toBeTruthy();
+    });
+    const spy = spyOn(component, 'changeUser');
+    component.changeUser(testedUser.id);
+    expect(spy).toHaveBeenCalled();
+  });*/
+
+  /*тоже не работает как надо*/
+  /*it('should test call function defineRequest in submit', () => {
+    const spy = spyOn(component, 'defineRequest').and.callThrough();
+    component.submit();
+    component.defineRequest();
+    expect(spy).toHaveBeenCalled();
+  })*/

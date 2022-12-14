@@ -1,9 +1,8 @@
 
 import { ChangeDetectorRef, Component,OnInit, ViewEncapsulation } from '@angular/core';
 import { Router } from '@angular/router';
-import { ButtonRounded } from '@progress/kendo-angular-buttons';
 import { CellClickEvent, RowClassArgs } from '@progress/kendo-angular-grid';
-import { Observable, of, switchMap, takeUntil } from 'rxjs';
+import { Observable, of, takeUntil } from 'rxjs';
 import { UserMapper } from 'src/app/mappers/user.mapper';
 import { DEFAULT_USER } from 'src/app/models/default-user';
 import { UserApiInterface } from 'src/app/models/user-api.interface';
@@ -22,14 +21,7 @@ import { BaseComponent } from '../base/base.component';
   styles: [
     ` tr.bold{
       font-weight:700 !important;
-    },
-    .open-user-modal-btn{
-      margin: 15px;
-      background-color: #ff6358;
-      color: white;
-      font-size: 16px;
-      border-radius: 4px;
-  }
+    }
     `
   ]
 })
@@ -39,7 +31,6 @@ export class UserTableComponent extends BaseComponent implements OnInit {
   public user: UserApiInterface;
   public updatedUser: UserFormInterface;
   public updatedUsers: UserFormInterface[] = [];
-  public rounded: ButtonRounded = 'medium';
   public isUserModalDialogVisible: boolean;
   public userMapper = new UserMapper();
 

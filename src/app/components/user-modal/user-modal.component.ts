@@ -64,37 +64,35 @@ export class UserModalComponent extends BaseComponent implements OnInit {
   public applyUser(): void {
     if (this.userFormComponent?.userForm?.valid) {
       if (!this.isFormForEdit && !this.isUserDetailFormEdit) {
-        //apply new user
-        const mappedUser = this.userMapper.mapFromFormToTableValue(
-          this.userFormComponent?.userForm?.value
-        );
-        this.usersFromTable.push(mappedUser);
-        this.updatedUsersFromTable.emit(this.usersFromTable);
-        this.changingUser.emit(this.userFormComponent?.userForm?.value);
+        this.createUser();
       } else {
-        //update exist user
-        const editedTableElement = this.userMapper.mapFromFormToTableValue(
-          this.userFormComponent?.userForm?.value
-        );
-        if (this.usersFromTable.length) {
-          const findedTableElement = this.usersFromTable.find((user: UserTableInterface) =>user.id === this.userFormComponent.userForm.value.id) as UserTableInterface;
-          const index = this.usersFromTable.indexOf(findedTableElement);
-          this.usersFromTable.splice(index, 1, editedTableElement);
-          this.updatedUsersFromTable.emit(this.usersFromTable);
-          this.changingUser.emit(this.userFormComponent.userForm.value)
-        } else {
-          console.log('редактируем из деталей');
-          this.updatingUserDetail.emit(this.userFormComponent.userForm.value);
-          this.changingUser.emit(this.userFormComponent.userForm.value);
-        }
+        this.updateUser();
       }
       this.changeUpdatedProperty(false);
       this.closeModal();
+      this.changingUser.emit(this.userFormComponent.userForm.value);
     } else {
       this.userFormComponent?.userForm.markAllAsTouched();
     }
   }
 
+  public createUser(): void {
+    const mappedUser = this.userMapper.mapFromFormToTableValue(this.userFormComponent?.userForm?.value);
+    this.usersFromTable.push(mappedUser);
+    this.updatedUsersFromTable.emit(this.usersFromTable);
+  }
+
+  public updateUser(): void {
+    const editedTableElement = this.userMapper.mapFromFormToTableValue(this.userFormComponent?.userForm?.value);
+        if (this.usersFromTable.length) {
+          const findedTableElement = this.usersFromTable.find((user: UserTableInterface) => user.id === this.userFormComponent.userForm.value.id) as UserTableInterface;
+          const index = this.usersFromTable.indexOf(findedTableElement);
+          this.usersFromTable.splice(index, 1, editedTableElement);
+          this.updatedUsersFromTable.emit(this.usersFromTable);
+        } else {
+          this.updatingUserDetail.emit(this.userFormComponent.userForm.value);
+        }
+  }
 
   public changeUpdatedProperty(value: boolean): void {
     this.isFormForEdit = value;
