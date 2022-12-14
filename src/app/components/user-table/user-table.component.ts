@@ -18,6 +18,7 @@ import { BaseComponent } from '../base/base.component';
   selector: 'app-user-table',
   templateUrl: './user-table.component.html',
   encapsulation: ViewEncapsulation.None,
+  styleUrls: ['./user-table.component.css'],
   styles: [
     ` tr.bold{
       font-weight:700 !important;
@@ -108,45 +109,32 @@ export class UserTableComponent extends BaseComponent implements OnInit {
   }
   
   public changedUser(user: UserFormInterface): void {
-    console.log(user, 'updated or created user');
     this.updatedUser = user;
     this.updatedUsers.push(this.updatedUser);
   }
-  
+
   public viewUpdatedUser(users: UserTableInterface[]): void {
-    console.log(users, ' users after update');
     this.users = users;
   }
 
   public submit(): void {
    this.users.filter((user: UserTableInterface) => user.isEdited).forEach((user) => user.isEdited = false);
-    console.log('submit works');
      this.defineRequest().pipe(takeUntil(this.destroy$)).subscribe((user) => {
-        this.changeUser();
+      this.changeUser();
       })
     } 
-  
 
-  public defineRequest(): Observable<UserApiInterface> { 
-    if(!this.updatedUser.id){
-      console.log('создаем юзера')
-      return this.userService.createUser(this.updatedUser)
-    } 
-    console.log(this.updatedUsers, ' from submit')
-    if(this.updatedUsers.length === 1) {
-      console.log('апдейтим 1 юзера')
-        return this.userService.updateUser(this.updatedUser.id,this.userMapper.mapToCreateUpdateDto(this.updatedUser)) 
-      } else {
-        console.log('апдейтим много юзеров')
-        this.updatedUsers.map((user: UserFormInterface) => {
-          const id = user.id as string;
-          return this.userService.updateUser(id,this.userMapper.mapToCreateUpdateDto(user)).subscribe(() => {
-            this.getAllUsers()
-          })
-        
-        })
-      }
-      return of(this.userMapper.mapToCreateUpdateDto(this.updatedUser))
+  public defineRequest(): Observable<UserApiInterface>{
+    if(this.updatedUsers.length === 1){
+     return !this.updatedUser.id ? this.userService.createUser(this.updatedUser) : this.userService.updateUser(this.updatedUser.id,this.userMapper.mapToCreateUpdateDto(this.updatedUser)) 
+    } else {
+      this.updatedUsers.map((user: UserFormInterface) => {
+        const id = user.id as string;
+        return !id ? this.userService.createUser(user).subscribe(() => {this.getAllUsers()})
+        : this.userService.updateUser(id,this.userMapper.mapToCreateUpdateDto(user)).subscribe(() => {this.getAllUsers()})
+      })
+    }
+    return of(this.userMapper.mapToCreateUpdateDto(this.updatedUser))
   }
 
   public rowCallback = (context: RowClassArgs) => {

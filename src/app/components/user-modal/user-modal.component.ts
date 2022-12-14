@@ -44,7 +44,6 @@ export class UserModalComponent extends BaseComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    console.log(this.usersFromTable, ' usersFromTable from table');
     this.getFormStatus();
   }
 
@@ -63,7 +62,6 @@ export class UserModalComponent extends BaseComponent implements OnInit {
   }
 
   public applyUser(): void {
-    console.log(this.userFormComponent?.userForm?.valid, ' valid of form');
     if (this.userFormComponent?.userForm?.valid) {
       if (!this.isFormForEdit && !this.isUserDetailFormEdit) {
         //apply new user
@@ -73,19 +71,12 @@ export class UserModalComponent extends BaseComponent implements OnInit {
         this.usersFromTable.push(mappedUser);
         this.updatedUsersFromTable.emit(this.usersFromTable);
         this.changingUser.emit(this.userFormComponent?.userForm?.value);
-        console.log(
-          mappedUser,
-          this.usersFromTable,
-          'что передаем наверх при создании'
-        );
       } else {
         //update exist user
         const editedTableElement = this.userMapper.mapFromFormToTableValue(
           this.userFormComponent?.userForm?.value
         );
-        console.log(editedTableElement, ' элемент что редачим');
         if (this.usersFromTable.length) {
-          console.log('редактируем из таблицы');
           const findedTableElement = this.usersFromTable.find((user: UserTableInterface) =>user.id === this.userFormComponent.userForm.value.id) as UserTableInterface;
           const index = this.usersFromTable.indexOf(findedTableElement);
           this.usersFromTable.splice(index, 1, editedTableElement);
