@@ -73,7 +73,11 @@ export class UserModalComponent extends BaseComponent implements OnInit {
         this.usersFromTable.push(mappedUser);
         this.updatedUsersFromTable.emit(this.usersFromTable);
         this.changingUser.emit(this.userFormComponent?.userForm?.value);
-        console.log(mappedUser,this.usersFromTable, 'что передаем наверх при создании' )
+        console.log(
+          mappedUser,
+          this.usersFromTable,
+          'что передаем наверх при создании'
+        );
       } else {
         //update exist user
         const findedTableElement = this.usersFromTable.find(
@@ -87,35 +91,25 @@ export class UserModalComponent extends BaseComponent implements OnInit {
         this.usersFromTable.splice(index, 1, editedTableElement);
         this.updatedUsersFromTable.emit(this.usersFromTable);
         this.changingUser.emit(this.userFormComponent?.userForm?.value);
-        console.log(editedTableElement, this.usersFromTable, ' что передаем наверх при редактировании')
+        console.log(
+          editedTableElement,
+          this.usersFromTable,
+          ' что передаем наверх при редактировании'
+        );
       }
-    }
-  }
-
-  /*public submit(): void {
-    if (this.userFormComponent?.userForm?.valid) {
-      this.defineRequest().pipe(takeUntil(this.destroy$)).subscribe((user) => {
-        this.changeUser(user.id);
-        this.changeUpdatedProperty(false);
-      })
+      this.changeUpdatedProperty(false);
     } else {
-      this.userFormComponent?.userForm.markAllAsTouched(); 
+      this.userFormComponent?.userForm.markAllAsTouched();
     }
   }
-
-  public defineRequest(): Observable<UserApiInterface> {
-    return (!this.isFormForEdit && !this.isUserDetailFormEdit)
-    ? this.userService.createUser(this.userFormComponent?.userForm?.value)
-    : this.userService.updateUser(this.userFormComponent?.userForm?.value?.id,this.userMapper.mapToCreateUpdateDto(this.userFormComponent?.userForm?.value))         
-  }*/
 
   public changeUser(id: string) {
     this.updatingUserDetail.emit(id);
     this.closeModal();
   }
 
-  /*public changeUpdatedProperty(value: boolean): void {
+  public changeUpdatedProperty(value: boolean): void {
     this.isFormForEdit = value;
     this.isUserDetailFormEdit = value;
-  }*/
+  }
 }

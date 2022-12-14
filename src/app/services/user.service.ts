@@ -24,6 +24,7 @@ export class UserService {
   }
 
   public createUser(user: UserFormInterface): Observable<UserApiInterface> {
+    console.log(user, 'user send on create')
     let updatedUser = this.userMapper.mapToCreateUpdateDto(user);
 
     const apiUrl = userRoutes.createUser;
@@ -35,6 +36,7 @@ export class UserService {
     id: string,
     user: UserApiInterface
   ): Observable<UserApiInterface> {
+    console.log(user, 'user send on update')
     const apiUrl = userRoutes.updateUser.replace('${id}', id);
 
     return this.http.put<UserApiInterface>(apiUrl, user);

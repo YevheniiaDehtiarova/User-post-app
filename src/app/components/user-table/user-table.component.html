@@ -1,7 +1,7 @@
 
 <div>
   <button kendoButton class="k-primary open-user-modal-btn" (click)="addUser()">Add user</button>
-  <button kendoButton class="k-primary open-user-modal-btn" (click)="submit()">Save users</button>
+  <button kendoButton class="k-primary open-user-modal-btn" type="submit" (click)="submit()">Save users</button>
 <kendo-grid
   [data]="users"
   (edit)="editUser($event.dataItem)"
@@ -31,3 +31,4 @@
 [user]="user"
 [users]="users">
 </app-user-modal>
+
