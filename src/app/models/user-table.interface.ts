@@ -1,7 +1,8 @@
 export interface UserTableInterface {
-  id: number;
+  id: string | undefined;
   name: string;
   email: string;
   address: string;
   phone: string;
+  isEdited?: boolean;
 }

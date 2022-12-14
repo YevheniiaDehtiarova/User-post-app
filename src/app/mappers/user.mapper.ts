@@ -10,7 +10,7 @@ export class UserMapper {
   ): Array<UserTableInterface> {
     return users.map((user: UserApiInterface) => {
       return {
-        id: Number(user.id),
+        id: user.id,
         name: `${user.firstName} ${user.lastName}`,
         email: user.email,
         address: `${user.address.city} ${user.address.street} ${user.address.building}`,
@@ -42,7 +42,7 @@ export class UserMapper {
   }
 
   public mapToFormValue(user: UserApiInterface): UserFormInterface {
-    return {
+    return { 
       id: user.id,
       firstName: user.firstName,
       lastName: user.lastName,
@@ -57,5 +57,16 @@ export class UserMapper {
       companyName: user.company?.name,
       companyScope: user.company?.scope,
     };
+  }
+
+  public mapFromFormToTableValue(userForm: UserFormInterface): UserTableInterface{
+    return {
+      id: userForm.id ? userForm.id : 'null',
+      name: `${userForm.firstName} ${userForm.lastName}`,
+      email: userForm.email,
+      address:  `${userForm.zipcode} ${userForm.city} ${userForm.street} ${userForm.building}`,
+      phone: userForm.phone,
+      isEdited: userForm.id ? true : false,
+    }
   }
 }

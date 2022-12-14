@@ -4,8 +4,7 @@
 
         <div class="button-container">
             <button class="button" type="submit" (click)="closeModal()">Cancel</button>
-            <button class="button" (click)="submit()">{{(isFormForEdit || isUserDetailFormEdit) ? 'Update' : 'Add'}}</button>
-            <!--button *ngIf="isFormForEdit || isUserDetailFormEdit" class="button" (click)="updateSubmit()">Update</!--button-->
+            <button class="button" (click)="applyUser()">{{(isFormForEdit || isUserDetailFormEdit) ? 'Apply' : 'Add'}}</button>
         </div>
     </div>
 
