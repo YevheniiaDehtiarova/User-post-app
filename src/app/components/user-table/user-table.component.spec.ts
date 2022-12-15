@@ -12,6 +12,7 @@ import { of } from 'rxjs';
 import { UserMapper } from 'src/app/mappers/user.mapper';
 import { DEFAULT_USER } from 'src/app/models/default-user';
 import { UserApiInterface } from 'src/app/models/user-api.interface';
+import { UserFormInterface } from 'src/app/models/user-form.interface';
 import { UserTableInterface } from 'src/app/models/user-table.interface';
 import { UserFormStateService } from 'src/app/services/user-form-state.service';
 import { UserModalService } from 'src/app/services/user-modal.service';
@@ -23,6 +24,7 @@ describe('User Table Component', () => {
   let fixture: ComponentFixture<UserTableComponent>;
   let testedUser: UserApiInterface;
   let testedUsers: Array<UserApiInterface> = [];
+  let testedFormUser: UserFormInterface;
   let testedUserTable: UserTableInterface;
   let userModalService: UserModalService;
   let userService: UserService;
@@ -72,7 +74,22 @@ describe('User Table Component', () => {
         scope: '',
       },
     };
-    testedUserTable = { id: 1, name: '', email: '', address: '', phone: '' };
+    testedFormUser = {
+      id: '',
+      firstName: '',
+      lastName: '',
+      userName: '',
+      email: '',
+      street: '',
+      building: '',
+      city: '',
+      zipcode: '',
+      phone: '',
+      website: '',
+      companyName: '',
+      companyScope: '',
+  };
+    testedUserTable = { id: '1', name: '', email: '', address: '', phone: '' };
   });
   
   it('should create', () => {
@@ -92,7 +109,6 @@ describe('User Table Component', () => {
     expect(spy).toHaveBeenCalled();
   });
 
-  /*не работает корректно*/
   it('should test subscribe in getAllUsers method', fakeAsync(() => {
     const response: UserApiInterface[] = [];
     spyOn(userService, 'getAllUsers').and.returnValue(of(response));
@@ -100,7 +116,7 @@ describe('User Table Component', () => {
     tick();
     expect(component.usersFromApi).toEqual(response);
     expect(component.users).toEqual(userMapper.mapToViewModel(response));
-  })); // attempt 1
+  })); 
 
   it('should test map in getAllUsers method', () => {
     let mockedData: any = [];
@@ -111,7 +127,7 @@ describe('User Table Component', () => {
     expect(spy).toHaveBeenCalled();
     expect(component.usersFromApi).toEqual(mockedData);
     expect(component.users).toEqual(userMapper.mapToViewModel(mockedData));
-  });  //attempt 2
+  });  
 
   it('should test getModalStatus method', () => {
     component.getModalStatus();
@@ -140,20 +156,16 @@ describe('User Table Component', () => {
     expect(component.editUser(testedUserTable)).toBeFalsy();
     testedUsers.push(testedUser);
     const findedUser = testedUsers.find(
-      (user) => Number(user.id) === testedUserTable.id
+      (user) => user.id === testedUserTable.id
     ) as UserApiInterface;
     expect(component.user).toEqual(findedUser);
   });
 
   it('should test equal in editUser', () => {
     component.editUser(testedUserTable);
-    component.usersFromApi.find((user) => {
-      expect(Number(user.id)). toEqual(testedUserTable.id)
-    })
-    const testExpr = Number(testedUser.id) === testedUserTable.id
+    const testExpr = testedUser.id === testedUserTable.id
     expect(testExpr).toBeFalsy();
-  }) // не покрывает корректно сравнение в подписке
-
+  }) 
   
 
   it('should test call openModal in editUser method', () => {
@@ -209,4 +221,52 @@ describe('User Table Component', () => {
     component.getAllUsers();
     expect(funcSpy).toHaveBeenCalled();
   })
+
+  it('should test createUser in defineRequest', () => {
+    component.defineRequest();
+    userService.createUser(testedFormUser).subscribe((user) => {
+      expect(user).toBe(testedUser);
+      expect(component.changeUser()).toBeTruthy();
+    });
+    const spy = spyOn(userService, 'createUser');
+    userService.createUser(testedFormUser);
+    expect(spy).toHaveBeenCalled();
+  })
+
+  it('should test change user', () => {
+    component.changedUser(testedFormUser);
+    expect(component.updatedUser).toBe(testedFormUser);
+  })
+
+  it('should test users in viewUpdatedUser', () => {
+    let testedUsersTable: UserTableInterface [] = [];
+     testedUsersTable.push(testedUserTable);
+    component.viewUpdatedUser(testedUsersTable);
+    expect(component.users).toBe(testedUsersTable);
+  })
+
+  it('should test changeUser in submit', () => {
+    component.submit();
+    const spy = spyOn(component, 'changeUser');
+    component.changeUser();
+    expect(spy).toHaveBeenCalled();
+  });
+
+  it('should test call function defineRequest in submit', () => {
+    const spy = spyOn(component, 'defineRequest').and.callThrough();
+    component.submit();
+    component.defineRequest();
+    expect(spy).toHaveBeenCalled();
+  })
+
+  it('should test rowCallback function', () => {
+    let context =  {
+      dataItem: testedUserTable,
+      index: 1
+    }
+    component.rowCallback(context);
+    let condition = context.dataItem.isEdited = true;
+    expect(condition).toBeTrue();
+  })
+
 });
