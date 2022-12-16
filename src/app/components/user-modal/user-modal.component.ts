@@ -2,12 +2,11 @@ import {
   Component,
   EventEmitter,
   Input,
-  OnDestroy,
   OnInit,
   Output,
   ViewChild,
 } from '@angular/core';
-import { Observable, Subscription, takeUntil } from 'rxjs';
+import { takeUntil } from 'rxjs';
 import { UserMapper } from 'src/app/mappers/user.mapper';
 import { UserApiInterface } from 'src/app/models/user-api.interface';
 import { UserFormInterface } from 'src/app/models/user-form.interface';
@@ -63,34 +62,34 @@ export class UserModalComponent extends BaseComponent implements OnInit {
 
   public applyUser(): void {
     if (this.userFormComponent?.userForm?.valid) {
+      const mappedUser = this.userMapper.mapFromFormToTableValue(this.userFormComponent?.userForm?.value);
       if (!this.isFormForEdit && !this.isUserDetailFormEdit) {
-        this.createUser();
+        this.createUser(mappedUser);
       } else {
-        this.updateUser();
+        this.updateUser(mappedUser);
       }
       this.changeUpdatedProperty(false);
       this.closeModal();
       this.changingUser.emit(this.userFormComponent.userForm.value);
-    } else {
+    } 
+    else {
       this.userFormComponent?.userForm.markAllAsTouched();
     }
   }
 
-  public createUser(): void {
-    const mappedUser = this.userMapper.mapFromFormToTableValue(this.userFormComponent?.userForm?.value);
-    this.usersFromTable.push(mappedUser);
+  public createUser(user: UserTableInterface): void {
+    this.usersFromTable.push(user); 
     this.updatedUsersFromTable.emit(this.usersFromTable);
   }
 
-  public updateUser(): void {
-    const editedTableElement = this.userMapper.mapFromFormToTableValue(this.userFormComponent?.userForm?.value);
+  public updateUser(user: UserTableInterface): void {
         if (this.usersFromTable.length) {
           const findedTableElement = this.usersFromTable.find((user: UserTableInterface) => user.id === this.userFormComponent.userForm.value.id) as UserTableInterface;
           const index = this.usersFromTable.indexOf(findedTableElement);
-          this.usersFromTable.splice(index, 1, editedTableElement);
+          this.usersFromTable.splice(index, 1, user);
           this.updatedUsersFromTable.emit(this.usersFromTable);
         } else {
-          this.updatingUserDetail.emit(this.userFormComponent.userForm.value);
+          this.updatingUserDetail.emit(this.userFormComponent?.userForm?.value);
         }
   }
 

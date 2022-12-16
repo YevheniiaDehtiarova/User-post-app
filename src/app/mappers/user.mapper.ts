@@ -59,10 +59,10 @@ export class UserMapper {
     };
   }
 
-  public mapFromFormToTableValue(userForm: UserFormInterface): UserTableInterface{
+  public  mapFromFormToTableValue(userForm: UserFormInterface): UserTableInterface{
     return {
       id: userForm.id ? userForm.id : 'null',
-      name: `${userForm.firstName} ${userForm.lastName}`,
+      name: `${userForm.firstName} ${userForm?.lastName}`,
       email: userForm.email,
       address:  `${userForm.zipcode} ${userForm.city} ${userForm.street} ${userForm.building}`,
       phone: userForm.phone,

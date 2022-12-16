@@ -1,9 +1,9 @@
 import { HttpClient } from '@angular/common/http';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { UserMapper } from 'src/app/mappers/user.mapper';
-import { UserApiInterface } from 'src/app/models/user-api.interface';
-import { UserFormInterface } from 'src/app/models/user-form.interface';
+import { UserMapper } from 'src/app/mappers/user.mapper';import { UserFormInterface } from 'src/app/models/user-form.interface';
+import { UserTableInterface } from 'src/app/models/user-table.interface';
+;
 import { UserFormStateService } from 'src/app/services/user-form-state.service';
 import { UserModalService } from 'src/app/services/user-modal.service';
 import { UserService } from 'src/app/services/user.service';
@@ -13,10 +13,10 @@ describe('User Modal Component', () => {
   let component: UserModalComponent;
   let fixture: ComponentFixture<UserModalComponent>;
   let userModalService: UserModalService;
-  let userService: UserService;
-  let userMapper: UserMapper;
   let http: HttpClient;
   let userFormStateService: UserFormStateService;
+  let testedFormUser: UserFormInterface;
+  let testedUser: UserTableInterface;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -26,17 +26,31 @@ describe('User Modal Component', () => {
         UserService,
         UserModalService,
         UserFormStateService,
-        { provide: UserMapper, useValue: {} },
+        { provide: UserMapper, useClass: UserMapper },
       ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(UserModalComponent);
     component = fixture.componentInstance;
     http = TestBed.get(HttpClient);
-    userService = new UserService(http);
     userModalService = new UserModalService();
-    userMapper = new UserMapper();
     userFormStateService = new UserFormStateService();
+    testedFormUser = {
+      id: '',
+      firstName: '',
+      lastName: '',
+      userName: '',
+      email: '',
+      street: '',
+      building: '',
+      city: '',
+      zipcode: '',
+      phone: '',
+      website: '',
+      companyName: '',
+      companyScope: '',
+  };
+  testedUser = { id: '1', name: '', email: '', address: '', phone: '' };
 
     fixture.detectChanges();
   });
@@ -80,30 +94,39 @@ describe('User Modal Component', () => {
     expect(mockedUserFormValue).toBeTruthy();
   });
 
-  it('should test createUser in applyUser', () => {
-    let condition = !component.isFormForEdit && !component.isUserDetailFormEdit;
-    component.applyUser();
-    const spy = spyOn(component, 'createUser');
-    component.createUser();
-    expect(spy).toHaveBeenCalled();
-    expect(condition).toBeTrue();
-  });
-
   it('should test updateUser in applyUser', () => {
     let condition = component.isFormForEdit && component.isUserDetailFormEdit;
     component.applyUser();
     const spy = spyOn(component, 'updateUser');
-    component.updateUser();
+    component.updateUser(testedUser);
     expect(spy).toHaveBeenCalled();
     expect(condition).toBeFalse();
   });
 
-  it('should test call changeUpdatedProperty function in submit', () => {
+  it('should test call changeUpdatedProperty function in applyUser()', () => {
     const spyFunc = spyOn(component, 'changeUpdatedProperty');
     component.changeUpdatedProperty(false);
     component.applyUser();
     expect(spyFunc).toHaveBeenCalled();
   });
+  
+  it('should test emit im applyUser', () => {
+    spyOn(component.changingUser, 'emit');
+    component.applyUser();
+    component.changingUser.emit(component.userFormComponent?.userForm?.value)
+    expect(component.changingUser.emit).toHaveBeenCalled();
+  })
+  
+  it('should test condition in applyUser', () => {
+    component.isFormForEdit = false;
+    component.isUserDetailFormEdit = false;
+    let condition = !component.isFormForEdit && !component.isUserDetailFormEdit;
+    expect(condition).toBeTrue();
+    component.applyUser();
+    const spy = spyOn(component, 'createUser');
+    component.createUser(testedUser);
+    expect(spy).toHaveBeenCalled();
+  })
 
  it('should test changeUser method', () => {
     component.applyUser();
@@ -118,4 +141,32 @@ describe('User Modal Component', () => {
     expect(component.isFormForEdit).toBe(fakedValue);
     expect(component.isUserDetailFormEdit).toBe(fakedValue);
   })
+
+  it('should test method createUser', () => {
+    let usersFromTable:UserTableInterface[]  = [];
+    component.createUser(testedUser);
+    expect(component.usersFromTable.length).toEqual(1);
+  })
+  
+  it('should test emit in createUser()', () => {
+    let usersFromTable:UserTableInterface[]  = [];
+    component.createUser(testedUser);
+    spyOn(component.updatedUsersFromTable, 'emit');
+    component.updatedUsersFromTable.emit(usersFromTable)
+    expect(component.updatedUsersFromTable.emit).toHaveBeenCalled();
+  })
+
+  it('should test push in array in createUser', () => {
+    component.createUser(testedUser);
+    expect(component.usersFromTable.push(testedUser)).toBe(2)
+  })
+
+  it('should test emit in updateUser()', () => {
+    let usersFromTable:UserTableInterface[]  = [];
+    component.updateUser(testedUser);
+    spyOn(component.updatedUsersFromTable, 'emit');
+    component.updatedUsersFromTable.emit(usersFromTable)
+    expect(component.updatedUsersFromTable.emit).toHaveBeenCalled();
+  })
+  
 });

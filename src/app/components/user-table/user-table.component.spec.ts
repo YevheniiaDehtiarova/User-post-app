@@ -41,7 +41,7 @@ describe('User Table Component', () => {
         UserService,
         UserModalService,
         UserFormStateService,
-        { provide: UserMapper, useValue: {} },
+        { provide: UserMapper, useClass: UserMapper },
         { provide: Router, useValue: routerSpy }
       ],
     }).compileComponents();

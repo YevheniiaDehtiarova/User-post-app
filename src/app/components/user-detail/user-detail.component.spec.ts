@@ -21,6 +21,7 @@ import { InjectionToken } from '@angular/core';
 import { Location } from '@angular/common';
 import { of } from 'rxjs';
 import { Comment } from '../../models/comment.interface';
+import { UserFormInterface } from 'src/app/models/user-form.interface';
 
 describe('UserDetailComponent', () => {
   let component: UserDetailComponent;
@@ -30,8 +31,10 @@ describe('UserDetailComponent', () => {
   let userService: UserService;
   let userFormStateService: UserFormStateService;
   let userModalService: UserModalService;
+  let userMapper: UserMapper;
   let route: ActivatedRoute;
   let testedUser: UserApiInterface;
+  let testedFormUser: UserFormInterface; 
   let testedPost: Post;
   let testedPosts: Array<Post> = [];
 
@@ -71,6 +74,7 @@ describe('UserDetailComponent', () => {
     userService = new UserService(http);
     userModalService = new UserModalService();
     userFormStateService = new UserFormStateService();
+    userMapper = new UserMapper();
     testedUser = {
       id: '1',
       firstName: 'aaaa',
@@ -90,6 +94,21 @@ describe('UserDetailComponent', () => {
         scope: 'zsgbxdh',
       },
     };
+    testedFormUser = {
+      id: '',
+      firstName: '',
+      lastName: '',
+      userName: '',
+      email: '',
+      street: '',
+      building: '',
+      city: '',
+      zipcode: '',
+      phone: '',
+      website: '',
+      companyName: '',
+      companyScope: '',
+  };
     testedPost = {
       body: '',
       comments: [
@@ -183,11 +202,6 @@ describe('UserDetailComponent', () => {
   }); 
 
 
-  /*не покрывается тестами присвоение в переменную и вызов функции,
-  не покрыты след строки кода
-  this.posts[index].comments = comment;
-  this.splicePosts(post, this.posts);*/
-
   it('should check modifyPosts and call methods inside', () => {
     let index = 1;
     let testedComment: Comment[] = testedPost.comments as Comment[];
@@ -231,15 +245,7 @@ describe('UserDetailComponent', () => {
     component.getUserFormStatus();
     expect(spy).toHaveBeenCalled();
   });
-/* аналогично не работает присвоение в юзер, не  покрыта строка
-this.user = user; */
-  /*it('should test updateUser method', () => {
-    component.updateUser(testedUser);
-    userService.getUser(testedUser.id).subscribe((value) => {
-      expect(value).toBe(component.user);
-    });
-    expect(testedUser).toBeTruthy();
-  });*/
+
 
   it('should test user in init method', () => {
     component.ngOnInit();
