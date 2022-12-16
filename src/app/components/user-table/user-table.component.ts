@@ -69,7 +69,7 @@ export class UserTableComponent extends BaseComponent implements OnInit {
 
     this.openModal();
     this.changeUserFormstate(true);
-    this.userFormStateService.setInitialFormState(this.user);
+    //this.userFormStateService.setInitialFormState(this.user);
   }
 
   public openModal(): void {
@@ -116,7 +116,7 @@ export class UserTableComponent extends BaseComponent implements OnInit {
     } 
 
   public defineRequest(): Observable<UserApiInterface>{
-    if(this.updatedUsers.length === 1){
+    if(this.updatedUsers.length === 1 && this.updatedUser){
      return !this.updatedUser.id ? this.userService.createUser(this.updatedUser) : this.userService.updateUser(this.updatedUser.id,this.userMapper.mapToCreateUpdateDto(this.updatedUser)) 
     } else {
       this.updatedUsers.map((user: UserFormInterface) => {

@@ -21,7 +21,7 @@ export class UserMapper {
  
   public mapToCreateUpdateDto(user: UserFormInterface): UserApiInterface {
     return {
-      id: user?.id as string,
+      id: user?.id ? user.id : '',
       firstName: user?.firstName,
       lastName: user?.lastName,
       username: user?.userName,

@@ -136,6 +136,6 @@ export class UserDetailComponent extends BaseComponent implements OnInit {
     this.location.back();
   }
   public submit(): void {
-    this.userService.updateUser(this.user.id,this.user).pipe(takeUntil(this.destroy$)).subscribe();
+    this.userService.updateUser(this.user?.id,this.user).pipe(takeUntil(this.destroy$)).subscribe();
   }
 }

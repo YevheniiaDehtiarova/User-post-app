@@ -49,7 +49,7 @@ describe('UserDetailComponent', () => {
         PostService,
         UserModalService,
         UserFormStateService,
-        { provide: UserMapper, useValue: {} },
+        { provide: UserMapper, useClass: UserMapper },
         { provide: LOCATION_TOKEN, useValue: window.history },
         {
           provide: ActivatedRoute,
@@ -153,6 +153,11 @@ describe('UserDetailComponent', () => {
     });
   }));
 
+  it('should test calculateUserId', () => {
+    component.calculateUserId();
+    expect(component.userId).toBe('1');
+   })
+
   it('should test work postService in initAllPosts', () => {
     const spy = spyOn(postService, 'getAllPosts').and.callThrough();
     postService.getAllPosts();
@@ -246,6 +251,13 @@ describe('UserDetailComponent', () => {
     expect(spy).toHaveBeenCalled();
   });
 
+  it('should test updateUser' , () => {
+    component.updateUser(testedFormUser);
+    let mappedUser = userMapper.mapToCreateUpdateDto(testedFormUser);
+    expect(component.user).toEqual(mappedUser)
+
+  })
+
 
   it('should test user in init method', () => {
     component.ngOnInit();
@@ -276,4 +288,11 @@ describe('UserDetailComponent', () => {
     _loc.back();
     expect(_loc.back).toHaveBeenCalled();
   }));
+
+  it('should test submit method', () => {
+    const spy = spyOn(userService, 'updateUser').and.callThrough();
+    userService.updateUser(testedUser.id, testedUser)
+    component.submit()
+    expect(spy).toHaveBeenCalled();
+  })
 });
