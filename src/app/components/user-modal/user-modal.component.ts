@@ -69,8 +69,8 @@ export class UserModalComponent extends BaseComponent implements OnInit {
         this.updateUser(mappedUser);
       }
       this.changeUpdatedProperty(false);
-      this.closeModal();
       this.changingUser.emit(this.userFormComponent.userForm.value);
+      this.closeModal();
     } 
     else {
       this.userFormComponent?.userForm.markAllAsTouched();

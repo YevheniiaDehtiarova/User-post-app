@@ -121,7 +121,7 @@
   "users": [
     {
       "id": 7,
-      "firstName": "Yevheniia",
+      "firstName": "Yevheniia777",
       "lastName": "Дегтярева",
       "username": "77",
       "email": "jeni4ka2509@gmail.com",
@@ -345,6 +345,63 @@
       "company": {
         "name": null,
         "scope": null
+      }
+    },
+    {
+      "id": 21,
+      "firstName": null,
+      "lastName": null,
+      "username": null,
+      "email": null,
+      "address": {
+        "street": null,
+        "building": null,
+        "city": null,
+        "zipcode": null
+      },
+      "phone": null,
+      "website": null,
+      "company": {
+        "name": null,
+        "scope": null
+      }
+    },
+    {
+      "id": 22,
+      "firstName": null,
+      "lastName": null,
+      "username": null,
+      "email": null,
+      "address": {
+        "street": null,
+        "building": null,
+        "city": null,
+        "zipcode": null
+      },
+      "phone": null,
+      "website": null,
+      "company": {
+        "name": null,
+        "scope": null
+      }
+    },
+    {
+      "id": 23,
+      "firstName": "CCZSC",
+      "lastName": "fdxsgdh",
+      "username": "gsdhb",
+      "email": "zxdbc@gmail.com",
+      "address": {
+        "street": "dgddh",
+        "building": "8",
+        "city": "bxdg",
+        "zipcode": "61204-####"
+      },
+      "phone": "+380661618617",
+      "website": "SFcfv",
+      "company": {
+        "name": " zasx v",
+        "scope": "  xzbx db"
       }
     }
   ],
